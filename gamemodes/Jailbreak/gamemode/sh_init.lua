@@ -6,7 +6,11 @@ GM.Website = "N/A"
 JB = {}
 
 team.SetUp(1, "Prisoners", Color(255, 10, 10))
-team.SetUp(1, "Guards", Color(10, 10, 255))
+team.SetUp(2, "Guards", Color(10, 10, 255))
+
+TEAM_PRISONERS = 1
+TEAM_GUARDS = 2
+TEAM_SPECTATORS = 3
 
 local gmDir = "jailbreak/gamemode"
 function JB:AutoInclude(dir)

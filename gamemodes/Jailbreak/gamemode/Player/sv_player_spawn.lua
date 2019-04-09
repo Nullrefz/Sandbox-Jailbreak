@@ -1,8 +1,8 @@
 local ply = FindMetaTable("Player")
 
 local spawns = {
-    ["prisoners"] = ents.FindByClass("info_player_terrorist"),
-    ["guards"] = ents.FindByClass("info_player_counterterrorist"),
+    ents.FindByClass("info_player_terrorist"),
+    ents.FindByClass("info_player_counterterrorist"),
     ["global"] = ents.FindByClass("info_player_start")
 }
 
@@ -16,18 +16,22 @@ function ply:GetSpawnPos()
     end
 
     local spawn = teamSpawn[math.random(#teamSpawn)]
-
     return spawn:GetPos()
 end
 
 function ply:ApplyModel()
     local teamModels = models[self:Team()]
     if not teamModels then return end
+    
     local designatedModel = teamModels[math.random(#teamModels)]
     self:SetModel(designatedModel)
 end
 
 function ply:Setup()
+    if(self:Team() == TEAM_UNASSIGNED) then
+        self:SetTeam(TEAM_PRISONERS)
+    end
+   
     self:SetPos(self:GetSpawnPos())
     self:ApplyModel()
     local col = team.GetColor(self:Team())
@@ -39,7 +43,7 @@ hook.Add("PlayerSpawn", "OnPlayerSpawn", function(pl)
 end)
 
 hook.Add("PlayerInitialSpawn", "some_unique_name", function(pl)
-    pl:SetTeam(1)
-    pl:SetTeam(TEAM_REBELS)
+ 
+    pl:SetTeam(TEAM_PRISONERS)
     pl:KillSilent()
 end)
