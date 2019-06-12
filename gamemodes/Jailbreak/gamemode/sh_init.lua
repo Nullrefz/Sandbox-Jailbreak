@@ -4,6 +4,7 @@ GM.Email = "davidmoussa@outlook.com"
 GM.Website = "N/A"
 JB = {}
 
+
 PING = {
     ["BEST"] = 0,
     ["GOOD"] = 60,

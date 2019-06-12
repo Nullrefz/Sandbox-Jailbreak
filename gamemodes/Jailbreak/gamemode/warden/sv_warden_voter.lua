@@ -47,6 +47,7 @@ function JB:InitiateVote()
     timer.Simple(GetConVar("jb_warden_vote_duration"):GetInt(), function() self:ConcludeVote() end)
 end
 
+
 function JB:ConcludeVote()
     self:BreakVote()
     -- TODO: Count Total and Set Warden
