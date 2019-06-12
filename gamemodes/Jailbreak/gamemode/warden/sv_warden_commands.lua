@@ -1,0 +1,49 @@
+util.AddNetworkString("SendWardenCommand")
+util.AddNetworkString("UpdateCommands")
+util.AddNetworkString("ToggleCommand")
+util.AddNetworkString("RequestCommands")
+local activeCommands = {}
+
+function JB:ParseCommand(command)
+    -- I wish switch cases exists
+    if command == commandType.WAYPOINT then
+        self:SetWaypoint(waypointType.POINT)
+    elseif command == commandType.LINEUP then
+        self:SetWaypoint(waypointType.LINE)
+    else
+        self:ToggleCommand(command)
+    end
+end
+
+function JB:ToggleCommand(type)
+    if table.HasValue(activeCommands, type) then
+        table.RemoveByValue(activeCommands, type)
+    else
+        table.insert(activeCommands, type)
+    end
+
+    self:UpdateCommands()
+end
+
+function JB:SetWaypoint(type)
+end
+
+function JB:UpdateCommands(ply)
+    net.Start("UpdateCommands")
+    net.WriteTable(activeCommands)
+
+    if ply then
+        net.Send(ply)
+    else
+        net.Broadcast()
+    end
+end
+
+net.Receive("SendWardenCommand", function(ln, ply)
+    --if not ply:IsWarden"someString" then return end
+    JB:ParseCommand(net.ReadInt(32))
+end)
+
+net.Receive("RequestCommands", function(ln, ply)
+    JB:UpdateCommands(ply)
+end)

@@ -11,6 +11,22 @@ PING = {
     ["BAD"] = 150
 }
 
+commandType = {
+    AFK = 0,
+    CROUCH = 1,
+    LINEUP = 2,
+    WALK = 3,
+    FREELOOK = 4,
+    SPRINTING = 5,
+    WAYPOINT = 6,
+    JUMPING = 7
+}
+
+waypointType = {
+    POINT = 0,
+    LINE = 1
+}
+
 team.SetUp(1, "Prisoners", Color(255, 89, 50))
 team.SetUp(2, "Guards", Color(50, 185, 255))
 TEAM_PRISONERS = 1

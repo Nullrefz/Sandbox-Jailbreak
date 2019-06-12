@@ -6,13 +6,14 @@ function JAILBREAKHUD:Init()
     self.footer = vgui.Create("Panel", self)
     self.healthBar = vgui.Create("JailbreakHealthBar", self.footer)
     self.timerBar = vgui.Create("JailbreakTimerBar", self.footer)
+    self.commandBar = vgui.Create("JailbreakCommandBar", self.header)
     self.wardenBar = vgui.Create("JailbreakWardenBar", self.header)
 end
 
 function JAILBREAKHUD:PerformLayout(width, height)
     if self.header then
         self.header:Dock(TOP)
-        self.header:SetTall(toVRatio(69 + 42))
+        self.header:SetTall(toVRatio(69 + 42 + 42))
     end
 
     if self.footer then
@@ -43,6 +44,12 @@ function JAILBREAKHUD:PerformLayout(width, height)
         self.wardenBar:SetSize(toHRatio(250), toVRatio(69))
         self.wardenBar:SetPos(toHRatio(42), toVRatio(24))
     end
+
+    if self.commandBar then
+        self.commandBar:Dock(BOTTOM)
+        self.commandBar:SetTall(toVRatio(42))
+        self.commandBar:DockMargin(50, 0, 0, 0)
+    end
 end
 
 vgui.Register("JailbreakHUD", JAILBREAKHUD)
@@ -52,6 +59,11 @@ function JB.hud:Show()
     self.hudPanel = vgui.Create("JailbreakHUD")
     self.hudPanel:SetSize(w, h)
     self.hudPanel:SetPos(0, 0)
+
+    JB.hud.Hide = function()
+        self.hudPanel:Remove()
+        self.hudPanel:Clear()
+    end
 end
 
 function JB.hud:UpdatePanels()
@@ -63,12 +75,18 @@ function JB.hud:UpdatePanels()
     JB.hud:Show()
 end
 
-hook.Add("InitPostEntity", "Hook Hud After Init", function()
-    net.Receive("PlayerSpawned", function()
-        JB.hud:Show()
-    end)
+-- hook.Add("InitPostEntity", "Hook Hud After Init", function()
+--     net.Receive("PlayerSpawned", function()
+--         JB.hud:Show()
+--     end)
+--     net.Receive("PlayerDied", function()
+--         JB.hud:UpdatePanels()
+--     end)
+-- end)
+function GM:ScoreboardShow()
+    JB.hud:Show()
+end
 
-    net.Receive("PlayerDied", function()
-        JB.hud:UpdatePanels()
-    end)
-end)
+function GM:ScoreboardHide()
+    JB.hud:Hide()
+end

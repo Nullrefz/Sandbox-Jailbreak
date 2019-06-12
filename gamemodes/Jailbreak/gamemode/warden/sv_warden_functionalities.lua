@@ -1,5 +1,11 @@
 util.AddNetworkString("OnWardenSet")
 util.AddNetworkString("OnWardenRequest")
+local ply = FindMetaTable("Player")
+
+function ply:IsWarden()
+    if JB.warden == self then return true end
+    return false
+end
 
 function JB:SetWarden(guard)
     if guard:Team() == TEAM_GUARDS then
