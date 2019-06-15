@@ -4,7 +4,6 @@ GM.Email = "davidmoussa@outlook.com"
 GM.Website = "N/A"
 JB = {}
 
-
 PING = {
     ["BEST"] = 0,
     ["GOOD"] = 60,
@@ -26,6 +25,12 @@ commandType = {
 waypointType = {
     POINT = 0,
     LINE = 1
+}
+
+Team = {
+    PRISONERS = 1,
+    GUARDS = 2,
+    SPECTATORS = 3
 }
 
 team.SetUp(1, "Prisoners", Color(255, 89, 50))

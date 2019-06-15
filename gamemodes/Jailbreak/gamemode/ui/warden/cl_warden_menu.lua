@@ -68,7 +68,7 @@ function WARDENMENU:Init()
                 panelAlpha[i] = math.Clamp(panelAlpha[i] - FrameTime() * 100, 0, 25)
             end
 
-            draw.DrawArc(width / 2, height / 2, width, self.radius, 45, -i * 45 + 45 / 2 + 45 + 0.5, Color(0, 180, 255, panelAlpha[i]))
+            draw.DrawArc(width / 2, height / 2, width, self.radius, 45, -i * 45 + 45 / 2 + 45 + 0.5, Color(255, 255, 255, panelAlpha[i]))
 
             if i == 5 then
                 draw.DrawRect(width / 2 - self.iconSize / 2 + math.sin(angle) * self.iconRadius, height / 2 - self.iconSize / 2 + math.cos(angle) * self.iconRadius, self.iconSize, self.iconSize, Color(255, 200, 0, 255 * self.alphaLerp), mats[i + 1])

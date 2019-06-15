@@ -36,16 +36,23 @@ surface.CreateFont("Jailbreak_Font_WardenName", {
     outline = false
 })
 
-local warden
-
 function WARDENBAR:Init()
-    self.wardenIcon = vgui.Create("JailbreakPlayerICon", self)
+    self.wardenIcon = vgui.Create("CircularAvatar", self)
     self.wardenInfo = vgui.Create("DPanel", self)
+    net.Start("OnWardenRequest")
+    net.SendToServer()
+
+    function self:Think()
+        if (warden and  self.wardenIcon:Player() ~= warden) then
+            self.wardenIcon:Player(warden)
+            self.warden = warden
+        end
+    end
 
     function self.wardenInfo:Paint(width, height)
         draw.DrawText("Warden", "Jailbreak_Font_WardenTitle", toHRatio(10), height / 2 - toVRatio(30) / 2 - toVRatio(18) / 2, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
 
-        if (warden) then
+        if warden then
             draw.DrawText(warden:Name(), "Jailbreak_Font_WardenName", toHRatio(5), height / 2 - toVRatio(30) / 2, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
         else
             draw.DrawText("None", "Jailbreak_Font_WardenName", toHRatio(5), height / 2 - toVRatio(30) / 2, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
@@ -54,21 +61,9 @@ function WARDENBAR:Init()
 end
 
 function WARDENBAR:PerformLayout(width, height)
-    self.wardenIcon:SetSize(height, height)
-    self.wardenInfo:SetPos(self.wardenIcon:GetWide(), 0)
-    self.wardenInfo:SetSize(width - self.wardenIcon:GetWide(), height)
-    self.wardenIcon.playerIcon:SetPlayer(warden, 64)
-end
-
-function WARDENBAR:PerformLayout(width, height)
-    self.wardenIcon:SetSize(height, height)
+    self.wardenIcon:SetSize(height - 10, height - 10)
     self.wardenInfo:SetPos(self.wardenIcon:GetWide(), 0)
     self.wardenInfo:SetSize(width - self.wardenIcon:GetWide(), height)
 end
 
 vgui.Register("JailbreakWardenBar", WARDENBAR)
-
-net.Receive("SendWarden", function()
-    warden = player.GetByID(net.ReadFloat())
-    WARDENBAR.wardenIcon.playerIcon:SetPlayer(warden, 64)
-end)
