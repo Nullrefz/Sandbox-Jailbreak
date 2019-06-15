@@ -2,6 +2,9 @@ util.AddNetworkString("SendWardenCommand")
 util.AddNetworkString("UpdateCommands")
 util.AddNetworkString("ToggleCommand")
 util.AddNetworkString("RequestCommands")
+util.AddNetworkString("PlaceWaypoint")
+util.AddNetworkString("SetWaypoint")
+util.AddNetworkString("UpdateWaypoint")
 local activeCommands = {}
 
 function JB:ParseCommand(command)
@@ -26,6 +29,8 @@ function JB:ToggleCommand(type)
 end
 
 function JB:SetWaypoint(type)
+    net.Start("PlaceWaypoint")
+    net.Broadcast()
 end
 
 function JB:UpdateCommands(ply)
@@ -46,4 +51,10 @@ end)
 
 net.Receive("RequestCommands", function(ln, ply)
     JB:UpdateCommands(ply)
+end)
+
+net.Receive("SetWaypoint", function()
+    net.Start("UpdateWaypoint")
+    net.WriteTable(net.ReadTable())
+    net.Broadcast()
 end)

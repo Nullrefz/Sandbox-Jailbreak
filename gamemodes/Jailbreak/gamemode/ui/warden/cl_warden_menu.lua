@@ -1,5 +1,5 @@
 local WARDENMENU = {}
-local mats = {Material("jailbreak/vgui/walk.png", "smooth"), Material("jailbreak/vgui/line up.png", "smooth"), Material("jailbreak/vgui/crouch.png", "smooth"), Material("jailbreak/vgui/afk.png", "smooth"), Material("jailbreak/vgui/jumping.png", "smooth"), Material("jailbreak/vgui/waypoint.png", "smooth"), Material("jailbreak/vgui/sprinting.png", "smooth"), Material("jailbreak/vgui/freelook.png", "smooth")}
+local mats = {Material("jailbreak/vgui/walk.png", "smooth"), Material("jailbreak/vgui/mic.png", "smooth"), Material("jailbreak/vgui/crouch.png", "smooth"), Material("jailbreak/vgui/afk.png", "smooth"), Material("jailbreak/vgui/jumping.png", "smooth"), Material("jailbreak/vgui/waypoint.png", "smooth"), Material("jailbreak/vgui/sprinting.png", "smooth"), Material("jailbreak/vgui/freelook.png", "smooth")}
 
 surface.CreateFont("Jailbreak_Font_WardenMenu", {
     font = "Optimus",
@@ -70,7 +70,7 @@ function WARDENMENU:Init()
 
             draw.DrawArc(width / 2, height / 2, width, self.radius, 45, -i * 45 + 45 / 2 + 45 + 0.5, Color(0, 180, 255, panelAlpha[i]))
 
-            if i == 1 or i == 5 then
+            if i == 5 then
                 draw.DrawRect(width / 2 - self.iconSize / 2 + math.sin(angle) * self.iconRadius, height / 2 - self.iconSize / 2 + math.cos(angle) * self.iconRadius, self.iconSize, self.iconSize, Color(255, 200, 0, 255 * self.alphaLerp), mats[i + 1])
                 draw.DrawText(str:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end), "Jailbreak_Font_WardenMenu", width / 2 + math.sin(angle) * self.textRadius, height / 2 + math.cos(angle) * self.textRadius - 42 / 2,  Color(255, 200, 0, 255 * self.alphaLerp), TEXT_ALIGN_CENTER)
 

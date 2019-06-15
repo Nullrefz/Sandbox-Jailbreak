@@ -1,9 +1,9 @@
 local COMMANDBAR = {}
 local mats = {
     Material("jailbreak/vgui/afk.png", "smooth"),
-    Material("jailbreak/vgui/walk.png", "smooth"),
-    Material("jailbreak/vgui/line up.png", "smooth"),
     Material("jailbreak/vgui/crouch.png", "smooth"),
+    Material("jailbreak/vgui/mic.png", "smooth"),
+    Material("jailbreak/vgui/walk.png", "smooth"),
     Material("jailbreak/vgui/freelook.png", "smooth"),
     Material("jailbreak/vgui/sprinting.png", "smooth"),
     Material("jailbreak/vgui/waypoint.png", "smooth"),
