@@ -65,6 +65,7 @@ function JB:DrawWaypoint()
     cam.End3D2D()
     cam.Start3D2D(trace.HitPos, tr.HitNormal:Angle() + Angle(0, (LocalPlayer():GetEyeTrace().HitPos - LocalPlayer():GetEyeTrace().StartPos):Angle().y, 0), math.Clamp(LocalPlayer():GetPos():Distance(trace.HitPos) / 100, 2, 15))
     local dist = math.Clamp(LocalPlayer():GetPos():Distance(trace.HitPos) / 100 - 1, 0, 1)
+    if LocalPlayer():GetPos():Distance(trace.HitPos) < 15 then pointColor = Color(0,255,0, 150) else pointColor = Color(255,255,255, 150)  end
     draw.DrawRect(0 + 4 + math.sin(CurTime() * 2) * 2, -wid / 2, wid * 2, wid, Color(255, 255, 255, 222 * dist), mats.ARROW)
     cam.End3D2D()
 end
