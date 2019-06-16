@@ -28,7 +28,7 @@ function JB:SetRoundPreparing()
         hook.Run("ChangeMap")
         return
     else
-        self:OrganizeGuards()
+        --self:OrganizeGuards()
 
         -- TODO To Implement a better notification system
         for k, v in pairs(player.GetAll()) do
@@ -40,7 +40,7 @@ function JB:SetRoundPreparing()
     game.CleanUpMap()
     self:EnableRespawns()
     self:SpawnAllPlayers()
-    self:FreezePlayers(true)
+    --self:FreezePlayers(true)
 end
 
 hook.Add("jb_round_preparing", "setup preparing", function()
@@ -78,7 +78,7 @@ end)
 -----------------------------------------------------------]]
 function JB:SetRoundEnding()
     self:SetRoundTime(GetConVar("jb_Round_Ending"):GetInt() or 10)
-
+    self:RevokeWarden()
     for k, v in pairs(player.GetAll()) do
         if self.round.count + 1 <= GetConVar("jb_max_rounds"):GetInt() then
             v:ChatPrint("Round Ended. Restarting in " .. self:GetTimeLeft() .. " seconds")
@@ -111,6 +111,7 @@ end)
     Desc: Loop logic for round preparing
 -----------------------------------------------------------]]
 function JB:RoundPreparingThink()
+    if not self.warden then   self:SetRoundTime(GetConVar("jb_Round_Preparing"):GetInt()) end
     if self:GetTimeLeft() <= 0 and self.round.count <= GetConVar("jb_max_rounds"):GetInt() then
         self:SetRoundPhase(ROUND_ACTIVE)
     end
