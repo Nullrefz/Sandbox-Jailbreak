@@ -94,6 +94,17 @@ function ply:GenerateShield()
     end
 end
 
+function ply:SetupHealth()
+    if not self:Alive() then return end
+
+    if self:Team() == TEAM_GUARDS then
+        self:GenerateHealth(GetConVar("jb_guards_regen_health"):GetInt(), GetConVar("jb_guards_max_regen"):GetInt())
+        self:SetArmor(GetConVar("jb_guards_max_armor"):GetInt())
+    else
+        self:GenerateHealth(GetConVar("jb_prisoners_regen_health"):GetInt(), GetConVar("jb_prisoners_max_regen"):GetInt())
+    end
+end
+
 hook.Add("PlayerDeath", "SendDied", function(victim, inflictor, attacker)
     JB:SendPlayerDied(victim)
 end)
@@ -103,10 +114,26 @@ hook.Add("PlayerSilentDeath", "SendSilentDied", function(pl)
 end)
 
 function JB:SendPlayerDied(pl)
+    pl:SetArmor(0)
     net.Start("PlayerDied")
     net.Send(pl)
 end
 
-net.Receive("RequestHealth", function(ln, pl) 
+net.Receive("RequestHealth", function(ln, pl)
     pl:SendHealthStatus()
+end)
+
+function JB:HandleWardenHealth(oldWarden, newWarden)
+    if oldWarden then
+        oldWarden:SetupHealth()
+    end
+
+    if newWarden then
+        newWarden:GenerateHealth(GetConVar("jb_guards_regen_health"):GetInt(), GetConVar("jb_warden_max_regen"):GetInt())
+        newWarden:SetArmor(GetConVar("jb_warden_max_armor"):GetInt())
+    end
+end
+
+hook.Add("PlayerSetWarden", "OnWardenSet", function(oldWarden, newWarden)
+    JB:HandleWardenHealth(oldWarden, newWarden)
 end)

@@ -1,8 +1,10 @@
+util.AddNetworkString("ChangeTeam")
 local pl = FindMetaTable("Player")
 
 hook.Add("PlayerInitialSpawn", "FirstPlayerSpawn", function(ply)
     ply:JoinTeam(TEAM_PRISONERS)
     ply:Kill()
+    ply:SendSpawned()
 end)
 
 --[[---------------------------------------------------------
@@ -36,6 +38,7 @@ concommand.Add("jb_jointeam", function(ply, cmd, args)
     local selectedTeam = tonumber(args[1])
     ply:SetHealth(0)
     ply:SetArmor(0)
+
     if selectedTeam == TEAM_PRISONERS then
         ply:JoinTeam(TEAM_PRISONERS)
     elseif selectedTeam == TEAM_GUARDS and JB:GetGuardBalance() > 0 then
@@ -58,3 +61,7 @@ function pl:JoinTeam(chosenTeam)
     self:SetTeam(chosenTeam)
     hook.Run("PlayerChangedTeam")
 end
+
+net.Receive("ChangeTeam", function(ln, ply)
+    ply:JoinTeam(net.ReadInt(32))
+end)

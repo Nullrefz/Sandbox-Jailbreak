@@ -21,6 +21,7 @@ function ply:GetSpawnPos()
     end
 
     local spawn = teamSpawn[math.random(#teamSpawn)]
+
     return spawn:GetPos() or ents.FindByClass("info_player_terrorist")
 end
 
@@ -40,7 +41,7 @@ end
     Desc: Initializes the player and assigns them
 -----------------------------------------------------------]]
 function ply:Setup()
-    if (self:Team() == TEAM_UNASSIGNED) then
+    if self:Team() == TEAM_UNASSIGNED then
         self:SetTeam(TEAM_PRISONERS)
         self:KillSilent()
     end
@@ -50,20 +51,15 @@ function ply:Setup()
     self:ApplyModel()
     local col = team.GetColor(self:Team())
     self:SetPlayerColor(Vector(col.r / 255, col.g / 255, col.b / 255))
-
-    if self:Team() == TEAM_GUARDS then
-        self:GenerateHealth(2, 60)
-        self:SetArmor(100)
-    else
-        self:GenerateHealth(0, 0)
-    end
-
+    self:SetupHealth()
     self.health = self:Health()
     self:SendSpawned()
 end
 
 hook.Add("PlayerSpawn", "OnPlayerSpawn", function(pl)
-    pl:Setup()
+    if pl:Alive() then
+        pl:Setup()
+    end
 end)
 
 function ply:SendSpawned()
