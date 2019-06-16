@@ -98,8 +98,13 @@ function ply:SetupHealth()
     if not self:Alive() then return end
 
     if self:Team() == TEAM_GUARDS then
-        self:GenerateHealth(GetConVar("jb_guards_regen_health"):GetInt(), GetConVar("jb_guards_max_regen"):GetInt())
-        self:SetArmor(GetConVar("jb_guards_max_armor"):GetInt())
+        if self:IsWarden() then
+            self:GenerateHealth(GetConVar("jb_guards_regen_health"):GetInt(), GetConVar("jb_warden_max_regen"):GetInt())
+            self:SetArmor(GetConVar("jb_warden_max_armor"):GetInt())
+        else
+            self:GenerateHealth(GetConVar("jb_guards_regen_health"):GetInt(), GetConVar("jb_guards_max_regen"):GetInt())
+            self:SetArmor(GetConVar("jb_guards_max_armor"):GetInt())
+        end
     else
         self:GenerateHealth(GetConVar("jb_prisoners_regen_health"):GetInt(), GetConVar("jb_prisoners_max_regen"):GetInt())
     end

@@ -9,17 +9,15 @@ function ply:IsWarden()
 end
 
 function JB:SetWarden(guard)
-    if guard:Team() == TEAM_GUARDS then
-        self.warden = guard
-        print(self.warden)
-        self:BroadcastWarden()
-    end
+    local oldWarden = self.warden
+    self.warden = guard
+
+    hook.Run("PlayerSetWarden", oldWarden, self.warden)
+    self:BroadcastWarden()
 end
 
 function JB:RevokeWarden()
-    if self.warden then
-        self.warden = nil
-    end
+    self:SetWarden(nil)
 end
 
 function JB:BroadcastWarden(ply)
@@ -36,12 +34,45 @@ function JB:BroadcastWarden(ply)
     end
 end
 
-function GM:ShowTeam(ply)
-    -- and not JB.warden then -- and JB:GetActivePhase() == ROUND_PREPARING then
-    if ply:Team() == TEAM_GUARDS then
-        JB:SetWarden(ply)
+function JB:ValidateWarden()
+    local wardenValid = false
+
+    for k, v in pairs(player.GetAll()) do
+        if IsValid(v) and v == self.warden and v:Team() == Team.GUARDS and v:Alive() then
+            wardenValid = true
+            break
+        end
+    end
+
+    if not wardenValid then
+        self:RevokeWarden()
     end
 end
+
+function GM:ShowTeam(ply)
+    -- and (JB:GetActivePhase() == ROUND_PREPARING or JB:GetActivePhase() == ROUND_WAITING) then
+    if ply:Team() == Team.GUARDS and not JB.warden and ply:Alive() then
+        JB:SetWarden(ply)
+    elseif JB.warden == ply then
+        JB:RevokeWarden()
+    end
+end
+
+hook.Add("PlayerDisconnected", "CheckWardenIsDisconnected", function()
+    JB:ValidateWarden()
+end)
+
+hook.Add("PlayerChangedTeam", "CheckWardenTeamHasChange", function()
+    JB:ValidateWarden()
+end)
+
+hook.Add("PlayerDeath", "CheckWardenHasDied", function()
+    JB:ValidateWarden()
+end)
+
+hook.Add("PlayerSilentDeath", "CheckWardenHasDiedSilently", function()
+    JB:ValidateWarden()
+end)
 
 net.Receive("OnWardenRequest", function(ln, ply)
     JB:BroadcastWarden(ply)

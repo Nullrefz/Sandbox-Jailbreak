@@ -45,7 +45,7 @@ function JB:UpdateCommands(ply)
 end
 
 net.Receive("SendWardenCommand", function(ln, ply)
-    --if not ply:IsWarden"someString" then return end
+    if not ply:IsWarden() then return end
     JB:ParseCommand(net.ReadInt(32))
 end)
 
