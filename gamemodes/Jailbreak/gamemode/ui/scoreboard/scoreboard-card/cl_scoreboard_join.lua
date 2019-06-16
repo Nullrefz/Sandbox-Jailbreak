@@ -28,6 +28,8 @@ function JOINBUTTON:JoinTeam(group)
 end
 
 function JOINBUTTON:DrawSkin()
+    local plyTeam = self.team
+
     self.panel = vgui.Create("DButton", self)
     self.panel:SetText("Join")
     self.panel:SetFont("Jailbreak_Font_ScoreboardJoin")
@@ -39,7 +41,9 @@ function JOINBUTTON:DrawSkin()
     end
 
     self.panel.DoClick = function()
-        self:JoinTeam(self.team)
+       net.Start("ChangeTeam")
+       net.WriteInt(plyTeam, 32)
+       net.SendToServer()
     end
 
     function self:Paint(width, height)

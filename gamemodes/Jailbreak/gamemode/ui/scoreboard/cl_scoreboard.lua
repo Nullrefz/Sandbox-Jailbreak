@@ -43,10 +43,10 @@ function JB.scoreboard:Show()
     end
 end
 
--- function GM:ScoreboardShow()
---     JB.scoreboard:Show()
--- end
+function GM:ScoreboardShow()
+    JB.scoreboard:Show()
+end
 
--- function GM:ScoreboardHide()
---     JB.scoreboard:Hide()
--- end
+function GM:ScoreboardHide()
+    JB.scoreboard:Hide()
+end

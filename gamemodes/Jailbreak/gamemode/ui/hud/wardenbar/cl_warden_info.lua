@@ -3,7 +3,7 @@ local WARDENBAR = {}
 surface.CreateFont("Jailbreak_Font_WardenTitle", {
     font = "Optimus",
     extended = false,
-    size = 14,
+    size = 18,
     weight = 5,
     blursize = 0,
     scanlines = 0,
@@ -37,33 +37,46 @@ surface.CreateFont("Jailbreak_Font_WardenName", {
 })
 
 function WARDENBAR:Init()
-    self.wardenIcon = vgui.Create("CircularAvatar", self)
+    self.background = vgui.Create("DImage", self)
+    self.wardenIcon = vgui.Create("CircularAvatar", self.background)
+    self.wardenIcon:Player(warden)
+    self.background:SetImage("jailbreak/vgui/DeepBlue_Icon_Slot.png")
     self.wardenInfo = vgui.Create("DPanel", self)
+    self.warden = warden
     net.Start("OnWardenRequest")
     net.SendToServer()
 
     function self:Think()
-        if (warden and  self.wardenIcon:Player() ~= warden) then
-            self.wardenIcon:Player(warden)
+        if self.warden ~= warden then
             self.warden = warden
+            self.wardenIcon:Show()
+            self.wardenIcon:Player(warden)
+        elseif self.wardenIcon and not self.warden then
+            self.wardenIcon:Hide()
         end
     end
 
     function self.wardenInfo:Paint(width, height)
-        draw.DrawText("Warden", "Jailbreak_Font_WardenTitle", toHRatio(10), height / 2 - toVRatio(30) / 2 - toVRatio(18) / 2, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
+        draw.DrawText("Warden", "Jailbreak_Font_WardenTitle", toHRatio(10), height / 2 - toVRatio(30) / 2 - toVRatio(18) / 2, Color(255, 255, 255, 150), TEXT_ALIGN_LEFT)
 
         if warden then
             draw.DrawText(warden:Name(), "Jailbreak_Font_WardenName", toHRatio(5), height / 2 - toVRatio(30) / 2, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
         else
-            draw.DrawText("None", "Jailbreak_Font_WardenName", toHRatio(5), height / 2 - toVRatio(30) / 2, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
+            draw.DrawText("None", "Jailbreak_Font_WardenName", toHRatio(5), height / 2 - toVRatio(30) / 2, Color(255, 255, 255, 50), TEXT_ALIGN_LEFT)
         end
     end
 end
 
 function WARDENBAR:PerformLayout(width, height)
-    self.wardenIcon:SetSize(height - 10, height - 10)
-    self.wardenInfo:SetPos(self.wardenIcon:GetWide(), 0)
-    self.wardenInfo:SetSize(width - self.wardenIcon:GetWide(), height)
+    self.background:SetSize(height, height)
+
+    if self.wardenIcon then
+        self.wardenIcon:SetSize(height - 20, height - 20)
+        self.wardenIcon:Center()
+    end
+
+    self.wardenInfo:SetPos(self.background:GetWide(), 0)
+    self.wardenInfo:SetSize(width - self.background:GetWide(), height + 20)
 end
 
 vgui.Register("JailbreakWardenBar", WARDENBAR)

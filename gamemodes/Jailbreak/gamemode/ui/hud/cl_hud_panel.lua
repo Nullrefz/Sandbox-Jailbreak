@@ -67,7 +67,7 @@ function JB.hud:Show()
 end
 
 function JB.hud:UpdatePanels()
-    if self.hudPanel then
+    if self.hudPanel and self.hudPanel:IsValid() then
         self.hudPanel:Remove()
         self.hudPanel = nil
     end
@@ -75,18 +75,11 @@ function JB.hud:UpdatePanels()
     JB.hud:Show()
 end
 
--- hook.Add("InitPostEntity", "Hook Hud After Init", function()
---     net.Receive("PlayerSpawned", function()
---         JB.hud:Show()
---     end)
---     net.Receive("PlayerDied", function()
---         JB.hud:UpdatePanels()
---     end)
--- end)
-function GM:ScoreboardShow()
-    JB.hud:Show()
-end
-
-function GM:ScoreboardHide()
-    JB.hud:Hide()
-end
+hook.Add("InitPostEntity", "Hook Hud After Init", function()
+    net.Receive("PlayerSpawned", function()
+        JB.hud:UpdatePanels()
+    end)
+    net.Receive("PlayerDied", function()
+        --JB.hud:UpdatePanels()
+    end)
+end)

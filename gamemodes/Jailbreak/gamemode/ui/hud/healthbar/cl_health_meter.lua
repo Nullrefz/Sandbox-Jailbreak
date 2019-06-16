@@ -23,7 +23,7 @@ function HEALTHMETER:Init()
         width = width - 30
         self.health = Lerp(FrameTime() * 5, self.health, health / self.ply:GetMaxHealth())
         self.shield = Lerp(FrameTime() * 5, self.shield, shield / maxShield)
-        self.armor =  Lerp(FrameTime() * 5, self.armor, self.ply:Armor() / 100)
+        self.armor =  Lerp(FrameTime() * 5, self.armor, self.ply:Alive() and self.ply:Armor() / 100 or 0)
         self.armorWidth = self.armor / 2
         self.healthWidth = 1 - self.armor / 2
         self.shieldWidth = (1 - (self.ply:GetMaxHealth() - maxShield) / self.ply:GetMaxHealth()) * (1 - self.armor / 2)

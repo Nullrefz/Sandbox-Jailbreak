@@ -18,10 +18,12 @@ surface.CreateFont("Jailbreak_Font_WardenJoiner", {
     outline = false
 })
 
+local textToShow = ""
 function JAILBREAKWARDENJOINER:Init()
     self.panel = vgui.Create("DLabel", self)
     self.panel:SetFont("Jailbreak_Font_WardenJoiner")
-    self.panel:SetText("Press F2 To Become Warden")
+    
+    self.panel:SetText(textToShow)
     self.panel:SetContentAlignment(5)
 end
 
@@ -29,26 +31,34 @@ function JAILBREAKWARDENJOINER:PerformLayout(width, height)
     self.panel:Dock(FILL)
 end
 
+function JAILBREAKWARDENJOINER:Think()
+    if LocalPlayer():Team() == Team.PRISONERS  and #team.GetPlayers(Team.GUARDS) == 0 and #team.GetPlayers(Team.PRISONERS) > 1 then
+    self.panel:SetText("Game Cannot Start Without Guards")
+
+    elseif LocalPlayer():Team() == Team.GUARDS and not warden then
+    self.panel:SetText("Press F2 To Become Warden")
+
+    else
+    self.panel:SetText("")
+
+    end
+end
+
 vgui.Register("JailbreakJoiner", JAILBREAKWARDENJOINER)
 JB.joiner = {}
 
 function JB.joiner:Show()
-    self.hudPanel = vgui.Create("JailbreakJoiner")
-    self.hudPanel:SetSize(w, h)
-    self.hudPanel:SetPos(0, 0)
+    self.joinPanel = vgui.Create("JailbreakJoiner")
+    self.joinPanel:SetSize(w, h)
+    self.joinPanel:SetPos(0, 0)
 
     JB.joiner.hide = function()
-        self.hudPanel:Clear()
-        self.hudPanel:Remove()
+        if not self.joinPanel and self.joinPanel:IsValid() then return end
+        self.joinPanel:Clear()
+        self.joinPanel:Remove()
     end
 end
 
--- hook.Add("InitPostEntity", "Hook Hud After Init", function()
---     JB.joiner:Show()
-
---     net.Receive("PlayerDied", function()
---         if (JB.joiner.hide) then
---             JB.joiner.hide()
---         end
---     end)
--- end)
+hook.Add("InitPostEntity", "Hook Notification After Init", function()
+    JB.joiner:Show()
+end)

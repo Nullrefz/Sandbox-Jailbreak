@@ -4,7 +4,6 @@ local mats = {
     WARDEN = Material("jailbreak/vgui/Blue_Icon_Slot.png", "smooth"),
     GUARD = Material("jailbreak/vgui/DeepBlue_Icon_Slot.png", "smooth"),
     PRISONER = Material("jailbreak/vgui/Orange_Icon_Slot.png", "smooth")
-
 }
 
 function PLAYERMODELPANEL:Init()
@@ -17,8 +16,9 @@ function PLAYERMODELPANEL:Init()
     self.avatar:SetDirectionalLight(BOX_RIGHT, Color(0, 50, 255))
     self.avatar:SetDirectionalLight(BOX_LEFT, Color(255, 170, 170))
     self.avatar:SetDirectionalLight(BOX_LEFT, Color(50, 170, 250))
-    self.avatar.Entity:SetEyeTarget(eyepos  - Vector(-35, 0, 0))
+    self.avatar.Entity:SetEyeTarget(eyepos - Vector(-35, 0, 0))
     self.avatar:SetPaintedManually(true)
+
     -- disables default rotation
     function self.avatar:LayoutEntity(Entity)
         return
@@ -34,7 +34,8 @@ function PLAYERMODELPANEL:PerformLayout(width, height)
 end
 
 function PLAYERMODELPANEL:Paint(width, height)
-    draw.DrawRect(0, 0, self.avatar:GetWide(), self.avatar:GetTall(), Color(255, 255, 255), (LocalPlayer():Team() == 1) and mats.PRISONER or mats.GUARD)
+    draw.DrawRect(0, 0, self.avatar:GetWide(), self.avatar:GetTall(), Color(255, 255, 255), (LocalPlayer():Team() == 1) and mats.PRISONER or (LocalPlayer() == warden and mats.GUARD or mats.WARDEN))
+    if not LocalPlayer():Alive() then return end
     local radius = 109
     render.ClearStencil()
     render.SetStencilEnable(true)
@@ -57,7 +58,8 @@ function PLAYERMODELPANEL:Paint(width, height)
 
     if self.avatar:GetModel() ~= LocalPlayer():GetModel() then
         self.avatar:SetModel(LocalPlayer():GetModel())
-        self.avatar:SetAnimated( false )
+        self.avatar:SetAnimated(false)
+
         function self.avatar.Entity:GetPlayerColor()
             return team.GetColor(LocalPlayer():Team())
         end

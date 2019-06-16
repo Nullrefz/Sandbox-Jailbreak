@@ -21,6 +21,13 @@ surface.CreateFont("Jailbreak_Font_WardenMenu", {
 
 function WARDENMENU:Init()
     --self.UpdateInfo()
+
+    if LocalPlayer() ~= warden then
+        self:Remove()
+
+        return
+    end
+
     self.panel = vgui.Create("Panel", self)
     self.panel:MakePopup()
     self.thickness = 2
@@ -72,14 +79,11 @@ function WARDENMENU:Init()
 
             if i == 5 then
                 draw.DrawRect(width / 2 - self.iconSize / 2 + math.sin(angle) * self.iconRadius, height / 2 - self.iconSize / 2 + math.cos(angle) * self.iconRadius, self.iconSize, self.iconSize, Color(255, 200, 0, 255 * self.alphaLerp), mats[i + 1])
-                draw.DrawText(str:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end), "Jailbreak_Font_WardenMenu", width / 2 + math.sin(angle) * self.textRadius, height / 2 + math.cos(angle) * self.textRadius - 42 / 2,  Color(255, 200, 0, 255 * self.alphaLerp), TEXT_ALIGN_CENTER)
-
+                draw.DrawText(str:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end), "Jailbreak_Font_WardenMenu", width / 2 + math.sin(angle) * self.textRadius, height / 2 + math.cos(angle) * self.textRadius - 42 / 2, Color(255, 200, 0, 255 * self.alphaLerp), TEXT_ALIGN_CENTER)
             else
                 draw.DrawRect(width / 2 - self.iconSize / 2 + math.sin(angle) * self.iconRadius, height / 2 - self.iconSize / 2 + math.cos(angle) * self.iconRadius, self.iconSize, self.iconSize, table.HasValue(activeCommands, (-i + 3) % 8) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(200, 200, 200, 180 * self.alphaLerp), mats[i + 1])
                 draw.DrawText(str:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end), "Jailbreak_Font_WardenMenu", width / 2 + math.sin(angle) * self.textRadius, height / 2 + math.cos(angle) * self.textRadius - 42 / 2, table.HasValue(activeCommands, (-i + 3) % 8) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(200, 200, 200, 180 * self.alphaLerp), TEXT_ALIGN_CENTER)
-
             end
-
         end
 
         selection = math.floor(x:Angle().yaw / 360 * 8 + 0.5) % 8
@@ -93,8 +97,17 @@ function WARDENMENU:Init()
         end
     end
 
+    function self:Think()
+        if input.IsMouseDown(MOUSE_FIRST) then
+            self.clicked = true
+        end
+    end
+
     function self:Exit()
-        --self.button:SendCommand()
+        if not self.clicked then
+            self.button:SendCommand()
+        end
+
         self.remove = true
     end
 
@@ -135,7 +148,9 @@ function JB.ShowMenu:Show()
     self.menu:SetPos(0, 0)
 
     JB.ShowMenu.Hide = function()
-        self.menu:Exit()
+        if self.menu:IsValid() then
+            self.menu:Exit()
+        end
     end
 end
 
