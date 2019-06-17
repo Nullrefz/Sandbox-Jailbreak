@@ -8,5 +8,4 @@ end)
 
 net.Receive('OnWardenSet', function()
     warden = player.GetBySteamID(net.ReadString())
-    print(warden)
 end)

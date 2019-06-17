@@ -1,0 +1,38 @@
+AddCSLuaFile()
+
+if (CLIENT) then
+    SWEP.PrintName = "P90"
+    SWEP.Author = "Counter-Strike"
+    SWEP.Slot = 3
+    SWEP.SlotPos = 1
+    SWEP.IconLetter = "A"
+    SWEP.ViewModelFlip = false
+    killicon.AddFont("weapon_p90", "CSKillIcons", SWEP.IconLetter, Color(255, 80, 0, 255))
+end
+
+SWEP.HoldType = "smg"
+SWEP.Base = "weapon_jb_base"
+SWEP.Category = "Counter-Strike"
+SWEP.Spawnable = false
+SWEP.AdminSpawnable = false
+SWEP.ViewModel = "models/weapons/cstrike/c_smg_p90.mdl"
+SWEP.WorldModel = "models/weapons/w_smg_p90.mdl"
+SWEP.Weight = 5
+SWEP.AutoSwitchTo = false
+SWEP.AutoSwitchFrom = false
+SWEP.Primary.Sound = Sound("Weapon_P90.Single")
+SWEP.Primary.Recoil = 1
+SWEP.Primary.Damage = 26
+SWEP.Primary.NumShots = 1
+SWEP.Primary.Cone = 0.045
+SWEP.Primary.ClipSize = 50
+SWEP.Primary.Delay = 0.07
+SWEP.Primary.DefaultClip = 50
+SWEP.Primary.Automatic = true
+SWEP.Primary.Ammo = "smg1"
+SWEP.Secondary.ClipSize = -1
+SWEP.Secondary.DefaultClip = -1
+SWEP.Secondary.Automatic = false
+SWEP.Secondary.Ammo = "none"
+SWEP.IronSightsPos = Vector(0, 0, 2.5)
+SWEP.IronSightsAng = Vector(0, 0, 0)
