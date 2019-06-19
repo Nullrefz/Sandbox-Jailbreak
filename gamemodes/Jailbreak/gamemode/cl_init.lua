@@ -9,3 +9,8 @@ end)
 net.Receive('OnWardenSet', function()
     warden = player.GetBySteamID(net.ReadString())
 end)
+
+function GM:OnSpawnMenuOpen()
+    net.Start("DropWeapon")
+    net.SendToServer()
+end
