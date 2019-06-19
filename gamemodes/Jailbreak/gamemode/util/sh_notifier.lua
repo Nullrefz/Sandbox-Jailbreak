@@ -1,7 +1,8 @@
 util.AddNetworkString("ShowButtonNotification")
 util.AddNetworkString("HideButtonNotification")
+local ply = FindMetaTable("Player")
 
-function JB:ShowNotifyButton(ply, button, message)
+function ply:ShowNotifyButton(ply, button, message)
     if ply.buttonNotificationActive then return end
     ply.buttonNotificationActive = true
     net.Start("ShowButtonNotification")
@@ -10,7 +11,7 @@ function JB:ShowNotifyButton(ply, button, message)
     net.Send(ply)
 end
 
-function JB:HideNotifyButton(ply, button, message)
+function ply:HideNotifyButton(ply, button, message)
     if not ply.buttonNotificationActive then return end
     ply.buttonNotificationActive = false
     net.Start("HideButtonNotification")

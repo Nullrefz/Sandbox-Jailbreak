@@ -44,8 +44,8 @@ local key = ""
 
 function BUTTONOTIFY:Paint(width, height)
     draw.DrawRect(width / 2 - 32, 0, 64, 64, Color(255, 255, 255, 150), mats.BUTTON)
-    draw.DrawText(key, "Jailbreak_Font_ButtonNotifyKey", width / 2 - 1 , 12.5, Color(255, 255, 255, 150), TEXT_ALIGN_CENTER)
-    draw.DrawText(message, "Jailbreak_Font_ButtonNotifyMessage", width / 2 , 54, Color(255, 255, 255, 150), TEXT_ALIGN_CENTER)
+    draw.DrawText(key, "Jailbreak_Font_ButtonNotifyKey", width / 2 - 2, 12, Color(255, 255, 255, 150), TEXT_ALIGN_CENTER)
+    draw.DrawText(message, "Jailbreak_Font_ButtonNotifyMessage", width / 2, 64, Color(255, 255, 255, 150), TEXT_ALIGN_CENTER)
 end
 
 vgui.Register("ButtonNotify", BUTTONOTIFY)
@@ -56,6 +56,7 @@ hook.Add("InitPostEntity", "ShowButtonNotification", function()
     buttonNotify:Center()
     buttonNotify:SetPos(w / 2 - 128, h / 2 + 128)
     buttonNotify:Hide()
+
     net.Receive("ShowButtonNotification", function()
         key = net.ReadString()
         message = net.ReadString()
@@ -64,5 +65,20 @@ hook.Add("InitPostEntity", "ShowButtonNotification", function()
 
     net.Receive("HideButtonNotification", function()
         buttonNotify:Hide()
+    end)
+
+    hook.Add("Think", "DrawWeaponOutline", function()
+        local trace = LocalPlayer():GetEyeTrace()
+        if trace.Entity:IsWeapon() and LocalPlayer():GetPos():Distance(trace.Entity:GetPos()) < 100 
+        and not LocalPlayer():HasWeapon(JB:GetWeapon(trace.Entity)) then
+            key = "E"
+            message = "Pick Up"
+
+            if not buttonNotify:IsVisible() then
+                buttonNotify:Show()
+            end
+        elseif buttonNotify:IsVisible() then
+            buttonNotify:Hide()
+        end
     end)
 end)
