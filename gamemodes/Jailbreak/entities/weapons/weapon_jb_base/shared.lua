@@ -24,10 +24,13 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "none"
 SWEP.UseHands = true
 SWEP.DrawAmmo = true
-SWEP.DrawCrosshair = false
 SWEP.ViewModelFOV = 70
 SWEP.ViewModelFlip = false
 SWEP.CSMuzzleFlashes = true
+SWEP.crosshairVisible = true
+SWEP.DrawCrosshair = false
+SWEP.TargetFOV = 75
+SWEP.CurFOV = 75
 
 AIM = {
     Normal = 1,
@@ -50,6 +53,22 @@ function SWEP:Deploy()
     self:SetNextPrimaryFire(CurTime() + 1)
     self:SetNWMode(AIM.Normal)
     --self:SetReloading(false)
+
+    return true
+end
+
+function SWEP:SetCurFOV(fov)
+    self.CurFOV = fov
+
+    --print(self.CurFOV, self.TargetFOV)
+    LerpFloat(self.CurFOV, self.TargetFOV, 0.5, function(val)
+        self.CurFOV = val
+    end, INTERPOLATION.SmoothStep)
+end
+
+function SWEP:Holster(newWeapon)
+    if not IsFirstTimePredicted() then return false end
+    newWeapon:SetCurFOV(self.CurFOV)
 
     return true
 end
@@ -183,7 +202,7 @@ end
 ---------------------------------------------------------]]
 function SWEP:DrawHUD()
     -- No crosshair when ironsights is on
-    if (self:GetNWBool("Ironsights") or not self.DrawCrosshair) then return end
+    if self:GetNWBool("Ironsights") and not self.crossairVisible then return end
     local x, y
 
     -- If we're drawing the local player, draw the crosshair where they're aiming,
@@ -202,16 +221,39 @@ function SWEP:DrawHUD()
     -- Scale the size of the crosshair according to how long ago we fired our weapon
     local LastShootTime = self:GetNWFloat("LastShootTime", 0)
     scale = scale * (2 - math.Clamp((CurTime() - LastShootTime) * 5, 0.0, 1.0))
-    surface.SetDrawColor(0, 255, 0, 255)
+    if not IsValid(LocalPlayer()) then return end
+    local trace = LocalPlayer():GetEyeTrace()
+
+    if trace.Entity:GetClass() == "player" then
+        local bone = trace.HitBox
+
+        if bone == 0 then
+            surface.SetDrawColor(0, 220, 255, 255)
+        else
+            surface.SetDrawColor(255, 255, 255, 255)
+        end
+    else
+        surface.SetDrawColor(255, 255, 255, 50)
+    end
+
     -- Draw an awesome crosshair
     local gap = 40 * scale
-    local length = gap + 20 * scale
+    local length = gap + 10 * scale
     surface.DrawLine(x - length, y, x - gap, y)
     surface.DrawLine(x + length, y, x + gap, y)
     surface.DrawLine(x, y - length, x, y - gap)
     surface.DrawLine(x, y + length, x, y + gap)
 end
 
-function SWEP:TranslateFOV(fov)
-    return self.ViewModelFOV
+function SWEP:TranslateFOV()
+    return self.CurFOV
 end
+-- function SWEP:ShouldDropOnDie()
+--     return true
+-- end
+-- function SWEP:OnDrop()
+--     local phys = self:GetPhysicsObject()
+--     if (phys:IsValid()) then
+--         phys:Wake()
+--     end
+-- end

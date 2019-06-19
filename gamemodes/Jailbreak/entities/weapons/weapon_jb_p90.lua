@@ -13,8 +13,8 @@ end
 SWEP.HoldType = "smg"
 SWEP.Base = "weapon_jb_base"
 SWEP.Category = "Counter-Strike"
-SWEP.Spawnable = false
-SWEP.AdminSpawnable = false
+SWEP.Spawnable = true
+SWEP.AdminSpawnable = true
 SWEP.ViewModel = "models/weapons/cstrike/c_smg_p90.mdl"
 SWEP.WorldModel = "models/weapons/w_smg_p90.mdl"
 SWEP.Weight = 5

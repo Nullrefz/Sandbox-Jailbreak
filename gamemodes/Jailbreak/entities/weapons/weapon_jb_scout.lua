@@ -12,8 +12,8 @@ end
 SWEP.HoldType = "ar2"
 SWEP.Base = "weapon_jb_base"
 SWEP.Category = "Counter-Strike"
-SWEP.Spawnable = false
-SWEP.AdminSpawnable = false
+SWEP.Spawnable = true
+SWEP.AdminSpawnable = true
 SWEP.ViewModel = "models/weapons/cstrike/c_snip_scout.mdl"
 SWEP.WorldModel = "models/weapons/w_snip_scout.mdl"
 SWEP.Weight = 5
