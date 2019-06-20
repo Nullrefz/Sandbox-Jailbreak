@@ -20,13 +20,13 @@ if SERVER then
     end)
 
     hook.Add("PlayerCanPickupWeapon", "PickupLogic", function(ply, wep)
-        if ply:HasWeapon(JB:GetWeapon(wep)) or ply:HasWeapon(wep:GetClass()) or not ply.canPick then return false end
+        -- if ply:HasWeapon(JB:GetWeapon(wep)) or ply:HasWeapon(wep:GetClass()) or not ply.canPick then return false end
 
-        if JB:ValidateWeapon(ply, wep) then
-            wep:Remove()
+        -- if JB:ValidateWeapon(ply, wep) then
+        --     wep:Remove()
 
-            return false
-        end
+        --     return false
+        -- end
 
         return true
     end)
@@ -42,13 +42,10 @@ if SERVER then
         wep:Remove()
     end
 end
-
 -- if CLIENT then
 --     pl = LocalPlayer()
-
 --     hook.Add("Think", "DrawWeaponOutline", function()
 --         local trace = LocalPlayer():GetEyeTrace()
-
 --         if trace.Entity:IsWeapon() and LocalPlayer():GetPos():Distance(trace.Entity:GetPos()) then
 --             BlaBla()
 --         end

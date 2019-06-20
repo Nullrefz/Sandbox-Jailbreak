@@ -30,6 +30,8 @@ end
 
 function JB:SetWaypoint(type)
     net.Start("PlaceWaypoint")
+    print(self.warden)
+    self.warden:Give("weapon_radio")
     net.Broadcast()
 end
 
