@@ -24,13 +24,14 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "none"
 SWEP.UseHands = true
 SWEP.DrawAmmo = true
-SWEP.ViewModelFOV = 70
+SWEP.ViewModelFOV = 60
 SWEP.ViewModelFlip = false
 SWEP.CSMuzzleFlashes = true
 SWEP.crosshairVisible = true
 SWEP.DrawCrosshair = false
-SWEP.TargetFOV = 75
-SWEP.CurFOV = 75
+SWEP.TargetFOV = 70
+SWEP.CurFOV = 70
+SWEP.CanDrop = true
 
 AIM = {
     Normal = 1,
@@ -68,7 +69,10 @@ end
 
 function SWEP:Holster(newWeapon)
     if not IsFirstTimePredicted() then return false end
-    newWeapon:SetCurFOV(self.CurFOV)
+
+    if not newWeapon:IsValid() then
+        newWeapon:SetCurFOV(self.CurFOV)
+    end
 
     return true
 end

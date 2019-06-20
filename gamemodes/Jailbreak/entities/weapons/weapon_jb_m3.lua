@@ -6,7 +6,7 @@ if (CLIENT) then
     SWEP.Slot = 2
     SWEP.SlotPos = 3
     SWEP.IconLetter = "k"
-    killicon.AddFont("weapon_pumpshotgun", "CSKillIcons", SWEP.IconLetter, Color(255, 80, 0, 255))
+    killicon.AddFont("weapon_m3", "CSKillIcons", SWEP.IconLetter, Color(255, 80, 0, 255))
 end
 
 SWEP.HoldType = "ar2"
@@ -34,7 +34,7 @@ SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "none"
 SWEP.IronSightsPos = Vector(5.7, -3, 3)
-SWEP.TargetFOV = 30
+SWEP.TargetFOV = 65
 --[[---------------------------------------------------------
 	Reload does nothing
 ---------------------------------------------------------]]

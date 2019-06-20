@@ -4,7 +4,7 @@ SWEP.Author = "Kilburn, robotboy655, MaxOfS2D & Tenrys & Nullrefz"
 SWEP.Purpose = ""
 SWEP.Base = "weapon_jb_base"
 SWEP.Slot = 0
-SWEP.SlotPos = 4
+SWEP.SlotPos = 1
 SWEP.Spawnable = false
 SWEP.ViewModel = Model("models/weapons/c_arms.mdl")
 SWEP.WorldModel = ""
@@ -19,6 +19,18 @@ SWEP.Secondary.Automatic = true
 SWEP.Secondary.Ammo = "none"
 SWEP.DrawAmmo = false
 SWEP.HitDistance = 48
+SWEP.CanDrop = false
+
+if (CLIENT) then
+    SWEP.PrintName = "Hands"
+    SWEP.Author = "Counter-Strike"
+    SWEP.Slot = 0
+    SWEP.SlotPos = 1
+    SWEP.IconLetter = "H"
+    killicon.AddFont("weapon_fists", "CSKillIcons", SWEP.IconLetter, Color(255, 80, 0, 255))
+end
+
+
 local SwingSound = Sound("WeaponFrag.Throw")
 local HitSound = Sound("Flesh.ImpactHard")
 local fov = 45

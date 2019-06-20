@@ -3,8 +3,8 @@ AddCSLuaFile()
 if (CLIENT) then
     SWEP.PrintName = "Radio"
     SWEP.Author = "Nullrefz"
-    SWEP.Slot = 1
-    SWEP.SlotPos = 0
+    SWEP.Slot = 0
+    SWEP.SlotPos = 2
     SWEP.IconLetter = "R"
     SWEP.ViewModelFlip = false
     killicon.AddFont("weapon_radio", "CSKillIcons", SWEP.IconLetter, Color(255, 80, 0, 255))
@@ -48,7 +48,7 @@ SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "none"
-
+SWEP.CanDrop = false
 function SWEP:PrimaryAttack()
     self:SendWeaponAnim(ACT_VM_HOLSTER)
     self:EmitSound(self.Primary.Sound)
@@ -61,5 +61,9 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:Reload()
+    return false
+end
+
+function SWEP:ShouldDropOnDie()
     return false
 end

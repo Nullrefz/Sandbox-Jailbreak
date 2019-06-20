@@ -5,8 +5,8 @@ if (CLIENT) then
     SWEP.Author = "Counter-Strike"
     SWEP.Slot = 3
     SWEP.SlotPos = 1
-    SWEP.IconLetter = "A"
-    killicon.AddFont("weapon_awp", "CSKillIcons", SWEP.IconLetter, Color(255, 80, 0, 255))
+    SWEP.IconLetter = "r"
+    killicon.AddFont("weapon_awp", "CSKillIcons", SWEP.IconLetter, Color(255, 255, 255, 150))
 end
 
 SWEP.HoldType = "ar2"
@@ -35,7 +35,7 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "none"
 SWEP.IronSightsPos = Vector(0, 0, 0)
 SWEP.IronSightsAng = Vector(0, 0, 0)
---SWEP.TargetFOV = 70
+
 local inFocus = false
 
 function SWEP:Think()

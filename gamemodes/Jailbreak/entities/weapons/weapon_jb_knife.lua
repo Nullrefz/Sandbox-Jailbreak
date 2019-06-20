@@ -3,9 +3,9 @@ AddCSLuaFile()
 if (CLIENT) then
     SWEP.PrintName = "Knife"
     SWEP.Author = "Counter-Strike"
-    SWEP.Slot = 1
-    SWEP.SlotPos = 1
-    SWEP.IconLetter = "k"
+    SWEP.Slot = 0
+    SWEP.SlotPos = 3
+    SWEP.IconLetter = "j"
     killicon.AddFont("weapon_knife", "CSKillIcons", SWEP.IconLetter, Color(255, 80, 0, 255))
 end
 

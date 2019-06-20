@@ -5,8 +5,8 @@ if (CLIENT) then
     SWEP.Author = "Counter-Strike"
     SWEP.Slot = 2
     SWEP.SlotPos = 1
-    SWEP.IconLetter = "d"
-    killicon.AddFont("weapon_tmp", "CSKillIcons", SWEP.IconLetter, Color(255, 80, 0, 255))
+    SWEP.IconLetter = "q"
+    killicon.AddFont("weapon_ump45", "CSKillIcons", SWEP.IconLetter, Color(255, 80, 0, 255))
 end
 
 SWEP.HoldType = "smg"
