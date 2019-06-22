@@ -25,8 +25,8 @@ end
 
 function LerpFloat(pointA, pointB, time, callback, typeOfInterpolation, onComplete)
     local endTime = CurTime() + time
-
-    hook.Add("Think", "DoALerp", function()
+    local ID = tostring(CurTime())
+    hook.Add("Think", "DoALerp" .. ID, function()
         local percentage = math.Clamp(1 - (endTime - CurTime()) / time, 0, 1)
 
         if percentage < 1 then
@@ -37,8 +37,7 @@ function LerpFloat(pointA, pointB, time, callback, typeOfInterpolation, onComple
             if onComplete then
                 onComplete()
             end
-
-            hook.Remove("Think", "DoALerp")
+            hook.Remove("Think", "DoALerp" .. ID)
         end
     end)
 end

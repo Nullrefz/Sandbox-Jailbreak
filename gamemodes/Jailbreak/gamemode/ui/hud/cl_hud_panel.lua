@@ -82,20 +82,20 @@ function JB.hud:UpdatePanels()
     JB.hud:Show()
 end
 
--- hook.Add("InitPostEntity", "Hook Hud After Init", function()
---     net.Receive("PlayerSpawned", function()
---         JB.hud:UpdatePanels()
---     end)
---     net.Receive("PlayerDied", function()
---         --JB.hud:UpdatePanels()
---     end)
--- end)
+hook.Add("InitPostEntity", "Hook Hud After Init", function()
+    net.Receive("PlayerSpawned", function()
+        JB.hud:UpdatePanels()
+    end)
+    net.Receive("PlayerDied", function()
+        --JB.hud:UpdatePanels()
+    end)
+end)
 
 
-function GM:ScoreboardShow()
-    JB.hud:Show()
-end
+-- function GM:ScoreboardShow()
+--     JB.hud:Show()
+-- end
 
-function GM:ScoreboardHide()
-    JB.hud:Hide()
-end
+-- function GM:ScoreboardHide()
+--     JB.hud:Hide()
+-- end

@@ -14,4 +14,3 @@ function GM:OnSpawnMenuOpen()
     net.Start("DropWeapon")
     net.SendToServer()
 end
-
