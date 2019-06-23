@@ -1,8 +1,9 @@
 util.AddNetworkString("ChangeTeam")
+util.AddNetworkString("GuardCount")
 local pl = FindMetaTable("Player")
 
 hook.Add("PlayerInitialSpawn", "FirstPlayerSpawn", function(ply)
-    ply:JoinTeam(TEAM_PRISONERS)
+    JB:ValidateTeamChange(ply, TEAM_PRISONERS)
     ply:Kill()
     ply:SendSpawned()
 end)
@@ -30,23 +31,36 @@ end
 function JB:GetGuardBalance()
     local players = player.GetAll()
     local ratio = GetConVar("jb_guards_ratio"):GetInt()
+    local balance = math.ceil(#players / ratio) - #team.GetPlayers(TEAM_GUARDS)
+    net.Start("GuardCount")
+    net.WriteInt(balance, 32)
+    net.Broadcast()
 
-    return math.ceil(#players / ratio) - #team.GetPlayers(TEAM_GUARDS)
+    return balance
 end
+
+hook.Add("PlayerDisconnected", "GetGuardsOnPlayerDisconnect", function()
+    JB:GetGuardBalance()
+end)
 
 concommand.Add("jb_jointeam", function(ply, cmd, args)
     local selectedTeam = tonumber(args[1])
-    ply:SetHealth(0)
-    ply:SetArmor(0)
+    JB:ValidateTeamChange(ply, selectedTeam)
+end)
+
+function JB:ValidateTeamChange(ply, selectedTeam)
+    -- ply:SetHealth(0)
+    -- ply:SetArmor(0)
+    local balance = JB:GetGuardBalance()
 
     if selectedTeam == TEAM_PRISONERS then
         ply:JoinTeam(TEAM_PRISONERS)
-    elseif selectedTeam == TEAM_GUARDS and JB:GetGuardBalance() > 0 then
+    elseif selectedTeam == TEAM_GUARDS and balance > 0 then
         ply:JoinTeam(TEAM_GUARDS)
     elseif selectedTeam == TEAM_SPECTATOR or selectedTeam == TEAM_SPECTATORS then
         ply:JoinTeam(TEAM_SPECTATOR)
     end
-end)
+end
 
 --[[---------------------------------------------------------
     Name: jailbreak:JoinTeam()
@@ -63,5 +77,5 @@ function pl:JoinTeam(chosenTeam)
 end
 
 net.Receive("ChangeTeam", function(ln, ply)
-    ply:JoinTeam(net.ReadInt(32))
+    JB:ValidateTeamChange(ply, net.ReadInt(32))
 end)
