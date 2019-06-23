@@ -29,15 +29,15 @@ function HEALTHMETER:Init()
         self.shieldWidth = (1 - (self.ply:GetMaxHealth() - maxShield) / self.ply:GetMaxHealth()) * (1 - self.armor / 2)
 
         if (self.health > 0) then
-            DrawBar(10, width * self.healthWidth, height, 5, barIncrement, self.health, Color(255, 255, 255, 255))
+            DrawBar(10, width * self.healthWidth, height, 5, barIncrement, self.health, Color(255, 255, 255, 255), mats.BAR)
         end
 
         if (self.shield > 0) then
-            DrawBar(10 + width * self.healthWidth * self.health, width * self.shieldWidth, height, 5, (1 - (self.ply:GetMaxHealth() - maxShield) / self.ply:GetMaxHealth()) * barIncrement, self.shield, Color(20, 175, 255, 255))
+            DrawBar(10 + width * self.healthWidth * self.health, width * self.shieldWidth, height, 5, (1 - (self.ply:GetMaxHealth() - maxShield) / self.ply:GetMaxHealth()) * barIncrement, self.shield, Color(20, 175, 255, 255), mats.BAR)
         end
 
         if (self.armor > 0) then
-            DrawBar(10 + width * ((self.healthWidth * self.health) + self.shieldWidth * self.shield), width *  self.armorWidth , height, 5, math.ceil( self.armorWidth * 2 * barIncrement)   , 1, Color(255, 200, 0, 255))
+            DrawBar(10 + width * ((self.healthWidth * self.health) + self.shieldWidth * self.shield), width *  self.armorWidth , height, 5, math.ceil( self.armorWidth * 2 * barIncrement)   , 1, Color(255, 200, 0, 255), mats.BAR)
         end
     end
 end

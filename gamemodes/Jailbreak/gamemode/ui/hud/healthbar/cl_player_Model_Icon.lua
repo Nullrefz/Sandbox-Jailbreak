@@ -10,9 +10,9 @@ function PLAYERMODELPANEL:Init()
     self.avatar = vgui.Create("DModelPanel", self)
     self.avatar:SetModel(LocalPlayer():GetModel())
     local eyepos = self.avatar.Entity:GetBonePosition(self.avatar.Entity:LookupBone("ValveBiped.Bip01_Head1"))
-    self.avatar:SetLookAt(eyepos - Vector(0, 0, 2))
-    self.avatar:SetCamPos(eyepos - Vector(-35, 0, 0)) -- Move cam in front of eyes
-    self.avatar:SetFOV(50)
+    self.avatar:SetLookAt(eyepos - Vector(0, 0, 5))
+    self.avatar:SetCamPos(eyepos - Vector(-30, 5, 5)) -- Move cam in front of eyes
+    self.avatar:SetFOV(52)
     self.avatar:SetDirectionalLight(BOX_RIGHT, Color(0, 50, 255))
     self.avatar:SetDirectionalLight(BOX_LEFT, Color(255, 170, 170))
     self.avatar:SetDirectionalLight(BOX_LEFT, Color(50, 170, 250))

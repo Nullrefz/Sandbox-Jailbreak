@@ -1,6 +1,7 @@
 local hide = {
-     CHudAmmo = true,
-     CHudBattery = true,
+    CHudAmmo = true,
+    CHudBattery = true,
+    -- CHudWeaponSelection = true,
     -- CHudChat = true,
     -- CHudCrosshair = true,
     -- CHudDamageIndicator = true,
@@ -12,7 +13,6 @@ local hide = {
 -- CHudSecondaryAmmo = true,
 -- CHudSquadStatus = true,
 -- CHudTrain = true,
--- CHudWeaponSelection = true,
 -- CHudZoom = true
 function HideEverything(element)
     if hide[element] then return false end

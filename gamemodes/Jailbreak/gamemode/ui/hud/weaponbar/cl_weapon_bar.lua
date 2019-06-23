@@ -13,6 +13,11 @@ function WEAPONBAR:Think()
         weapon = LocalPlayer():GetActiveWeapon():GetClass()
         self:AddWeapon(weapon)
         self.ammoBar:SetWeapon(LocalPlayer():GetActiveWeapon())
+    elseif not LocalPlayer():Alive() and #weaponIcons > 0 then
+        while #weaponIcons > 0 do
+            weaponIcons[1]:Remove()
+            table.remove(weaponIcons, 1)
+        end
     end
 end
 
@@ -40,9 +45,9 @@ function WEAPONBAR:PerformLayout(width, height)
     self.panel:Dock(FILL)
     self.ammoBar:Dock(FILL)
     local tall = 24
-    self.ammoBar:DockMargin( 0,  self.panel:GetTall() / 2 - tall ,0, self.panel:GetTall() / 2 - tall)
+    self.ammoBar:DockMargin(0, self.panel:GetTall() / 2 - tall, 0, self.panel:GetTall() / 2 - tall)
     -- self.icon:DockMargin(0,  self.panel:GetTall() / 2, 0, 0)
-    --self.icon:SizeToContents()
+    -- self.icon:SizeToContents()
 end
 
 function WEAPONBAR:PAINT(width, height)

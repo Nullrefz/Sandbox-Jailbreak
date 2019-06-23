@@ -19,10 +19,10 @@ surface.CreateFont("Jailbreak_Font_WardenJoiner", {
 })
 
 local textToShow = ""
+
 function JAILBREAKWARDENJOINER:Init()
     self.panel = vgui.Create("DLabel", self)
     self.panel:SetFont("Jailbreak_Font_WardenJoiner")
-    
     self.panel:SetText(textToShow)
     self.panel:SetContentAlignment(5)
 end
@@ -32,15 +32,14 @@ function JAILBREAKWARDENJOINER:PerformLayout(width, height)
 end
 
 function JAILBREAKWARDENJOINER:Think()
-    if LocalPlayer():Team() == Team.PRISONERS  and #team.GetPlayers(Team.GUARDS) == 0 and #team.GetPlayers(Team.PRISONERS) > 1 then
-    self.panel:SetText("Game Cannot Start Without Guards")
-
-    elseif LocalPlayer():Team() == Team.GUARDS and not warden then
-    self.panel:SetText("Press F2 To Become Warden")
-
+    if LocalPlayer():Team() == Team.PRISONERS and #team.GetPlayers(Team.GUARDS) == 0 and #team.GetPlayers(Team.PRISONERS) > 1 then
+        self.panel:SetText("Game Cannot Start Without Guards")
+    elseif LocalPlayer():Team() == Team.GUARDS and #team.GetPlayers(Team.PRISONERS) == 0 and #team.GetPlayers(Team.GUARDS) > 1 then
+        self.panel:SetText("Game Cannot Start Without Prisoners")
+    elseif LocalPlayer():Team() == Team.GUARDS and not warden and roundPhase == "Preparing" then
+        self.panel:SetText("Press F2 To Become Warden")
     else
-    self.panel:SetText("")
-
+        self.panel:SetText("")
     end
 end
 
@@ -49,7 +48,7 @@ JB.joiner = {}
 
 function JB.joiner:Show()
     self.joinPanel = vgui.Create("JailbreakJoiner")
-    self.joinPanel:SetSize(w, h)
+    self.joinPanel:SetSize(w, h / 2)
     self.joinPanel:SetPos(0, 0)
 
     JB.joiner.hide = function()

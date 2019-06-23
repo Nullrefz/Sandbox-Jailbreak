@@ -26,10 +26,10 @@ function JB:SetRoundPreparing()
 
     if self.round.count > GetConVar("jb_max_rounds"):GetInt() then
         hook.Run("ChangeMap")
+
         return
     else
         --self:OrganizeGuards()
-
         -- TODO To Implement a better notification system
         for k, v in pairs(player.GetAll()) do
             v:ChatPrint(GetConVar("jb_max_rounds"):GetInt() - self.round.count .. " Rounds Remaining")
@@ -79,6 +79,7 @@ end)
 function JB:SetRoundEnding()
     self:SetRoundTime(GetConVar("jb_Round_Ending"):GetInt() or 10)
     self:RevokeWarden()
+
     for k, v in pairs(player.GetAll()) do
         if self.round.count + 1 <= GetConVar("jb_max_rounds"):GetInt() then
             v:ChatPrint("Round Ended. Restarting in " .. self:GetTimeLeft() .. " seconds")
@@ -111,7 +112,6 @@ end)
     Desc: Loop logic for round preparing
 -----------------------------------------------------------]]
 function JB:RoundPreparingThink()
-    if not self.warden then   self:SetRoundTime(GetConVar("jb_Round_Preparing"):GetInt()) end
     if self:GetTimeLeft() <= 0 and self.round.count <= GetConVar("jb_max_rounds"):GetInt() then
         self:SetRoundPhase(ROUND_ACTIVE)
     end
@@ -125,10 +125,10 @@ end)
     Name: jailbreak:RoundActiveThink()
     Desc: Loop logic for round active
 -----------------------------------------------------------]]
-
 function JB:RoundActiveThink()
     if self:GetTimeLeft() <= 0 or #self:GetAlivePlayersByTeam(TEAM_GUARDS) <= 0 or #self:GetAlivePlayersByTeam(TEAM_PRISONERS) <= 0 then
         self:SetRoundPhase(ROUND_ENDING)
+
         return
     end
 end
@@ -141,7 +141,6 @@ end)
     Name: jailbreak:RoundEndingThink()
     Desc: Loop logic for round ending
 -----------------------------------------------------------]]
-
 function JB:RoundEndingThink()
     if self:GetTimeLeft() <= 0 then
         self:SetRoundPhase(ROUND_PREPARING)
