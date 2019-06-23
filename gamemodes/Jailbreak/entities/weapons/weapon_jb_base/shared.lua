@@ -70,7 +70,7 @@ end
 function SWEP:Holster(newWeapon)
     if not IsFirstTimePredicted() then return false end
 
-    if not newWeapon:IsValid() then
+    if newWeapon:IsValid() then
         newWeapon:SetCurFOV(self.CurFOV)
     end
 
