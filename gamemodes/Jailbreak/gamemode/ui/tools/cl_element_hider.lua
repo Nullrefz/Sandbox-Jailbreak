@@ -1,5 +1,5 @@
 local hide = {
-    -- CHudAmmo = true,
+     CHudAmmo = true,
      CHudBattery = true,
     -- CHudChat = true,
     -- CHudCrosshair = true,

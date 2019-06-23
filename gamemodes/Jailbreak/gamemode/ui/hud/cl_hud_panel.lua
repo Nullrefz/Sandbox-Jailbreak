@@ -53,9 +53,10 @@ function JAILBREAKHUD:PerformLayout(width, height)
     end
 
     if self.weaponBar then
-        self.weaponBar:SetSize(toHRatio(400), toVRatio(200))
         self.weaponBar:Dock(RIGHT)
-        self.weaponBar:DockMargin(0, 0, toHRatio(50), 0)
+        self.weaponBar:SetSize(toHRatio(250), toVRatio(100))
+
+        self.weaponBar:DockMargin(0, toVRatio(42), toHRatio(42),0)
     end
 end
 
@@ -82,20 +83,20 @@ function JB.hud:UpdatePanels()
     JB.hud:Show()
 end
 
-hook.Add("InitPostEntity", "Hook Hud After Init", function()
-    net.Receive("PlayerSpawned", function()
-        JB.hud:UpdatePanels()
-    end)
-    net.Receive("PlayerDied", function()
-        --JB.hud:UpdatePanels()
-    end)
-end)
+-- hook.Add("InitPostEntity", "Hook Hud After Init", function()
+--     net.Receive("PlayerSpawned", function()
+--         JB.hud:UpdatePanels()
+--     end)
+--     net.Receive("PlayerDied", function()
+--         --JB.hud:UpdatePanels()
+--     end)
+-- end)
 
 
--- function GM:ScoreboardShow()
---     JB.hud:Show()
--- end
+function GM:ScoreboardShow()
+    JB.hud:Show()
+end
 
--- function GM:ScoreboardHide()
---     JB.hud:Hide()
--- end
+function GM:ScoreboardHide()
+    JB.hud:Hide()
+end
