@@ -42,7 +42,6 @@ surface.CreateFont("Jailbreak_Font_RoundPhase", {
 
 local timeLeft = 0
 local roundTime = 0
-local roundPhase = ""
 
 function TIMERBAR:Init()
     if roundPhase == "" then
@@ -65,14 +64,15 @@ function TIMERBAR:Init()
         else
             draw.DrawText(string.FormattedTime(math.Clamp(timeLeft - CurTime(), 0, timeLeft - CurTime()), "%02i:%02i"), "Jailbreak_Font_Counter", toHRatio(5), -1, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
         end
+
         draw.DrawSkewedRect(toHRatio(5), height / 2, width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 50))
-        draw.DrawSkewedRect(toHRatio(5), height / 2, (((timeLeft - CurTime()) / roundTime))* width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 200))
+        draw.DrawSkewedRect(toHRatio(5), height / 2, ((timeLeft - CurTime()) / roundTime) * width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 200))
         draw.DrawText(tostring(roundPhase), "Jailbreak_Font_RoundPhase", toHRatio(2), height - 16, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
     end
 end
 
 function TIMERBAR:PerformLayout(width, height)
-    self.stopWatch:SetSize(toHRatio(39), height)
+    self.stopWatch:SetSize(42, 42)
     self.stopWatch:AlignBottom()
     self.timeInfo:SetPos(self.stopWatch:GetWide(), 0)
     self.timeInfo:SetSize(width - self.stopWatch:GetWide(), height)

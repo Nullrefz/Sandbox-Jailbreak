@@ -44,9 +44,11 @@ function JB:InitiateVote()
 
     net.WriteTable(entries)
     net.Broadcast()
-    timer.Simple(GetConVar("jb_warden_vote_duration"):GetInt(), function() self:ConcludeVote() end)
-end
 
+    timer.Simple(GetConVar("jb_warden_vote_duration"):GetInt(), function()
+        self:ConcludeVote()
+    end)
+end
 
 function JB:ConcludeVote()
     self:BreakVote()

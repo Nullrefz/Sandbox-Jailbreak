@@ -11,9 +11,16 @@ end
 function JB:SetWarden(guard)
     local oldWarden = self.warden
     self.warden = guard
-
     hook.Run("PlayerSetWarden", oldWarden, self.warden)
     self:BroadcastWarden()
+
+    if oldWarden then
+        oldWarden:ApplyModel()
+    end
+
+    if self.warden then
+        self.warden:ApplyModel()
+    end
 end
 
 function JB:RevokeWarden()
@@ -50,8 +57,7 @@ function JB:ValidateWarden()
 end
 
 function GM:ShowTeam(ply)
-    -- and (JB:GetActivePhase() == ROUND_PREPARING or JB:GetActivePhase() == ROUND_WAITING) then
-    if ply:Team() == Team.GUARDS and not JB.warden and ply:Alive() then
+    if ply:Team() == Team.GUARDS and not JB.warden and ply:Alive() and JB:GetActivePhase() == ROUND_PREPARING then
         JB:SetWarden(ply)
     elseif JB.warden == ply then
         JB:RevokeWarden()

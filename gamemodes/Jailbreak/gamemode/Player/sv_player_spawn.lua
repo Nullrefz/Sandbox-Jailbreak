@@ -1,7 +1,8 @@
 util.AddNetworkString("PlayerSpawned")
 local ply = FindMetaTable("Player")
 local spawns = {}
-local models = {{"models/player/group01/male_01.mdl", "models/player/group01/male_02.mdl", "models/player/group01/male_03.mdl", "models/player/group01/male_04.mdl", "models/player/group01/male_05.mdl", "models/player/group01/male_06.mdl", "models/player/group01/male_07.mdl", "models/player/group01/male_08.mdl", "models/player/group01/male_09.mdl", "models/player/group01/female_01.mdl", "models/player/group01/female_02.mdl", "models/player/group01/female_03.mdl", "models/player/group01/female_04.mdl", "models/player/group01/female_05.mdl", "models/player/group01/female_06.mdl"}, {"models/player/police.mdl", "models/player/police_fem.mdl"}} -- "models/player/combine_soldier.mdl", -- "models/player/combine_soldier_prisonguard.mdl", -- "models/player/combine_super_soldier.mdl",
+local models = {{"models/player/group01/male_01.mdl", "models/player/group01/male_02.mdl", "models/player/group01/male_03.mdl", "models/player/group01/male_04.mdl", "models/player/group01/male_05.mdl", "models/player/group01/male_06.mdl", "models/player/group01/male_07.mdl", "models/player/group01/male_08.mdl", "models/player/group01/male_09.mdl", "models/player/group01/female_01.mdl", "models/player/group01/female_02.mdl", "models/player/group01/female_03.mdl", "models/player/group01/female_04.mdl", "models/player/group01/female_05.mdl", "models/player/group01/female_06.mdl"}, {"models/player/police.mdl"}}
+local wardenModels = {"models/player/combine_super_soldier.mdl"}
 
 --[[---------------------------------------------------------
     Name: player:GetSpawnPos()
@@ -30,10 +31,14 @@ end
     Desc: Applies a default player model based on the player's team
 -----------------------------------------------------------]]
 function ply:ApplyModel()
-    local teamModels = models[self:Team()]
-    if not teamModels then return end
-    local designatedModel = teamModels[math.random(#teamModels)]
-    self:SetModel(designatedModel)
+    if self:IsWarden() then
+        self:SetModel(wardenModels[math.random(#wardenModels)])
+    else
+        local teamModels = models[self:Team()]
+        if not teamModels then return end
+        local designatedModel = teamModels[math.random(#teamModels)]
+        self:SetModel(designatedModel)
+    end
 end
 
 --[[---------------------------------------------------------
@@ -67,4 +72,3 @@ function ply:SendSpawned()
     net.Start("PlayerSpawned")
     net.Send(self)
 end
-

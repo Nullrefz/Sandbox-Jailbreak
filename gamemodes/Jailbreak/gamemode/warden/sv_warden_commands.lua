@@ -24,7 +24,7 @@ function JB:ToggleCommand(type)
     else
         table.insert(activeCommands, type)
     end
-    
+
     self:UpdateCommands()
 end
 
@@ -38,7 +38,7 @@ end
 function JB:UpdateCommands(ply)
     net.Start("UpdateCommands")
     net.WriteTable(activeCommands)
-    
+
     if ply then
         net.Send(ply)
     else
