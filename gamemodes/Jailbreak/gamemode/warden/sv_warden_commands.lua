@@ -24,11 +24,13 @@ function JB:ToggleCommand(type)
     else
         table.insert(activeCommands, type)
     end
-
+    
     self:UpdateCommands()
 end
 
 function JB:SetWaypoint(type)
+    self.warden:GiveWeapon("weapon_radio")
+    self.warden:SetActiveWeapon("weapon_radio")
     net.Start("PlaceWaypoint")
     net.Broadcast()
 end
@@ -36,7 +38,7 @@ end
 function JB:UpdateCommands(ply)
     net.Start("UpdateCommands")
     net.WriteTable(activeCommands)
-
+    
     if ply then
         net.Send(ply)
     else

@@ -2,7 +2,7 @@ local SCOREBOARD = {}
 
 function SCOREBOARD:Init()
     self:SetSize(w, h)
-    self.panel = vgui.Create("DPanel", self)
+    self.panel = vgui.Create("Panel", self)
     self.panel:MakePopup()
     self.panel:Dock(FILL)
 
@@ -43,10 +43,10 @@ function JB.scoreboard:Show()
     end
 end
 
-function GM:ScoreboardShow()
-    JB.scoreboard:Show()
-end
+-- function GM:ScoreboardShow()
+--     JB.scoreboard:Show()
+-- end
 
-function GM:ScoreboardHide()
-    JB.scoreboard:Hide()
-end
+-- function GM:ScoreboardHide()
+--     JB.scoreboard:Hide()
+-- end

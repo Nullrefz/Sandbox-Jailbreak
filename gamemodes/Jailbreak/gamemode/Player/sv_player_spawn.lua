@@ -46,7 +46,8 @@ function ply:Setup()
         self:KillSilent()
     end
 
-    self:StripWeapons()
+    self:ShouldDropWeapon(true)
+    --self:StripWeapons()
     self:SetPos(self:GetSpawnPos())
     self:ApplyModel()
     local col = team.GetColor(self:Team())
@@ -66,3 +67,4 @@ function ply:SendSpawned()
     net.Start("PlayerSpawned")
     net.Send(self)
 end
+

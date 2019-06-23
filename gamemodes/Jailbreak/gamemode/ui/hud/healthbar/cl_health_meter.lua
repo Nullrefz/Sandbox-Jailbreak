@@ -42,18 +42,6 @@ function HEALTHMETER:Init()
     end
 end
 
-function DrawBar(offset, width, height, skew, divisions, prog, color)
-    local wide = width / divisions
-    local progress = prog * divisions
-
-    for i = 1, math.Clamp(divisions, 0, math.ceil(progress)) do
-        local fill = math.Clamp(progress, 0, 1)
-        progress = progress - fill
-        draw.DrawSkewedRect((i - 1) * wide - skew + offset, 0, (wide * fill) + skew / 2, height, skew, color, mats.BAR)
-    end
-end
-
--- TODO: TO BE OPTIMIZED
 vgui.Register("HealthMeter", HEALTHMETER)
 
 net.Receive("UpdateHealth", function()
