@@ -24,9 +24,7 @@ function SCOREBOARD:Init()
 end
 
 function SCOREBOARD:PerformLayout(width, height)
-    -- for k, v in pairs(self.group) do
-    --     v:SetTall(height / 3)
-    -- end
+    self.panel:DockMargin(0, toVRatio(64), 0, 0)
 end
 
 vgui.Register("JailbreakScoreboard", SCOREBOARD)
@@ -35,7 +33,6 @@ JB.scoreboard = {}
 function JB.scoreboard:Show()
     self.scoreboardPanel = vgui.Create("JailbreakScoreboard")
     self.scoreboardPanel:SetSize(w, h)
-    self.scoreboardPanel:SetPos(0, 0)
 
     JB.scoreboard.Hide = function()
         self.scoreboardPanel:Remove()
