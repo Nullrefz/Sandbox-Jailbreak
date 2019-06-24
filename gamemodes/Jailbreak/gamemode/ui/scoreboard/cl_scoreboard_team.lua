@@ -38,6 +38,7 @@ surface.CreateFont("Jailbreak_Font_ScoreboardPlayerCount", {
 
 function SCOREBOARDGROUP:Init()
     self.playerCards = {}
+    self.panelWidth = 0
 end
 
 function SCOREBOARDGROUP:PerformLayout(width, height)
@@ -56,6 +57,17 @@ function SCOREBOARDGROUP:Think()
     if #team.GetPlayers(self.group) ~= #self.playerCards then
         self:ValidatePlayers()
     end
+
+    self:AdjustScroll()
+    -- print(self:IsChildHovered() and self.panelWidth > self:GetWide())
+    -- if self:IsChildHovered() and self.panelWidth > self:GetWide() then
+    --     self:AdjustScroll()
+    -- end
+end
+
+function SCOREBOARDGROUP:   ()
+    print( gui.MouseX())
+    self.content:DockMargin((-self.panelWidth - 55 + self:GetWide()) * (gui.MousePos() / self:GetWide()), 0, 0, 0)
 end
 
 function SCOREBOARDGROUP:SetGroup(group)
@@ -64,7 +76,7 @@ function SCOREBOARDGROUP:SetGroup(group)
 end
 
 function SCOREBOARDGROUP:CreatePlayer(ply)
-    -- Players     
+    -- Players
     local padding = toHRatio(145)
     local card = vgui.Create("PlayerCard", self.content)
     table.insert(self.playerCards, card)
@@ -79,14 +91,16 @@ function SCOREBOARDGROUP:CreatePlayer(ply)
 end
 
 function SCOREBOARDGROUP:PositionCards()
-    local padding = toHRatio(145)
+    local padding = toHRatio(55)
+    self.panelWidth = 0
+    table.sort(self.playerCards, function(a, b) return a:Player():Health() > b:Player():Health() end)
 
     for k, v in pairs(self.playerCards) do
-        v:SetPos(padding * k - 1)
+        local wide = (v:GetWide() - padding)
+        -- v:SetPos(wide * ((k % 13) - 1) + math.floor(k / 13) * wide, math.floor(k / 13) * v:GetTall() + math.floor(k / 13) * 5 )
+        v:SetPos(wide * (k - 1), 0)
+        self.panelWidth = self.panelWidth + wide
     end
-end
-
-function SCOREBOARDGROUP:RemovePlayer(ply)
 end
 
 function SCOREBOARDGROUP:ValidatePlayers()
@@ -96,13 +110,22 @@ function SCOREBOARDGROUP:ValidatePlayers()
             table.remove(self.playerCards, k)
         end
     end
-    self:PositionCards()
-    for j, k in pairs(team.GetPlayers(self.group)) do
-        for x, y in pairs(self.playerCards) do
-            if IsValid(y:Player()) and y:Player() == k then break end
+
+    if #team.GetPlayers(self.group) ~= #self.playerCards then
+        local players = team.GetPlayers(self.group)
+
+        for k, v in pairs(self.playerCards) do
+            if table.HasValue(players, v:Player()) then
+                table.RemoveByValue(players, v:Player())
+            end
         end
-        self:CreatePlayer(ply)
+
+        for k, v in pairs(players) do
+            self:CreatePlayer(v)
+        end
     end
+
+    self:PositionCards()
 end
 
 function SCOREBOARDGROUP:DrawSkin()
@@ -174,6 +197,7 @@ function SCOREBOARDGROUP:DrawSkin()
         self:CreatePlayer(v)
     end
 
+    self:PositionCards()
     -- Auto Size
     self.content:InvalidateLayout(true)
     self.content:SizeToChildren(false, true)
