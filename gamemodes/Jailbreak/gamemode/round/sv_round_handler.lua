@@ -98,7 +98,7 @@ end)
     Desc: Loop logic for round waiting
 -----------------------------------------------------------]]
 function JB:RounWaitingThink()
-    if #player.GetAll() >= (GetConVar("jb_min_players"):GetInt() or 2) then
+    if #team.GetPlayers(Team.PRISONERS) >= (GetConVar("jb_min_players"):GetInt() or 2) and #team.GetPlayers(Team.GUARDS) > 0 then
         self:SetRoundPhase(ROUND_PREPARING)
     end
 end
@@ -128,7 +128,6 @@ end)
 function JB:RoundActiveThink()
     if self:GetTimeLeft() <= 0 or #self:GetAlivePlayersByTeam(TEAM_GUARDS) <= 0 or #self:GetAlivePlayersByTeam(TEAM_PRISONERS) <= 0 then
         self:SetRoundPhase(ROUND_ENDING)
-
         return
     end
 end
