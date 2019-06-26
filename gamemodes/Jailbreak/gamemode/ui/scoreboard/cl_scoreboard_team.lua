@@ -123,7 +123,7 @@ function SCOREBOARDGROUP:PositionCards()
     local padding = toHRatio(55)
     self.panelWidth = 0
 
-    --table.sort(self.playerCards, function(a, b) return a:Player():Health() > b:Player():Health() end)
+    table.sort(self.playerCards, function(a, b) return a:Player():Health() > b:Player():Health() end)
     -- self.container:SetWide(toHRatio(200 + 55) * #team.GetPlayers(self.group))
     -- self.container:SetTall(math.floor(#self.playerCards / 13 + 1) * toVRatio(235))
     for k, v in pairs(self.playerCards) do
