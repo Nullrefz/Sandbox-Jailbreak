@@ -1,8 +1,9 @@
 util.AddNetworkString("OnWardenSet")
 util.AddNetworkString("OnWardenRequest")
-local ply = FindMetaTable("Player")
+util.AddNetworkString("RequestPromotion")
+local pl = FindMetaTable("Player")
 
-function ply:IsWarden()
+function pl:IsWarden()
     if JB.warden == self then return true end
 
     return false
@@ -56,7 +57,7 @@ function JB:ValidateWarden()
     end
 end
 
-function GM:ShowTeam(ply)
+function JB:PromotePlayer(ply)
     if ply:Team() == Team.GUARDS and not JB.warden and ply:Alive() and JB:GetActivePhase() == ROUND_PREPARING then
         JB:SetWarden(ply)
     elseif JB.warden == ply then
@@ -82,4 +83,8 @@ end)
 
 net.Receive("OnWardenRequest", function(ln, ply)
     JB:BroadcastWarden(ply)
+end)
+
+net.Receive("RequestPromotion", function(ln, ply)
+    JB:PromotePlayer(ply)
 end)

@@ -37,7 +37,7 @@ function JAILBREAKWARDENJOINER:Think()
     elseif LocalPlayer():Team() == Team.GUARDS and #team.GetPlayers(Team.PRISONERS) == 0 and #team.GetPlayers(Team.GUARDS) > 1 then
         self.panel:SetText("Game Cannot Start Without Prisoners")
     elseif LocalPlayer():Team() == Team.GUARDS and not warden and roundPhase == "Preparing" then
-        self.panel:SetText("Press F2 To Become Warden")
+        self.panel:SetText("Use Mic To Become Warden")
     else
         self.panel:SetText("")
     end
@@ -60,4 +60,11 @@ end
 
 hook.Add("InitPostEntity", "Hook Notification After Init", function()
     JB.joiner:Show()
+end)
+
+hook.Add("PlayerStartVoice", "RequestWarden", function()
+    if roundPhase == "Preparing" and not warden then
+        net.Start("RequestPromotion")
+        net.SendToServer()
+    end
 end)
