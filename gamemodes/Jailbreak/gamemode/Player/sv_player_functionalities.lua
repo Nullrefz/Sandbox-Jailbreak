@@ -105,14 +105,29 @@ function JB:GetAlivePlayersByTeam(teamIndex)
     return alivePlayers
 end
 
+--[[---------------------------------------------------------
+    Name: jailbreak:SetSelfCollision()
+    Desc: Sets if players should self collide 
+    Args: • enabled         -- collision enabled
+          • playerTeam      -- chosen team
+-----------------------------------------------------------]]
 function JB:SetSelfCollision(enabled, playerTeam)
-    if not playerTeam then
-        for k, v in pairs(player.GetAll()) do
-            v:SetNoCollideWithTeammates(enabled)
-        end
-    else
-        for k, v in pairs(team.GetPlayers(playerTeam)) do
-            v:SetNoCollideWithTeammates(enabled)
-        end
+    for k, v in pairs(playerTeam and playerTeam or player.GetAll()) do
+        v:SetNoCollideWithTeammates(enabled)
     end
+end
+
+--[[---------------------------------------------------------
+    Name: jailbreak:SetFriendlyFire()
+    Desc: Sets if players can hurt team members
+    Args: • enabled         -- friendly fire enabled
+          • playerTeam      -- chosen team
+-----------------------------------------------------------]]
+function JB:SetFriendlyFire(enabled, chosenTeam)
+    hook.Add("PlayerShouldTakeDamage", "FriendFire", function(ply, attacker)
+        if not chosenTeam and ply:Team() == attacker:Team() then return enabled end
+        if ply:Team() == chosenTeam and attacker:Team() == chosenTeam then return enabled end
+
+        return true
+    end)
 end
