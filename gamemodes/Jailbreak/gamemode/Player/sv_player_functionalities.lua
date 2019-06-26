@@ -11,13 +11,7 @@ end
     Desc: Disables players respawn
 -----------------------------------------------------------]]
 function JB:DisableRespawns()
-    hook.Add(
-        "PlayerDeathThink",
-        "Disable Respawns",
-        function()
-            return false
-        end
-    )
+    hook.Add("PlayerDeathThink", "Disable Respawns", function() return false end)
 end
 
 --[[---------------------------------------------------------
@@ -31,7 +25,6 @@ function JB:SpawnAllPlayers()
         v:Spawn()
     end
 end
-
 
 --[[---------------------------------------------------------
     Name: jailbreak:KillAllPlayers()
@@ -110,4 +103,16 @@ function JB:GetAlivePlayersByTeam(teamIndex)
     end
 
     return alivePlayers
+end
+
+function JB:SetSelfCollision(enabled, playerTeam)
+    if not playerTeam then
+        for k, v in pairs(player.GetAll()) do
+            v:SetNoCollideWithTeammates(enabled)
+        end
+    else
+        for k, v in pairs(team.GetPlayers(playerTeam)) do
+            v:SetNoCollideWithTeammates(enabled)
+        end
+    end
 end

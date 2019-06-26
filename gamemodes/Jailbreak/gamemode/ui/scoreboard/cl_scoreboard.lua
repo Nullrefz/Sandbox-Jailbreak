@@ -7,16 +7,24 @@ function SCOREBOARD:Init()
     self.panel:Dock(FILL)
 
     function self.panel:Paint()
+        Derma_DrawBackgroundBlur(self, 0)
     end
 
     self.group = {}
 
-    for i = 1, TEAM_SPECTATORS do
-        if i == TEAM_SPECTATORS and #team.GetPlayers(i) == 0 then return end
+    for i = Team.PRISONERS, Team.SPECTATORS do
+        if i == Team.SPECTATORS and #team.GetPlayers(1002) == 0 then return end
         local playerGroup = vgui.Create("ScoreboardGroup", self.panel)
-        playerGroup:Dock(TOP)
-        playerGroup:DockMargin(toHRatio(40), 0, toHRatio(40), 0)
         playerGroup:SetGroup(i)
+
+        if i == Team.SPECTATORS then
+            playerGroup:SetSize(w / 2, toVRatio(256))
+            playerGroup:SetPos(w / 2, h - playerGroup:GetTall())
+        else
+            playerGroup:Dock(TOP)
+            playerGroup:DockMargin(0, 0, 0, 0)
+        end
+
         playerGroup:InvalidateLayout(true)
         playerGroup:SizeToChildren(false, true)
         table.insert(self.group, playerGroup)
@@ -24,7 +32,6 @@ function SCOREBOARD:Init()
 end
 
 function SCOREBOARD:PerformLayout(width, height)
-    self.panel:DockMargin(0, toVRatio(64), 0, 0)
 end
 
 vgui.Register("JailbreakScoreboard", SCOREBOARD)
@@ -42,8 +49,10 @@ end
 
 function GM:ScoreboardShow()
     JB.scoreboard:Show()
+    RestoreCursorPosition()
 end
 
 function GM:ScoreboardHide()
     JB.scoreboard:Hide()
+    RememberCursorPosition()
 end

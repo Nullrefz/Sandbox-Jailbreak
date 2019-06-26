@@ -40,6 +40,7 @@ function JB:SetRoundPreparing()
     game.CleanUpMap()
     self:EnableRespawns()
     self:SpawnAllPlayers()
+    self:SetSelfCollision(false)
     --self:FreezePlayers(true)
 end
 
@@ -112,7 +113,7 @@ end)
     Desc: Loop logic for round preparing
 -----------------------------------------------------------]]
 function JB:RoundPreparingThink()
-    if self:GetTimeLeft() <= 0 and self.round.count <= GetConVar("jb_max_rounds"):GetInt() then
+    if (self:GetTimeLeft() <= 0 and self.round.count <= GetConVar("jb_max_rounds"):GetInt()) or self.warden then
         self:SetRoundPhase(ROUND_ACTIVE)
     end
 end

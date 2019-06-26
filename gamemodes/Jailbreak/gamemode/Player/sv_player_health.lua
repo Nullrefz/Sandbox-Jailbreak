@@ -40,6 +40,7 @@ function ply:SendHealthStatus()
 end
 
 function ply:LoseHealth()
+    if not self.hp then return end
     if (self.hp + math.floor(self.shield)) <= self:Health() then return end
     local dmg = (self.hp + self.shield) - self:Health()
 
@@ -63,6 +64,7 @@ function ply:LoseHealth()
 end
 
 function ply:GainHealth()
+    if not self.hp then return end
     if (self.hp + self.shield) >= self:Health() then return end
     gain = self:Health() - (self.hp + self.shield)
 
