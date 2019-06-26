@@ -40,6 +40,7 @@ function JB:SetRoundPreparing()
     game.CleanUpMap()
     self:EnableRespawns()
     self:SpawnAllPlayers()
+    self:SetSelfCollision(false)
     --self:FreezePlayers(true)
 end
 
@@ -98,7 +99,7 @@ end)
     Desc: Loop logic for round waiting
 -----------------------------------------------------------]]
 function JB:RounWaitingThink()
-    if #player.GetAll() >= (GetConVar("jb_min_players"):GetInt() or 2) then
+    if #team.GetPlayers(Team.PRISONERS) >= (GetConVar("jb_min_players"):GetInt() or 2) and #team.GetPlayers(Team.GUARDS) > 0 then
         self:SetRoundPhase(ROUND_PREPARING)
     end
 end
@@ -112,7 +113,7 @@ end)
     Desc: Loop logic for round preparing
 -----------------------------------------------------------]]
 function JB:RoundPreparingThink()
-    if self:GetTimeLeft() <= 0 and self.round.count <= GetConVar("jb_max_rounds"):GetInt() then
+    if (self:GetTimeLeft() <= 0 and self.round.count <= GetConVar("jb_max_rounds"):GetInt()) or self.warden then
         self:SetRoundPhase(ROUND_ACTIVE)
     end
 end
@@ -128,7 +129,6 @@ end)
 function JB:RoundActiveThink()
     if self:GetTimeLeft() <= 0 or #self:GetAlivePlayersByTeam(TEAM_GUARDS) <= 0 or #self:GetAlivePlayersByTeam(TEAM_PRISONERS) <= 0 then
         self:SetRoundPhase(ROUND_ENDING)
-
         return
     end
 end

@@ -76,7 +76,9 @@ end
 
 function SCOREBOARDCARD:DrawSkin()
     -- Main Container
+    self:SetMouseInputEnabled(true)
     self.panel = vgui.Create("DPanel", self)
+    self.panel:SetMouseInputEnabled(true)
 
     function self.panel:Paint(width, height)
         return
@@ -157,9 +159,14 @@ function SCOREBOARDCARD:DrawSkin()
     function self:Paint(width, height)
         if not self.ply then return end
         --draw.DrawSkewedRect(0, 0, width, height, toHRatio(60), team.GetColor(self.ply:Team()))
-        draw.SkweredChamferedBox(0, height / 2, width, height, 2, toHRatio(58) / 2, team.GetColor(self.ply:Team()))
+        draw.SkweredChamferedBox(0, height / 2, width, height, 2, toHRatio(58) / 2, team.GetColor(user:Team()))
+
+        if self:IsChildHovered() then
+            draw.SkweredChamferedBox(0, height / 2, width, height, 2, toHRatio(58) / 2, Color(255, 255, 255, 255))
+        end
+
         self.playerHealth:SetSize(toHRatio(156), toVRatio(32))
-        draw.DrawSkewedRect(0 + toHRatio(3), 0 + toVRatio(3), width - toHRatio(6), height - toVRatio(6), toHRatio(58), (self.ply:Team() == TEAM_PRISONERS) and Color(49, 44, 42, 255) or Color(42, 44, 49, 255))
+        draw.DrawSkewedRect(0 + toHRatio(3), 0 + toVRatio(3), width - toHRatio(6), height - toVRatio(6), toHRatio(58), (self.ply:Team() == TEAM_PRISONERS) and (Color(49, 44, 42, 255)) or Color(42, 44, 49, 255))
         render.SetStencilEnable(true)
         render.SetStencilWriteMask(1)
         render.SetStencilTestMask(1)

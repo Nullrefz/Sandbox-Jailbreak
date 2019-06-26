@@ -65,7 +65,29 @@ function TIMERBAR:Init()
             draw.DrawText(string.FormattedTime(math.Clamp(timeLeft - CurTime(), 0, timeLeft - CurTime()), "%02i:%02i"), "Jailbreak_Font_Counter", toHRatio(5), -1, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
         end
 
-        draw.DrawSkewedRect(toHRatio(5), height / 2, width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 50))
+        if (roundPhase == "Waiting") then
+            render.ClearStencil()
+            render.SetStencilEnable(true)
+            render.SetStencilWriteMask(1)
+            render.SetStencilTestMask(1)
+            render.SetStencilFailOperation(STENCILOPERATION_REPLACE)
+            render.SetStencilPassOperation(STENCILOPERATION_ZERO)
+            render.SetStencilZFailOperation(STENCILOPERATION_ZERO)
+            render.SetStencilCompareFunction(STENCILCOMPARISONFUNCTION_NEVER)
+            render.SetStencilReferenceValue(1)
+            draw.DrawSkewedRect(toHRatio(5), height / 2, width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 255))
+            render.SetStencilReferenceValue(2)
+            render.SetStencilFailOperation(STENCILOPERATION_ZERO)
+            render.SetStencilPassOperation(STENCILOPERATION_REPLACE)
+            render.SetStencilZFailOperation(STENCILOPERATION_ZERO)
+            render.SetStencilCompareFunction(STENCILCOMPARISONFUNCTION_EQUAL)
+            render.SetStencilReferenceValue(1)
+            DrawProgressBar(toHRatio(5), height / 2, width - toHRatio(5), toVRatio(6), toHRatio(2), 8, Color(255, 255, 255, 255))
+            render.SetStencilEnable(false)
+        else
+            draw.DrawSkewedRect(toHRatio(5), height / 2, width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 50))
+        end
+
         draw.DrawSkewedRect(toHRatio(5), height / 2, ((timeLeft - CurTime()) / roundTime) * width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 200))
         draw.DrawText(tostring(roundPhase), "Jailbreak_Font_RoundPhase", toHRatio(2), height - 16, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
     end

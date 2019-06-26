@@ -25,7 +25,7 @@ function AMMOBAR:Init()
     self.ply = LocalPlayer()
 
     function self:Paint(width, height)
-        if not LocalPlayer():Alive() or not weapon or not weapon:IsValid() then return end
+        if not LocalPlayer():Alive() or not weapon or not weapon:IsValid() or not LocalPlayer():GetActiveWeapon():IsValid() then return end
 
         if (weapon:GetMaxClip1() > 0) then
             draw.DrawText(LocalPlayer():GetActiveWeapon():Clip1() .. '/' .. weapon:GetMaxClip1(), "Jailbreak_Font_Ammo", width - 104, -4, Color(255, 255, 255, 200), TEXT_ALIGN_RIGHT)
