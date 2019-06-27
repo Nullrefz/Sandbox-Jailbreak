@@ -1,4 +1,5 @@
 local HEALTHBAR = {}
+targetPlayer = LocalPlayer()
 
 function HEALTHBAR:Init()
     self.rightContainer = vgui.Create("Panel", self)
@@ -24,3 +25,14 @@ function HEALTHBAR:PerformLayout(width, height)
 end
 
 vgui.Register("JailbreakHealthBar", HEALTHBAR)
+
+net.Receive("SpectatePlayer", function()
+    --chosenPlayer = player.GetBySteamID()
+    local ply = player.GetByUniqueID(net.ReadString())
+
+    if ply then
+        targetPlayer = ply
+    else
+        targetPlayer = LocalPlayer()
+    end
+end)

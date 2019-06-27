@@ -37,6 +37,11 @@ function ply:SendHealthStatus()
     net.WriteInt(self.hp, 32)
     net.WriteInt(self.maxShield, 32)
     net.Send(self)
+    if not self.spectators then return end
+
+    for k, v in pairs(self.spectators) do
+        net.Send(v)
+    end
 end
 
 function ply:LoseHealth()
@@ -53,7 +58,6 @@ function ply:LoseHealth()
         else
             dmg = 0
         end
-        --`
     end
 
     if dmg > 0 then
@@ -143,4 +147,8 @@ end
 
 hook.Add("PlayerSetWarden", "OnWardenSet", function(oldWarden, newWarden)
     JB:HandleWardenHealth(oldWarden, newWarden)
+end)
+
+hook.Add("SpectatorChange", "SendHealthUpdate", function(pl)
+    pl:SendHealthUpdate()
 end)

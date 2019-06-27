@@ -23,7 +23,7 @@ function HEALTHTEXT:Init()
 end
 
 function HEALTHTEXT:Paint(width, height)
-    draw.DrawText(tostring(math.Clamp(LocalPlayer():Health() + (LocalPlayer():Alive() and LocalPlayer():Armor() or 0), 0, 1000000) .. "/" .. math.Clamp(LocalPlayer():GetMaxHealth() +  (LocalPlayer():Alive() and LocalPlayer():Armor() or 0), 0, 1000000)), "Jailbreak_Font_Health", toHRatio(5), 0, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
+    draw.DrawText(tostring(math.Clamp(targetPlayer:Health() + (targetPlayer:Alive() and targetPlayer:Armor() or 0), 0, 1000000) .. "/" .. math.Clamp(targetPlayer:GetMaxHealth() + (targetPlayer:Alive() and targetPlayer:Armor() or 0), 0, 1000000)), "Jailbreak_Font_Health", toHRatio(5), 0, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
 end
 
 vgui.Register("HealthText", HEALTHTEXT)
