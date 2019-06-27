@@ -37,7 +37,7 @@ team.SetUp(1, "Prisoners", Color(255, 89, 50))
 team.SetUp(2, "Guards", Color(50, 185, 255))
 TEAM_PRISONERS = 1
 TEAM_GUARDS = 2
-TEAM_SPECTATORS = 3
+TEAM_SPECTATORS = 1002
 local gmDir = "jailbreak/gamemode"
 
 --[[---------------------------------------------------------

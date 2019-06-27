@@ -41,7 +41,6 @@ if SERVER then
     end
 
     function JB:PickUpWeapon(ply, wep)
-        print(ply:GetPos():Distance(wep:GetPos()))
         if ply:HasWeapon(JB:GetWeapon(wep)) or ply:HasWeapon(wep:GetClass()) and ply:GetPos():Distance(wep:GetPos()) < 100 then return end
         ply:Give(wep:GetClass())
         wep:Remove()
