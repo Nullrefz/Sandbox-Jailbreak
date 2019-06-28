@@ -24,6 +24,7 @@ function PLAYERMODELPANEL:Init()
     function self.avatar:LayoutEntity(Entity)
         return
     end
+
     function self.avatar.Entity:GetPlayerColor()
         return team.GetColor(ply:Team())
     end
@@ -33,10 +34,9 @@ function PLAYERMODELPANEL:PerformLayout(width, height)
     self.avatar:SetSize(width, width)
 end
 
-
 function PLAYERMODELPANEL:Paint(width, height)
+    if not targetPlayer or not targetPlayer:Alive() then return end
     draw.DrawRect(0, 0, self.avatar:GetWide(), self.avatar:GetTall(), Color(255, 255, 255), (targetPlayer:Team() == 1) and mats.PRISONER or (targetPlayer == warden and mats.GUARD or mats.WARDEN))
-    if not targetPlayer:Alive() then return end
     local radius = 109
     render.ClearStencil()
     render.SetStencilEnable(true)
@@ -56,6 +56,7 @@ function PLAYERMODELPANEL:Paint(width, height)
     render.SetStencilReferenceValue(1)
     self.avatar:PaintManual()
     render.SetStencilEnable(false)
+
     if self.avatar:GetModel() ~= targetPlayer:GetModel() then
         self.avatar:SetModel(targetPlayer:GetModel())
         self.avatar:SetAnimated(false)

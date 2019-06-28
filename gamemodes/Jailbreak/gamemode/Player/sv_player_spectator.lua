@@ -15,10 +15,16 @@ function player:CycleSpectateMode(mode)
 
     if self:GetObserverMode() == OBS_MODE_ROAMING then
         self:SetObserverMode(OBS_MODE_IN_EYE)
+        hook.Run("SpectatorChanged", self:GetObserverTarget())
+        self:UpdateHud(self:GetObserverTarget())
     elseif self:GetObserverMode() == OBS_MODE_IN_EYE then
         self:SetObserverMode(OBS_MODE_CHASE)
+        hook.Run("SpectatorChanged", self:GetObserverTarget())
+        self:UpdateHud(self:GetObserverTarget())
     elseif self:GetObserverMode() == OBS_MODE_CHASE then
         self:SetObserverMode(OBS_MODE_ROAMING)
+        hook.Run("SpectatorChanged")
+        self:UpdateHud()
     end
 end
 
@@ -55,12 +61,13 @@ function player:SpectateNewTarget(forward)
     if IsValid(currentTarget) then
         self:SpectateEntity(currentTarget)
         table.insert(currentTarget.spectators, self)
-        hook.Run("SpectatorChanged", currentTarget)
 
         if self:GetObserverMode() == OBS_MODE_ROAMING then
+            hook.Run("SpectatorChanged")
             self:UpdateHud()
         else
             self:UpdateHud(currentTarget)
+            hook.Run("SpectatorChanged", currentTarget)
         end
 
         return currentTarget
@@ -74,6 +81,11 @@ function JB:SpectatorKeyPress(ply, key)
         self.spectate[key](ply)
     end
 end
+
+hook.Add("PlayerDeath", "Holdspectate", function(ply)
+    ply:CycleSpectateMode(OBS_MODE_ROAMING)
+    ply:SetMoveType(MOVETYPE_NOCLIP)
+end)
 
 hook.Add("KeyPress", "JailBreakSpectatorControls", function(ply, key)
     JB:SpectatorKeyPress(ply, key)

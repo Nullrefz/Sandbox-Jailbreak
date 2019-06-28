@@ -227,7 +227,7 @@ function SWEP:DrawHUD()
     scale = scale * (2 - math.Clamp((CurTime() - LastShootTime) * 5, 0.0, 1.0))
     if not IsValid(LocalPlayer()) then return end
     local trace = LocalPlayer():GetEyeTrace()
-
+    if  not trace.Entity:IsValid() then return end
     if trace.Entity:GetClass() == "player" then
         local bone = trace.HitBox
 

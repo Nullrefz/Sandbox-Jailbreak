@@ -35,4 +35,5 @@ net.Receive("SpectatePlayer", function()
     else
         targetPlayer = LocalPlayer()
     end
+    print(targetPlayer)
 end)

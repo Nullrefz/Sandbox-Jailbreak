@@ -19,10 +19,11 @@ function HEALTHMETER:Init()
     self:RequestHealth()
 
     function self:Paint(width, height)
+        if not targetPlayer or not targetPlayer:Alive() then return end
         width = width - 30
         self.health = Lerp(FrameTime() * 5, self.health, health / targetPlayer:GetMaxHealth())
         self.shield = Lerp(FrameTime() * 5, self.shield, shield / maxShield)
-        self.armor =  Lerp(FrameTime() * 5, self.armor, targetPlayer:Alive() and targetPlayer:Armor() / 100 or 0)
+        self.armor = Lerp(FrameTime() * 5, self.armor, targetPlayer:Alive() and targetPlayer:Armor() / 100 or 0)
         self.armorWidth = self.armor / 2
         self.healthWidth = 1 - self.armor / 2
         self.shieldWidth = (1 - (targetPlayer:GetMaxHealth() - maxShield) / targetPlayer:GetMaxHealth()) * (1 - self.armor / 2)
@@ -36,7 +37,7 @@ function HEALTHMETER:Init()
         end
 
         if (self.armor > 0) then
-            DrawBar(10 + width * ((self.healthWidth * self.health) + self.shieldWidth * self.shield), width *  self.armorWidth , height, 5, math.ceil( self.armorWidth * 2 * barIncrement)   , 1, Color(255, 200, 0, 255), mats.BAR)
+            DrawBar(10 + width * ((self.healthWidth * self.health) + self.shieldWidth * self.shield), width * self.armorWidth, height, 5, math.ceil(self.armorWidth * 2 * barIncrement), 1, Color(255, 200, 0, 255), mats.BAR)
         end
     end
 end

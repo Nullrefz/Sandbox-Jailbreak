@@ -41,6 +41,7 @@ function JB:SetRoundPreparing()
     self:EnableRespawns()
     self:SpawnAllPlayers()
     self:SetSelfCollision(false)
+    self:SetFriendlyFire(false)
     --self:FreezePlayers(true)
 end
 
