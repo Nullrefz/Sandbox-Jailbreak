@@ -29,7 +29,7 @@ function JB:SetRoundPreparing()
 
         return
     else
-        --self:OrganizeGuards()
+        self:OrganizeGuards()
         -- TODO To Implement a better notification system
         for k, v in pairs(player.GetAll()) do
             v:ChatPrint(GetConVar("jb_max_rounds"):GetInt() - self.round.count .. " Rounds Remaining")
@@ -41,6 +41,7 @@ function JB:SetRoundPreparing()
     self:EnableRespawns()
     self:SpawnAllPlayers()
     self:SetSelfCollision(false)
+    self:SetFriendlyFire(false)
     --self:FreezePlayers(true)
 end
 

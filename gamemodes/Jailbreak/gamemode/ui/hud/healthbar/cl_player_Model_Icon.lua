@@ -7,8 +7,9 @@ local mats = {
 }
 
 function PLAYERMODELPANEL:Init()
+    targetPlayer = LocalPlayer()
     self.avatar = vgui.Create("DModelPanel", self)
-    self.avatar:SetModel(LocalPlayer():GetModel())
+    self.avatar:SetModel(targetPlayer:GetModel())
     local eyepos = self.avatar.Entity:GetBonePosition(self.avatar.Entity:LookupBone("ValveBiped.Bip01_Head1"))
     self.avatar:SetLookAt(eyepos - Vector(0, 0, 5))
     self.avatar:SetCamPos(eyepos - Vector(-30, 5, 5)) -- Move cam in front of eyes
@@ -25,7 +26,7 @@ function PLAYERMODELPANEL:Init()
     end
 
     function self.avatar.Entity:GetPlayerColor()
-        return team.GetColor(LocalPlayer():Team())
+        return team.GetColor(ply:Team())
     end
 end
 
@@ -34,8 +35,8 @@ function PLAYERMODELPANEL:PerformLayout(width, height)
 end
 
 function PLAYERMODELPANEL:Paint(width, height)
-    draw.DrawRect(0, 0, self.avatar:GetWide(), self.avatar:GetTall(), Color(255, 255, 255), (LocalPlayer():Team() == 1) and mats.PRISONER or (LocalPlayer() == warden and mats.GUARD or mats.WARDEN))
-    if not LocalPlayer():Alive() then return end
+    if not targetPlayer or not targetPlayer:Alive() then return end
+    draw.DrawRect(0, 0, self.avatar:GetWide(), self.avatar:GetTall(), Color(255, 255, 255), (targetPlayer:Team() == 1) and mats.PRISONER or (targetPlayer == warden and mats.GUARD or mats.WARDEN))
     local radius = 109
     render.ClearStencil()
     render.SetStencilEnable(true)
@@ -56,12 +57,12 @@ function PLAYERMODELPANEL:Paint(width, height)
     self.avatar:PaintManual()
     render.SetStencilEnable(false)
 
-    if self.avatar:GetModel() ~= LocalPlayer():GetModel() then
-        self.avatar:SetModel(LocalPlayer():GetModel())
+    if self.avatar:GetModel() ~= targetPlayer:GetModel() then
+        self.avatar:SetModel(targetPlayer:GetModel())
         self.avatar:SetAnimated(false)
 
         function self.avatar.Entity:GetPlayerColor()
-            return team.GetColor(LocalPlayer():Team())
+            return team.GetColor(ply:Team())
         end
     end
 end

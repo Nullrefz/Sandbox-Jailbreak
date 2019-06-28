@@ -26,7 +26,6 @@ if CLIENT then
         end)
 
         hook.Add("PostDrawOpaqueRenderables", tostring(dmg .. curTime), function()
-            print(dmg, trace)
             cam.Start3D2D(trace.HitPos, Angle(0, -90, 90) + Angle(0, (LocalPlayer():GetEyeTrace().HitPos - LocalPlayer():GetEyeTrace().StartPos):Angle().y, 0), 0.1)
             draw.DrawText(dmg, "Jailbreak_Font_72", 0, -100 * (CurTime() - curTime), Color(255, 255, 255, 255 * (1 - (CurTime() - curTime))), TEXT_ALIGN_CENTER)
             cam.End3D2D()

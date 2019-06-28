@@ -9,11 +9,11 @@ end
 
 function WEAPONBAR:Think()
     -- ik i hate doing this
-    if LocalPlayer():Alive() and LocalPlayer():GetActiveWeapon():IsValid() and weapon ~= LocalPlayer():GetActiveWeapon():GetClass() then
-        weapon = LocalPlayer():GetActiveWeapon():GetClass()
+    if targetPlayer:Alive() and targetPlayer:GetActiveWeapon():IsValid() and weapon ~= targetPlayer:GetActiveWeapon():GetClass() then
+        weapon = targetPlayer:GetActiveWeapon():GetClass()
         self:AddWeapon(weapon)
-        self.ammoBar:SetWeapon(LocalPlayer():GetActiveWeapon())
-    elseif not LocalPlayer():Alive() and #weaponIcons > 0 then
+        self.ammoBar:SetWeapon(targetPlayer:GetActiveWeapon())
+    elseif not targetPlayer:Alive() and #weaponIcons > 0 then
         while #weaponIcons > 0 do
             weaponIcons[1]:Remove()
             table.remove(weaponIcons, 1)

@@ -36,7 +36,19 @@ function ply:SendHealthStatus()
     net.WriteInt(self.shield, 32)
     net.WriteInt(self.hp, 32)
     net.WriteInt(self.maxShield, 32)
-    net.Send(self)
+    print("hei")
+
+    if not self.spectators then
+        net.Send(self)
+
+        return
+    end
+
+    local playersToUpdate = {}
+    table.insert(playersToUpdate, self)
+    table.Add(playersToUpdate, self.spectators)
+    net.Send(playersToUpdate)
+    PrintTable(playersToUpdate)
 end
 
 function ply:LoseHealth()
@@ -53,7 +65,6 @@ function ply:LoseHealth()
         else
             dmg = 0
         end
-        --`
     end
 
     if dmg > 0 then
@@ -143,4 +154,10 @@ end
 
 hook.Add("PlayerSetWarden", "OnWardenSet", function(oldWarden, newWarden)
     JB:HandleWardenHealth(oldWarden, newWarden)
+end)
+
+hook.Add("SpectatorChanged", "SendHealthUpdate", function(pl)
+    if IsValid(pl) then
+        pl:SendHealthStatus()
+    end
 end)
