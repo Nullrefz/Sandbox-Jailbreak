@@ -29,7 +29,7 @@ function JB:SetRoundPreparing()
 
         return
     else
-        self:OrganizeGuards()
+        --self:OrganizeGuards()
         -- TODO To Implement a better notification system
         for k, v in pairs(player.GetAll()) do
             v:ChatPrint(GetConVar("jb_max_rounds"):GetInt() - self.round.count .. " Rounds Remaining")
@@ -42,6 +42,7 @@ function JB:SetRoundPreparing()
     self:SpawnAllPlayers()
     self:SetSelfCollision(false)
     self:SetFriendlyFire(false)
+    self:SetMicEnabled(false, Team.PRISONERS)
     --self:FreezePlayers(true)
 end
 
@@ -64,6 +65,10 @@ function JB:SetRoundActive()
 
     self:FreezePlayers(false)
     self:DisableRespawns()
+
+    timer.Simple(GetConVar("jb_Prisoners_Mute_Time"):GetInt() or 15, function()
+        JB:SetMicEnabled(false, Team.PRISONERS)
+    end)
 
     for k, v in pairs(player.GetAll()) do
         v:ChatPrint(self:GetTimeLeft() .. " seconds left")
@@ -130,6 +135,7 @@ end)
 function JB:RoundActiveThink()
     if self:GetTimeLeft() <= 0 or #self:GetAlivePlayersByTeam(TEAM_GUARDS) <= 0 or #self:GetAlivePlayersByTeam(TEAM_PRISONERS) <= 0 then
         self:SetRoundPhase(ROUND_ENDING)
+
         return
     end
 end

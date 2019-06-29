@@ -131,3 +131,21 @@ function JB:SetFriendlyFire(enabled, chosenTeam)
         return true
     end)
 end
+
+--[[---------------------------------------------------------
+    Name: jailbreak:SetMicEnabled()
+    Desc: Sets if players can use mic
+    Args: • enabled         -- mic enabled
+          • playerTeam      -- chosen team
+-----------------------------------------------------------]]
+function JB:SetMicEnabled(enabled, chosenTeam)
+    hook.Add("PlayerCanHearPlayersVoice", "SetMicEnabled", function(listener, talker)
+        if not chosenTeam then
+            return enabled
+        else
+            if talker:Team() == chosenTeam then return enabled end
+
+            return true
+        end
+    end)
+end
