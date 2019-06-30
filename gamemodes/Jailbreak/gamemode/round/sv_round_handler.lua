@@ -58,7 +58,7 @@ function JB:SetRoundActive()
     self:SetRoundTime(GetConVar("jb_Round_Active"):GetInt() or 300)
 
     for k, v in pairs(player.GetAll()) do
-        if not v:Alive() then
+        if IsValid(v) and not v:Alive() then
             self:PlayerSpawn(v)
         end
     end

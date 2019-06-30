@@ -47,7 +47,6 @@ function ply:SendHealthStatus()
     table.insert(playersToUpdate, self)
     table.Add(playersToUpdate, self.spectators)
     net.Send(playersToUpdate)
-    PrintTable(playersToUpdate)
 end
 
 function ply:LoseHealth()
