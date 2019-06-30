@@ -1,20 +1,30 @@
-Days = {"freeday", "warday", "hidenseek", "purgeday"}
+Days = {"freeday", "warday", "hidenseek"}
 
 if SERVER then
+    util.AddNetworkString("UpdateCommands")
 
-    function JB:StartFreeDay()
-        self:OpenCells()
-    end
+    daysFunction = {
+        ["freeday"] = function()
+            JB:OpenCells()
+            JB:RemoveWarden()
+        end,
+        ["waraday"] = function()
+            JB:OpenCells()
+            JB:RemoveWarden()
+        end,
+        ["hidenseek"] = function()
+            --Teleport Guards to Armory
+            JB:OpenCells()
+        end
+    }
 
-    function JB:StartWarday()
-    end
-
-    function JB:StartHideNSeek()
-    end
+    net.Receive("SendChosenDay", function(ln, ply)
+        daysFunction[table.KeyFromValue(Days, net.ReadInt(32))]()
+    end)
 
     hook.Add("WardenRevoked", "WardenKilled", function()
         if JB:GetActivePhase() == ROUND_ACTIVE then
-            JB:StartFreeDay()
+            daysFunction["freeday"]()
         end
     end)
 end
