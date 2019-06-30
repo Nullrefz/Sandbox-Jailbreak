@@ -57,24 +57,25 @@ function WARDENMENU:Init()
         local y = Vector(width / 2, height / 2, 0)
         local x = Vector(gui.MouseX(), gui.MouseY(), 0)
         x:Sub(y)
+        local segments = 360 / #self.slots
+        local shiter =  segments / 2 --CurTime() * 50
 
+        selection = math.ceil(((x:Angle().yaw - shiter) % 360) / segments)
+        local shift = 90 --+ CurTime() * 50
         for i = 1, #self.slots do
-            draw.CapsuleBox(width / 2, height / 2 - 2, self.width, self.thickness, 360, 45 / 2 + 45 * i, self.anchor, Color(255, 255, 255, self.alpha * self.alphaLerp))
-            local angle = math.rad(i / (#self.slots) * 360)
-            local str = string.GetFileFromFilename(self.slots[i].MAT:GetName())
-
-            if i == math.floor(x:Angle().yaw / 360 * #self.slots + 0.5) % #self.slots + 1 and insideSelection then
+            draw.CapsuleBox(width / 2, height / 2 - 2, self.width, self.thickness, 360,  -i * segments + shift + shiter, self.anchor, Color(255, 255, 255, self.alpha * self.alphaLerp))
+            local angle = math.rad(-i * segments + shift - shiter + segments / 2)
+            local str = commandType[i]
+            if i == math.ceil(((x:Angle().yaw - shiter) % 360) / segments) and insideSelection then
                 self.slots[i].ALPHA = math.Clamp(self.slots[i].ALPHA + FrameTime() * 100, 0, 25)
             else
                 self.slots[i].ALPHA = math.Clamp(self.slots[i].ALPHA - FrameTime() * 100, 0, 25)
             end
 
-            draw.DrawArc(width / 2, height / 2, width, self.radius, 45, -i * 45 + 45 / 2 + 90 + 0.5, Color(255, 255, 255, self.slots[i].ALPHA))
-            draw.DrawRect(width / 2 - self.iconSize / 2 + math.sin(angle) * self.iconRadius, height / 2 - self.iconSize / 2 + math.cos(angle) * self.iconRadius, self.iconSize, self.iconSize, table.HasValue(activeCommands, (-i + 3) % 8) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(self.slots[i].COLOR.r, self.slots[i].COLOR.g, self.slots[i].COLOR.b, 180 * self.alphaLerp), self.slots[i].MAT)
-            draw.DrawText(str:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end), "Jailbreak_Font_WardenMenu", width / 2 + math.sin(angle) * self.textRadius, height / 2 + math.cos(angle) * self.textRadius - 42 / 2, table.HasValue(activeCommands, (-i + 3) % 8) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(200, 200, 200, 180 * self.alphaLerp), TEXT_ALIGN_CENTER)
+            draw.DrawArc(width / 2, height / 2, width, self.radius, segments,  -i * segments + shift - shiter, Color(255, 255, 255,  self.slots[i].ALPHA))
+            draw.DrawRect(width / 2 - self.iconSize / 2 + math.sin(angle) * self.iconRadius, height / 2 - self.iconSize / 2 + math.cos(angle) * self.iconRadius, self.iconSize, self.iconSize, table.HasValue(activeCommands, i) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(self.slots[i].COLOR.r, self.slots[i].COLOR.g, self.slots[i].COLOR.b, 180 * self.alphaLerp), Material("jailbreak/vgui/" .. commandType[i] .. ".png", "smooth"))
+            draw.DrawText(str:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end), "Jailbreak_Font_WardenMenu", width / 2 + math.sin(angle) * self.textRadius, height / 2 + math.cos(angle) * self.textRadius - 42 / 2, table.HasValue(activeCommands, i) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(self.slots[i].COLOR.r, self.slots[i].COLOR.g, self.slots[i].COLOR.b, 180 * self.alphaLerp), TEXT_ALIGN_CENTER)
         end
-
-        selection = math.floor(x:Angle().yaw / 360 * #self.slots + 0.5) % #self.slots
 
         if y:Distance(Vector(gui.MouseX(), gui.MouseY(), 0)) > self.radius then
             self.panel:SetCursor("hand")
@@ -93,8 +94,7 @@ function WARDENMENU:Init()
 
     function self:Exit()
         if not self.clicked then
-            print(selection)
-            self.button:SendCommand(self.slots[selection + 1].ACTION)
+            self.button:SendCommand(self.slots[selection].ACTION)
         end
 
         self.remove = true
@@ -108,14 +108,19 @@ function WARDENMENU:Init()
     end
 
     function self.button:DoClick()
-        self:SendCommand()
+        local slot = self:GetParent():GetParent().slots[selection]
+        self:SendCommand(slot.ACTION, slot.CLOSE)
     end
 
-    function self.button:SendCommand(action)
+    function self.button:SendCommand(action, close)
         if not insideSelection then return end
 
         if action then
             action()
+        end
+
+        if close then
+            self:GetParent():GetParent():Exit()
         end
     end
 end
@@ -129,12 +134,12 @@ function WARDENMENU:UpdateInfo()
     net.SendToServer()
 end
 
-function WARDENMENU:AddSlot(action, color, mat)
+function WARDENMENU:AddSlot(action, color, close)
     local slot = {
         ACTION = action,
         COLOR = color,
-        MAT = mat,
-        ALPHA = 0
+        ALPHA = 0,
+        CLOSE = close
     }
 
     table.insert(self.slots, slot)
