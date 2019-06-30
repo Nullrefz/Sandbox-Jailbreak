@@ -125,8 +125,10 @@ end
 -----------------------------------------------------------]]
 function JB:SetFriendlyFire(enabled, chosenTeam)
     hook.Add("PlayerShouldTakeDamage", "FriendFire", function(ply, attacker)
-        if not chosenTeam and ply:Team() == attacker:Team() then return enabled end
-        if ply:Team() == chosenTeam and attacker:Team() == chosenTeam then return enabled end
+        if attacker:IsPlayer() then
+            if not chosenTeam and ply:Team() == attacker:Team() then return enabled end
+            if ply:Team() == chosenTeam and attacker:Team() == chosenTeam then return enabled end
+        end
 
         return true
     end)
