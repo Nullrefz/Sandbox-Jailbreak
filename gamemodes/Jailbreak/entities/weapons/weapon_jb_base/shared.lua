@@ -237,7 +237,7 @@ function SWEP:DrawHUD()
             surface.SetDrawColor(255, 255, 255, 255)
         end
     else
-        surface.SetDrawColor(255, 255, 255, 50)
+        surface.SetDrawColor(255, 255, 255, 200)
     end
 
     -- Draw an awesome crosshair
