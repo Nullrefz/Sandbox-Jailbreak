@@ -7,7 +7,7 @@ function JAILBREAKHUD:Init()
     self.healthBar = vgui.Create("JailbreakHealthBar", self.footer)
     self.timerBar = vgui.Create("JailbreakTimerBar", self.footer)
     self.weaponBar = vgui.Create("JailbreakWeaponBar", self.footer)
-    self.commandBar = vgui.Create("JailbreakCommandBar", self.header)
+    self.commandBar = vgui.Create("JailbreakCommandBar", self.footer)
     self.wardenBar = vgui.Create("JailbreakWardenBar", self.header)
 end
 
@@ -47,9 +47,10 @@ function JAILBREAKHUD:PerformLayout(width, height)
     end
 
     if self.commandBar then
-        self.commandBar:Dock(BOTTOM)
-        self.commandBar:SetTall(toVRatio(42))
-        self.commandBar:DockMargin(50, 0, 0, 0)
+        self.commandBar:Dock(LEFT)
+        self.commandBar:SetWide(toHRatio(512))
+        self.commandBar:DockMargin(50,self.footer:GetTall() / 2, 0, self.footer:GetTall() / 2 - toVRatio(50))
+  
     end
 
     if self.weaponBar then

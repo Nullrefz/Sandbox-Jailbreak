@@ -36,7 +36,6 @@ function ply:SendHealthStatus()
     net.WriteInt(self.shield, 32)
     net.WriteInt(self.hp, 32)
     net.WriteInt(self.maxShield, 32)
-    print("hei")
 
     if not self.spectators then
         net.Send(self)
@@ -48,7 +47,6 @@ function ply:SendHealthStatus()
     table.insert(playersToUpdate, self)
     table.Add(playersToUpdate, self.spectators)
     net.Send(playersToUpdate)
-    PrintTable(playersToUpdate)
 end
 
 function ply:LoseHealth()

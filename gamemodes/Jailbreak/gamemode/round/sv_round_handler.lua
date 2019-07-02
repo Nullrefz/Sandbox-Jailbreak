@@ -7,10 +7,6 @@ function JB:SetRoundWaiting()
     self.round.count = 0
     self:EnableRespawns()
     game.CleanUpMap()
-
-    for k, v in pairs(player.GetAll()) do
-        v:ChatPrint("Waiting for Players")
-    end
 end
 
 hook.Add("jb_round_waiting", "setup waiting", function()
@@ -28,13 +24,6 @@ function JB:SetRoundPreparing()
         hook.Run("ChangeMap")
 
         return
-    else
-        self:OrganizeGuards()
-        -- TODO To Implement a better notification system
-        for k, v in pairs(player.GetAll()) do
-            v:ChatPrint(GetConVar("jb_max_rounds"):GetInt() - self.round.count .. " Rounds Remaining")
-            v:ChatPrint(self:GetTimeLeft() .. " seconds for round Start")
-        end
     end
 
     game.CleanUpMap()
@@ -42,6 +31,7 @@ function JB:SetRoundPreparing()
     self:SpawnAllPlayers()
     self:SetSelfCollision(false)
     self:SetFriendlyFire(false)
+    self:SetMicEnabled(false, Team.PRISONERS)
     --self:FreezePlayers(true)
 end
 
@@ -57,7 +47,7 @@ function JB:SetRoundActive()
     self:SetRoundTime(GetConVar("jb_Round_Active"):GetInt() or 300)
 
     for k, v in pairs(player.GetAll()) do
-        if not v:Alive() then
+        if IsValid(v) and not v:Alive() and v:Team() <= Team.GUARDS then
             self:PlayerSpawn(v)
         end
     end
@@ -65,9 +55,9 @@ function JB:SetRoundActive()
     self:FreezePlayers(false)
     self:DisableRespawns()
 
-    for k, v in pairs(player.GetAll()) do
-        v:ChatPrint(self:GetTimeLeft() .. " seconds left")
-    end
+    timer.Simple(GetConVar("jb_Prisoners_Mute_Time"):GetInt() or 15, function()
+        JB:SetMicEnabled(false, Team.PRISONERS)
+    end)
 end
 
 hook.Add("jb_round_active", "setup waiting", function()
@@ -81,14 +71,6 @@ end)
 function JB:SetRoundEnding()
     self:SetRoundTime(GetConVar("jb_Round_Ending"):GetInt() or 10)
     self:RevokeWarden()
-
-    for k, v in pairs(player.GetAll()) do
-        if self.round.count + 1 <= GetConVar("jb_max_rounds"):GetInt() then
-            v:ChatPrint("Round Ended. Restarting in " .. self:GetTimeLeft() .. " seconds")
-        else
-            v:ChatPrint("Changing Level")
-        end
-    end
 end
 
 hook.Add("jb_round_ending", "setup ending", function()
@@ -130,6 +112,7 @@ end)
 function JB:RoundActiveThink()
     if self:GetTimeLeft() <= 0 or #self:GetAlivePlayersByTeam(TEAM_GUARDS) <= 0 or #self:GetAlivePlayersByTeam(TEAM_PRISONERS) <= 0 then
         self:SetRoundPhase(ROUND_ENDING)
+
         return
     end
 end

@@ -38,6 +38,13 @@ function JB:PlaceWaypoint()
 end
 
 function JB:DrawWaypoint()
+    if not warden then
+        enabled = false
+
+        return
+    end
+
+    
     local wid = 2
 
     local tr = util.TraceLine({
@@ -55,7 +62,7 @@ function JB:DrawWaypoint()
     draw.DrawArc(0, 0, 6.7, 6.5, 360, 0, Color(255, 255, 255, 150))
 
     for i = 1, 10 do
-        draw.DrawArc(0, 0, 8, 7, (1.01 - math.Clamp(LocalPlayer():GetPos():Distance(tr.HitPos) , 0, 1000) / 1000) * 36.0, 36 * i + CurTime() * 25, pointColor)
+        draw.DrawArc(0, 0, 8, 7, (1.01 - math.Clamp(LocalPlayer():GetPos():Distance(tr.HitPos), 0, 1000) / 1000) * 36.0, 36 * i + CurTime() * 25, pointColor)
     end
 
     draw.ChamferedBox(0, 0, 3, .2, 2, Color(255, 255, 255, 150))

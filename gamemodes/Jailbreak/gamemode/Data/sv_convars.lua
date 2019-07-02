@@ -10,4 +10,5 @@ CreateConVar("jb_guards_max_regen", 40, FCVAR_ARCHIVE, "How many total health po
 CreateConVar("jb_prisoners_max_regen", 20, FCVAR_ARCHIVE, "How many total health points should prisoners regenerate")
 CreateConVar("jb_warden_max_regen", 60, FCVAR_ARCHIVE, "How many total health points should the warden regenerate")
 CreateConVar("jb_guards_max_armor", 20, FCVAR_ARCHIVE, "How many total armor points should guards have")
-CreateConVar("jb_warden_max_armor", 50, FCVAR_ARCHIVE, "How many total armor points should guards have")
+CreateConVar("jb_warden_max_armor", 50, FCVAR_ARCHIVE, "How many total armor points should warden have")
+CreateConVar("jb_Prisoners_Mute_Time", 15, FCVAR_ARCHIVE, "How many seconds should prisoners be muted at the end of the round")

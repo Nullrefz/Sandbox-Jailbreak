@@ -35,10 +35,7 @@ if CLIENT then
 
     -- JB:DrawHitPoint(dmg, trace)
     hook.Add("PlayerTraceAttack", "ShowHitPoint", function(ply, dmgInfo, trace)
-        local tr = util.TraceLine({
-            start = ply:GetPos(),
-            endpos = dmgInfo:GetDamagePosition()
-        })
+        local tr = dmgInfo:GetAttacker():GetEyeTrace()
 
         JB:DrawHitPoint(dmgInfo:GetDamage(), tr)
     end)

@@ -11,22 +11,6 @@ PING = {
     ["BAD"] = 150
 }
 
-commandType = {
-    AFK = 0,
-    CROUCH = 1,
-    MIC = 2,
-    WALK = 3,
-    FREELOOK = 4,
-    SPRINTING = 5,
-    WAYPOINT = 6,
-    JUMPING = 7
-}
-
-waypointType = {
-    POINT = 0,
-    LINE = 1
-}
-
 Team = {
     PRISONERS = 1,
     GUARDS = 2,

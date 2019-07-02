@@ -26,7 +26,7 @@ function PLAYERMODELPANEL:Init()
     end
 
     function self.avatar.Entity:GetPlayerColor()
-        return team.GetColor(ply:Team())
+        return team.GetColor(targetPlayer:Team())
     end
 end
 
@@ -62,7 +62,7 @@ function PLAYERMODELPANEL:Paint(width, height)
         self.avatar:SetAnimated(false)
 
         function self.avatar.Entity:GetPlayerColor()
-            return team.GetColor(ply:Team())
+            return team.GetColor(targetPlayer:Team())
         end
     end
 end
