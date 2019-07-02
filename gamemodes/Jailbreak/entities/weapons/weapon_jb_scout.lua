@@ -23,7 +23,7 @@ SWEP.Primary.Sound = Sound("Weapon_Scout.Single")
 SWEP.Primary.Recoil = 0.1
 SWEP.Primary.Damage = 80
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Cone = 0
+SWEP.Primary.Cone = 0.01
 SWEP.Primary.ClipSize = 1
 SWEP.Primary.Delay = 1.25
 SWEP.Primary.DefaultClip = 20
@@ -36,3 +36,25 @@ SWEP.Secondary.Ammo = "none"
 SWEP.IronSightsPos = Vector(-6, -5, 3)
 SWEP.IronSightsAng = Vector(0, 0, 0)
 SWEP.ZoomDelay = 0.25
+
+function SWEP:Think()
+    if self:GetNWMode() == AIM.Focus and not inFocus then
+        LerpFloat(self.CurFOV, 10, 0.5, function(val)
+            self.CurFOV = val
+        end, INTERPOLATION.SmoothStep)
+
+        inFocus = true
+    elseif self:GetNWMode() ~= AIM.Focus and inFocus then
+        inFocus = false
+
+        LerpFloat(self.CurFOV, self.TargetFOV, 0.5, function(val)
+            self.CurFOV = val
+        end, INTERPOLATION.SmoothStep)
+    end
+end
+
+if CLIENT then
+    function SWEP:AdjustMouseSensitivity()
+        return self:GetNWMode() == AIM.Focus and .08 or 1
+    end
+end
