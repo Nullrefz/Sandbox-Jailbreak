@@ -33,7 +33,7 @@ function JB:OpenDayMenu()
     self.dayMenu:SetSize(w, h)
     self.dayMenu:SetPos(0, 0)
 
-    for k, v in ipairs(commandType) do
+    for k, v in ipairs(calendar) do
         self.dayMenu:AddSlot(function()
             JB:SendChosenDay(v)
         end, Color(255, 255, 255))
@@ -61,8 +61,8 @@ function JB:SendWaypoint(waypoint)
     net.SendToServer()
 end
 
-function JB:SendCommand(chosenDay)
+function JB:SendChosenDay(chosenDay)
     net.Start("SendChosenDay")
-    net.WriteInt(table.KeyFromValue(days, chosenDay), 32)
+    net.WriteInt(table.KeyFromValue(calendar, chosenDay), 32)
     net.SendToServer()
 end

@@ -1,5 +1,6 @@
-Days = {"freeday", "warday", "hidenseek"}
-
+wardenMenu = {"games", "commands", "actions", "calendar"}
+calendar = {"freeday", "warday", "hidenseek", "jokeDay", "weepingangles", "salty spitoon"}
+actions = {"friendlyfire", "teamcollision", "guardmute"}
 if SERVER then
     util.AddNetworkString("UpdateCommands")
 
@@ -19,7 +20,7 @@ if SERVER then
     }
 
     net.Receive("SendChosenDay", function(ln, ply)
-        daysFunction[table.KeyFromValue(Days, net.ReadInt(32))]()
+        daysFunction[table.KeyFromValue(calendar, net.ReadInt(32))]()
     end)
 
     hook.Add("WardenRevoked", "WardenKilled", function()

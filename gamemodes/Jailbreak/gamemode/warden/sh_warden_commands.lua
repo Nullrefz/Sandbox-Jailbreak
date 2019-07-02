@@ -1,4 +1,4 @@
-commandType = {"walk", "mic", "crouch", "afk", "jumping", "sprinting","calendar", "waypoint", "freelook"}
+commandType = {"walk", "mic", "crouch", "afk", "jumping", "sprinting", "waypoint", "freelook"}
 
 waypointType = {
     POINT = 0,
