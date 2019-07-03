@@ -20,7 +20,7 @@ SWEP.Secondary.Ammo = "none"
 SWEP.DrawAmmo = false
 SWEP.HitDistance = 48
 SWEP.CanDrop = false
-SWEP.TargetFOV = 60
+SWEP.TargetFOV = 68
 
 if (CLIENT) then
     SWEP.PrintName = "Hands"

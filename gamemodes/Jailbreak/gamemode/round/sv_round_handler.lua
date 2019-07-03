@@ -6,7 +6,17 @@ function JB:SetRoundWaiting()
     self:SetRoundTime(GetConVar("jb_Round_Waiting"):GetInt() or -1)
     self.round.count = 0
     self:EnableRespawns()
-    game.CleanUpMap()
+    self:ResetMap(true)
+
+    timer.Create("IntervalCleanup", 5, 0, function()
+        for k, v in pairs(player.GetAll()) do
+            if not v:Alive() then
+                JB:ResetMap(true)
+                v:Spawn()
+                break
+            end
+        end
+    end)
 end
 
 hook.Add("jb_round_waiting", "setup waiting", function()
@@ -26,11 +36,13 @@ function JB:SetRoundPreparing()
         return
     end
 
-    game.CleanUpMap()
+    timer.Remove("IntervalCleanup")
+    self:ResetMap()
     self:EnableRespawns()
     self:SpawnAllPlayers()
     self:SetSelfCollision(false)
     self:SetFriendlyFire(false)
+    self:RemoveCloseButton()
     self:SetMicEnabled(false, Team.PRISONERS)
     --self:FreezePlayers(true)
 end
@@ -56,7 +68,7 @@ function JB:SetRoundActive()
     self:DisableRespawns()
 
     timer.Simple(GetConVar("jb_Prisoners_Mute_Time"):GetInt() or 15, function()
-        JB:SetMicEnabled(false, Team.PRISONERS)
+        JB:SetMicEnabled(true, Team.PRISONERS)
     end)
 end
 

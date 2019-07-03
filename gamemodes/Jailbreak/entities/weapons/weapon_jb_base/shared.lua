@@ -29,15 +29,16 @@ SWEP.ViewModelFlip = false
 SWEP.CSMuzzleFlashes = true
 SWEP.crosshairVisible = true
 SWEP.DrawCrosshair = false
-SWEP.TargetFOV = 70
-SWEP.CurFOV = 70
+SWEP.TargetFOV = 75
+SWEP.CurFOV = 75
 SWEP.CanDrop = true
 
 AIM = {
     Normal = 1,
     Crouch = 2,
     Focus = 3,
-    Sprint = 4
+    Sprint = 4,
+    Reload = 5
 }
 
 function SWEP:SetupDataTables()
@@ -79,7 +80,7 @@ end
 
 function SWEP:Reload()
     self:DefaultReload(ACT_VM_RELOAD)
-    self:SetNWMode(AIM.Normal)
+    self:SetNWMode(AIM.Reload)
     self.Owner:SetAnimation(PLAYER_RELOAD)
     self:SetIronsights(false)
 end
@@ -221,23 +222,22 @@ function SWEP:DrawHUD()
         x, y = ScrW() / 2.0, ScrH() / 2.0
     end
 
-    local scale = 10 * self.Primary.Cone
+    local scale = 10 * math.Clamp(self.Primary.Cone, 0.01, 10000)
     -- Scale the size of the crosshair according to how long ago we fired our weapon
     local LastShootTime = self:GetNWFloat("LastShootTime", 0)
     scale = scale * (2 - math.Clamp((CurTime() - LastShootTime) * 5, 0.0, 1.0))
     if not IsValid(LocalPlayer()) then return end
     local trace = LocalPlayer():GetEyeTrace()
-    if  not trace.Entity:IsValid() then return end
-    if trace.Entity:GetClass() == "player" then
+    if trace.Entity:IsValid() and trace.Entity:GetClass() == "player" then
         local bone = trace.HitBox
 
         if bone == 0 then
-            surface.SetDrawColor(0, 220, 255, 255)
+            surface.SetDrawColor(255, 0, 50, 255)
         else
             surface.SetDrawColor(255, 255, 255, 255)
         end
     else
-        surface.SetDrawColor(255, 255, 255, 200)
+        surface.SetDrawColor(255, 255, 255, 100)
     end
 
     -- Draw an awesome crosshair

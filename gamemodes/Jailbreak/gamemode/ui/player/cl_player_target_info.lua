@@ -1,6 +1,8 @@
 function GM:HUDDrawTargetID()
 end
 
+local plyCount = 0
+
 surface.CreateFont("Jailbreak_Font_42", {
     font = "Optimus",
     extended = false,
@@ -56,6 +58,9 @@ function JB:RefreshTargetInfo(ID)
     end
 end
 
-hook.Add("PlayerConnect", "EnableTargedInfo", function()
-    JB:RefreshTargetInfo()
+hook.Add("Think", "EnableTargedInfo", function()
+    if plyCount ~= #player.GetAll() then
+        JB:RefreshTargetInfo()
+        plyCount = #player.GetAll()
+    end
 end)

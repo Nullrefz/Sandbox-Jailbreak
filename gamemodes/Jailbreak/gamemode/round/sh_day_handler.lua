@@ -25,7 +25,7 @@ if SERVER then
 
     hook.Add("WardenRevoked", "WardenKilled", function()
         if JB:GetActivePhase() == ROUND_ACTIVE then
-            daysFunction["freeday"]()
+            --daysFunction["freeday"]()
         end
     end)
 end

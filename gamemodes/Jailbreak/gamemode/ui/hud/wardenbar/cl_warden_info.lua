@@ -69,14 +69,14 @@ end
 
 function WARDENBAR:PerformLayout(width, height)
     self.background:SetSize(height, height)
-
+    local iconSizePadding = 32
     if self.wardenIcon then
-        self.wardenIcon:SetSize(height - 20, height - 20)
+        self.wardenIcon:SetSize(height - toHRatio(iconSizePadding), height - toVRatio(iconSizePadding))
         self.wardenIcon:Center()
     end
 
     self.wardenInfo:SetPos(self.background:GetWide(), 0)
-    self.wardenInfo:SetSize(width - self.background:GetWide(), height + 20)
+    self.wardenInfo:SetSize(width - self.background:GetWide(), height )
 end
 
 vgui.Register("JailbreakWardenBar", WARDENBAR)
