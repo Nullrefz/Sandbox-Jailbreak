@@ -37,7 +37,8 @@ AIM = {
     Normal = 1,
     Crouch = 2,
     Focus = 3,
-    Sprint = 4
+    Sprint = 4,
+    Reload = 5
 }
 
 function SWEP:SetupDataTables()
@@ -79,7 +80,7 @@ end
 
 function SWEP:Reload()
     self:DefaultReload(ACT_VM_RELOAD)
-    self:SetNWMode(AIM.Normal)
+    self:SetNWMode(AIM.Reload)
     self.Owner:SetAnimation(PLAYER_RELOAD)
     self:SetIronsights(false)
 end
