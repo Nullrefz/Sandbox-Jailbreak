@@ -221,7 +221,7 @@ function SWEP:DrawHUD()
         x, y = ScrW() / 2.0, ScrH() / 2.0
     end
 
-    local scale = 10 * self.Primary.Cone
+    local scale = 10 * math.Clamp(self.Primary.Cone, 0.01, 10000)
     -- Scale the size of the crosshair according to how long ago we fired our weapon
     local LastShootTime = self:GetNWFloat("LastShootTime", 0)
     scale = scale * (2 - math.Clamp((CurTime() - LastShootTime) * 5, 0.0, 1.0))
