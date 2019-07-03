@@ -1,6 +1,6 @@
 CreateConVar("jb_max_guards", 5, FCVAR_ARCHIVE, "Max guard limit")
 CreateConVar("jb_guards_ratio", 3, FCVAR_ARCHIVE, "Number of prisoner per guard")
-CreateConVar("jb_min_players", 2, FCVAR_ARCHIVE, "Number of players required to start the game")
+CreateConVar("jb_min_players", 1, FCVAR_ARCHIVE, "Number of players required to start the game")
 CreateConVar("jb_max_rounds", 10, FCVAR_ARCHIVE, "Number of played rounds need to change the map")
 CreateConVar("jb_warden_vote_duration", 20, FCVAR_ARCHIVE, "Time given for everyone to vote for a warden")
 CreateConVar("jb_warden_prisoners_vote_percentage", 25, FCVAR_ARCHIVE, "Percentage of vote participation for the prisoners")
@@ -12,3 +12,4 @@ CreateConVar("jb_warden_max_regen", 60, FCVAR_ARCHIVE, "How many total health po
 CreateConVar("jb_guards_max_armor", 20, FCVAR_ARCHIVE, "How many total armor points should guards have")
 CreateConVar("jb_warden_max_armor", 50, FCVAR_ARCHIVE, "How many total armor points should warden have")
 CreateConVar("jb_Prisoners_Mute_Time", 15, FCVAR_ARCHIVE, "How many seconds should prisoners be muted at the end of the round")
+CreateConVar("jb_celldoors_open", 30, FCVAR_ARCHIVE, "How many seconds before celldoors auto open")

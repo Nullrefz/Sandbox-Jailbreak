@@ -3,12 +3,14 @@ if SERVER then
 
     --
     hook.Add("PlayerSay", "SendURL", function(sender, text, teamChat)
-        if text == "!apply" then
+        if string.StartWith(text, "!apply") then
             JB:OpenURL("https://forms.gle/txPrhcyvKXqsyqhT7", sender)
-        elseif text == "!bug" then
+        elseif string.StartWith(text, "!bug") then
             JB:OpenURL("https://forms.gle/xcVqqAr5okAFf8DR9", sender)
-        elseif text == "!suggest" then
+        elseif string.StartWith(text, "!suggest") then
             JB:OpenURL("https://forms.gle/8Umv3cyg1QC7YPT16", sender)
+        elseif string.StartWith(text, "!status") then
+            JB:OpenURL("https://trello.com/b/6oXIrrNq/nullref-jailbreak", sender)
         end
     end)
 

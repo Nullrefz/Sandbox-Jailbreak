@@ -106,12 +106,12 @@ function JB:GetAlivePlayersByTeam(teamIndex)
 end
 
 --[[---------------------------------------------------------
-    Name: jailbreak:SetSelfCollision()
+    Name: jailbreak:SetNoSelfCollision()
     Desc: Sets if players should self collide 
     Args: • enabled         -- collision enabled
           • playerTeam      -- chosen team
 -----------------------------------------------------------]]
-function JB:SetSelfCollision(enabled, playerTeam)
+function JB:SetNoSelfCollision(enabled, playerTeam)
     for k, v in pairs(playerTeam and playerTeam or player.GetAll()) do
         v:SetNoCollideWithTeammates(enabled)
     end
@@ -141,7 +141,15 @@ end
           • playerTeam      -- chosen team
 -----------------------------------------------------------]]
 function JB:SetMicEnabled(enabled, chosenTeam)
+    if chosenTeam == Team.PRISONERS then
+        for k, v in pairs(player.GetAll()) do
+            v:ChatPrint("prisonners are now " .. (enabled and "unmuted" or "muted"))
+        end
+    end
+
     hook.Add("PlayerCanHearPlayersVoice", "SetMicEnabled", function(listener, talker)
+        if not talker:Alive() then return false end
+
         if not chosenTeam then
             return enabled
         else

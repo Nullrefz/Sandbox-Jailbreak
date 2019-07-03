@@ -37,22 +37,6 @@ SWEP.IronSightsPos = Vector(-6, -5, 3)
 SWEP.IronSightsAng = Vector(0, 0, 0)
 SWEP.ZoomDelay = 0.25
 
-function SWEP:Think()
-    if self:GetNWMode() == AIM.Focus and not inFocus then
-        LerpFloat(self.CurFOV, 10, 0.5, function(val)
-            self.CurFOV = val
-        end, INTERPOLATION.SmoothStep)
-
-        inFocus = true
-    elseif self:GetNWMode() ~= AIM.Focus and inFocus then
-        inFocus = false
-
-        LerpFloat(self.CurFOV, self.TargetFOV, 0.5, function(val)
-            self.CurFOV = val
-        end, INTERPOLATION.SmoothStep)
-    end
-end
-
 if CLIENT then
     function SWEP:AdjustMouseSensitivity()
         return self:GetNWMode() == AIM.Focus and .08 or 1
@@ -68,7 +52,7 @@ if CLIENT then
             percent = Lerp(FrameTime() * 10, percent, 0)
         end
 
-         self.CurFOV = math.Clamp(self.TargetFOV * (1 - percent), 10, self.TargetFOV)
+        self.CurFOV = math.Clamp(self.TargetFOV * (1 - percent), 10, self.TargetFOV)
         local trace = LocalPlayer():GetEyeTrace()
         draw.DrawArc(w / 2, h / 2, toHRatio(500) * percent, toHRatio(2500), 360, 30, Color(255, 255, 200, 255 * percent))
 

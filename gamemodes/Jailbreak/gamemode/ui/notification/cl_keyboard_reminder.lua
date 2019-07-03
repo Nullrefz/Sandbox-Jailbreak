@@ -70,7 +70,7 @@ hook.Add("InitPostEntity", "ShowButtonNotification", function()
     hook.Add("Think", "DrawWeaponOutline", function()
         local trace = LocalPlayer():GetEyeTrace()
 
-        if trace.Entity:IsWeapon() and LocalPlayer():GetPos():Distance(trace.Entity:GetPos()) < 100 and not LocalPlayer():HasWeapon(JB:GetWeapon(trace.Entity)) then
+        if  LocalPlayer():Alive() and trace.Entity:IsWeapon() and LocalPlayer():GetPos():Distance(trace.Entity:GetPos()) < 100 and not LocalPlayer():HasWeapon(JB:GetWeapon(trace.Entity)) then
             key = "E"
             message = "Pick Up"
 

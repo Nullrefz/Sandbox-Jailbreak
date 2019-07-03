@@ -6,6 +6,8 @@ local mats = {
     PRISONER = Material("jailbreak/vgui/Orange_Icon_Slot.png", "smooth")
 }
 
+local percent = 0
+
 function PLAYERMODELPANEL:Init()
     targetPlayer = LocalPlayer()
     self.avatar = vgui.Create("DModelPanel", self)
@@ -35,8 +37,17 @@ function PLAYERMODELPANEL:PerformLayout(width, height)
 end
 
 function PLAYERMODELPANEL:Paint(width, height)
+    if not targetPlayer or not targetPlayer:Alive() then
+        percent = Lerp(FrameTime() * 5, percent, 0)
+    else
+        percent = Lerp(FrameTime() * 5, percent, 1)
+    end
+
+    draw.DrawRect(0, 0, self.avatar:GetWide(), self.avatar:GetTall(), Color(255, 255, 255, 255 * percent), (targetPlayer:Team() == 1) and mats.PRISONER or (targetPlayer == warden and mats.GUARD or mats.WARDEN))
+
+
+
     if not targetPlayer or not targetPlayer:Alive() then return end
-    draw.DrawRect(0, 0, self.avatar:GetWide(), self.avatar:GetTall(), Color(255, 255, 255), (targetPlayer:Team() == 1) and mats.PRISONER or (targetPlayer == warden and mats.GUARD or mats.WARDEN))
     local radius = 109
     render.ClearStencil()
     render.SetStencilEnable(true)

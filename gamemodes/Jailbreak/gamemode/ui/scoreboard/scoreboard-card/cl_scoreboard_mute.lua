@@ -41,7 +41,7 @@ function MUTEBUTTON:DrawSkin()
     end
 
     function self:Paint(width, height)
-        if not self.ply then return end
+        if not IsValid(self.ply) and not self.ply then return end
         draw.DrawRect(width * 0.1, height * 0.1, width - width * 0.1 * 2, height - height * 0.1 * 2, self.ply:IsMuted() and Color(255, 0, 0, 255) or Color(255, 255, 255, 255), self.ply:IsMuted() and mats.MUTED or mats.UNMUTED)
     end
 end

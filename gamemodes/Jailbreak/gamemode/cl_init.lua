@@ -13,7 +13,7 @@ net.Receive('OnWardenSet', function()
 end)
 
 net.Receive("GuardCount", function()
-    allowedGuardCount = net.ReadInt(32)
+    allowedGuardCount = #team.GetPlayers(Team.GUARDS) + net.ReadInt(32)
 end)
 
 function GM:OnSpawnMenuOpen()

@@ -83,12 +83,11 @@ function JB:SpectatorKeyPress(ply, key)
 end
 
 hook.Add("PlayerDeath", "Holdspectate", function(ply)
-    ply:CycleSpectateMode(OBS_MODE_ROAMING)
-    ply:SetMoveType(MOVETYPE_NOCLIP)
+    --ply:StartSpectating()
 end)
 
 hook.Add("KeyPress", "JailBreakSpectatorControls", function(ply, key)
-    JB:SpectatorKeyPress(ply, key)
+    --timer.Simple(3, function() ply:StartSpectating() end)
 end)
 
 function JB:SetupSpectators()
@@ -110,6 +109,13 @@ function JB:SetupSpectators()
     self:AddSpectatorAction(IN_DUCK, function(ply)
         ply:CycleSpectateMode()
     end)
+end
+
+function player:StartSpectating()
+    if  not self:Alive() and self:GetObserverMode() ~= OBS_MODE_ROAMING then
+        self:CycleSpectateMode(OBS_MODE_ROAMING)
+        self:SetMoveType(MOVETYPE_NOCLIP)
+    end
 end
 
 function player:UpdateHud(target)

@@ -121,7 +121,7 @@ function JB:RoundThink()
         self:SetRoundPhase(ROUND_WAITING)
     end
 
-    if (#team.GetPlayers(Team.PRISONERS) < (GetConVar("jb_min_players"):GetInt() or 2) or #team.GetPlayers(Team.GUARDS) == 0) and self.round.activePhase ~= ROUND_WAITING then
+    if (#team.GetPlayers(Team.PRISONERS) < (GetConVar("jb_min_players"):GetInt() or 1) or #team.GetPlayers(Team.GUARDS) == 0) and self.round.activePhase ~= ROUND_WAITING then
         self:SetRoundPhase(ROUND_WAITING)
 
         return

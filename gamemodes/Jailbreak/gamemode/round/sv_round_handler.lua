@@ -7,6 +7,9 @@ function JB:SetRoundWaiting()
     self.round.count = 0
     self:EnableRespawns()
     self:ResetMap(true)
+    self:SetNoSelfCollision(true)
+    self:SetMicEnabled(true, Team.PRISONERS)
+    self:SetFriendlyFire(true)
 
     timer.Create("IntervalCleanup", 5, 0, function()
         for k, v in pairs(player.GetAll()) do
@@ -33,17 +36,17 @@ function JB:SetRoundPreparing()
     if self.round.count > GetConVar("jb_max_rounds"):GetInt() then
         hook.Run("ChangeMap")
 
-        return
+       -- return
     end
 
     timer.Remove("IntervalCleanup")
     self:ResetMap()
     self:EnableRespawns()
     self:SpawnAllPlayers()
-    self:SetSelfCollision(false)
+    self:SetNoSelfCollision(true)
     self:SetFriendlyFire(false)
     self:RemoveCloseButton()
-    self:SetMicEnabled(false, Team.PRISONERS)
+    self:SetMicEnabled(true, Team.PRISONERS)
     --self:FreezePlayers(true)
 end
 
@@ -60,16 +63,25 @@ function JB:SetRoundActive()
 
     for k, v in pairs(player.GetAll()) do
         if IsValid(v) and not v:Alive() and v:Team() <= Team.GUARDS then
-            self:PlayerSpawn(v)
+            v:Spawn()
         end
     end
 
     self:FreezePlayers(false)
     self:DisableRespawns()
+    self:SetMicEnabled(false, Team.PRISONERS)
 
     timer.Simple(GetConVar("jb_Prisoners_Mute_Time"):GetInt() or 15, function()
         JB:SetMicEnabled(true, Team.PRISONERS)
     end)
+
+    if not self.warden then
+        JB:OpenCells()
+    else
+        timer.Simple(GetConVar("jb_celldoors_open"):GetInt() or 30, function()
+            JB:OpenCells()
+        end)
+    end
 end
 
 hook.Add("jb_round_active", "setup waiting", function()
@@ -83,6 +95,8 @@ end)
 function JB:SetRoundEnding()
     self:SetRoundTime(GetConVar("jb_Round_Ending"):GetInt() or 10)
     self:RevokeWarden()
+    self:SetFriendlyFire(true)
+    self:SetMicEnabled(true)
 end
 
 hook.Add("jb_round_ending", "setup ending", function()

@@ -29,7 +29,7 @@ if SERVER then
 
     function JB:SetWaypoint(type)
         self.warden:GiveWeapon("weapon_radio")
-        self.warden:SetActiveWeapon("weapon_radio")
+        self.warden:SelectWeapon("weapon_jb_radio")
         net.Start("PlaceWaypoint")
         net.Broadcast()
     end

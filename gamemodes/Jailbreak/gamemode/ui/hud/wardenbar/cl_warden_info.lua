@@ -35,7 +35,7 @@ surface.CreateFont("Jailbreak_Font_WardenName", {
     additive = false,
     outline = false
 })
-
+local percent = 0
 function WARDENBAR:Init()
     self.background = vgui.Create("DImage", self)
     self.wardenIcon = vgui.Create("CircularAvatar", self.background)
@@ -43,10 +43,13 @@ function WARDENBAR:Init()
     self.background:SetImage("jailbreak/vgui/DeepBlue_Icon_Slot.png")
     self.wardenInfo = vgui.Create("DPanel", self)
     self.warden = warden
+    percent = 0
     net.Start("OnWardenRequest")
     net.SendToServer()
 
     function self:Think()
+        self.background:SetImageColor(Color(255,255,255,255 * percent))
+
         if self.warden ~= warden then
             self.warden = warden
             self.wardenIcon:Show()
@@ -57,12 +60,17 @@ function WARDENBAR:Init()
     end
 
     function self.wardenInfo:Paint(width, height)
-        draw.DrawText("Warden", "Jailbreak_Font_WardenTitle", toHRatio(10), height / 2 - toVRatio(30) / 2 - toVRatio(18) / 2, Color(255, 255, 255, 150), TEXT_ALIGN_LEFT)
+        if warden then
+            percent = Lerp(FrameTime() * 5, percent, 1)
+        else
+            percent = Lerp(FrameTime() * 5, percent, 0)
+        end
+        draw.DrawText("Warden", "Jailbreak_Font_WardenTitle", toHRatio(10), height / 2 - toVRatio(30) / 2 - toVRatio(18) / 2, Color(255, 255, 255, 150 * percent), TEXT_ALIGN_LEFT)
 
         if warden then
-            draw.DrawText(warden:Name(), "Jailbreak_Font_WardenName", toHRatio(5), height / 2 - toVRatio(30) / 2, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
+            draw.DrawText(warden:Name(), "Jailbreak_Font_WardenName", toHRatio(5), height / 2 - toVRatio(30) / 2, Color(255, 255, 255, 200 * percent), TEXT_ALIGN_LEFT)
         else
-            draw.DrawText("None", "Jailbreak_Font_WardenName", toHRatio(5), height / 2 - toVRatio(30) / 2, Color(255, 255, 255, 50), TEXT_ALIGN_LEFT)
+            draw.DrawText("None", "Jailbreak_Font_WardenName", toHRatio(5), height / 2 - toVRatio(30) / 2, Color(255, 255, 255, 50 * percent), TEXT_ALIGN_LEFT)
         end
     end
 end

@@ -9,17 +9,24 @@ function JB:OpenCells(ply, ent)
         end
     end
 
+    if not ent then return end
     ent:Fire("Press")
     ent:SetPos(Vector(0, 0, 0))
 
     timer.Simple(0.3, function()
-        ent:Remove()
+        if ent:IsValid() then
+            ent:Remove()
+        end
     end)
 
-    if not ply then return end
-
-    for k, v in pairs(player.GetAll()) do
-        v:ChatPrint(ply:Name() .. " opened the cell doors")
+    if not ply then
+        for k, v in pairs(player.GetAll()) do
+            v:ChatPrint("The cell doors are now opened")
+        end
+    else
+        for k, v in pairs(player.GetAll()) do
+            v:ChatPrint(ply:Name() .. " opened the cell doors")
+        end
     end
 end
 
