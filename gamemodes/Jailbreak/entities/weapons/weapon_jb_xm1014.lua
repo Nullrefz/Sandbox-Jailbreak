@@ -1,12 +1,13 @@
 AddCSLuaFile()
 
 if (CLIENT) then
-    SWEP.PrintName = "Pump Shotgun"
+    SWEP.PrintName = "XM1014"
     SWEP.Author = "Counter-Strike"
     SWEP.Slot = 2
-    SWEP.SlotPos = 3
-    SWEP.IconLetter = "k"
-    killicon.AddFont("weapon_m3", "CSKillIcons", SWEP.IconLetter, Color(255, 80, 0, 255))
+    SWEP.SlotPos = 1
+    SWEP.IconLetter = "B"
+    SWEP.ViewModelFlip = false
+    killicon.AddFont("weapon_xm1014", "CSKillIcons", SWEP.IconLetter, Color(255, 80, 0, 255))
 end
 
 SWEP.HoldType = "ar2"
@@ -14,27 +15,28 @@ SWEP.Base = "weapon_jb_base"
 SWEP.Category = "Counter-Strike"
 SWEP.Spawnable = true
 SWEP.AdminSpawnable = true
-SWEP.ViewModel = "models/weapons/cstrike/c_shot_m3super90.mdl"
-SWEP.WorldModel = "models/weapons/w_shot_m3super90.mdl"
+SWEP.ViewModel = "models/weapons/cstrike/c_shot_xm1014.mdl"
+SWEP.WorldModel = "models/weapons/w_shot_xm1014.mdl"
 SWEP.Weight = 5
 SWEP.AutoSwitchTo = false
 SWEP.AutoSwitchFrom = false
-SWEP.Primary.Sound = Sound("Weapon_M3.Single")
+SWEP.Primary.Sound = Sound("Weapon_xm1014.Single")
 SWEP.Primary.Recoil = 5
-SWEP.Primary.Damage = 8
-SWEP.Primary.NumShots = 8
+SWEP.Primary.Damage = 15
+SWEP.Primary.NumShots = 7
 SWEP.Primary.Cone = 0.1
-SWEP.Primary.ClipSize = 8
-SWEP.Primary.Delay = 0.95
-SWEP.Primary.DefaultClip = 16
+SWEP.Primary.ClipSize = 7
+SWEP.Primary.Delay = 0.07
+SWEP.Primary.DefaultClip = 32
 SWEP.Primary.Automatic = false
-SWEP.Primary.Ammo = "buckshot"
+SWEP.Primary.Ammo = "smg1"
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "none"
-SWEP.IronSightsPos = Vector(5.7, -3, 3)
-SWEP.TargetFOV = 70
+SWEP.IronSightsPos = Vector(0, 0, 2.5)
+SWEP.IronSightsAng = Vector(0, 0, 0)
+
 --[[---------------------------------------------------------
 	Reload does nothing
 ---------------------------------------------------------]]
