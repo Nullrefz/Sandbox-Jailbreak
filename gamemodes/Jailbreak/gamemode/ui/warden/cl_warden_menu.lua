@@ -1,5 +1,4 @@
 local WARDENMENU = {}
-local mats = {Material("jailbreak/vgui/walk.png", "smooth"), Material("jailbreak/vgui/line up.png", "smooth"), Material("jailbreak/vgui/crouch.png", "smooth"), Material("jailbreak/vgui/afk.png", "smooth"), Material("jailbreak/vgui/jumping.png", "smooth"), Material("jailbreak/vgui/waypoint.png", "smooth"), Material("jailbreak/vgui/sprinting.png", "smooth"), Material("jailbreak/vgui/freelook.png", "smooth")}
 
 surface.CreateFont("Jailbreak_Font_WardenMenu", {
     font = "Optimus",
@@ -20,6 +19,15 @@ surface.CreateFont("Jailbreak_Font_WardenMenu", {
 })
 
 function WARDENMENU:Init()
+    --self.UpdateInfo()
+    self.slots = {}
+
+    if LocalPlayer() ~= warden then
+        self:Remove()
+
+        return
+    end
+
     self.panel = vgui.Create("Panel", self)
     self.panel:MakePopup()
     self.thickness = 2
@@ -29,45 +37,91 @@ function WARDENMENU:Init()
     self.iconSize = 85
     self.iconRadius = 175
     self.textRadius = 275
-    local panelAlpha = {}
-
-    for i = 0, 7 do
-        table.insert(panelAlpha, 0)
-    end
+    self.alphaLerp = 0
+    self.remove = false
+    local insideSelection = false
+    local selection = 0
 
     function self:Paint(width, height)
+        self.alphaLerp = math.Clamp(self.alphaLerp + FrameTime() * 10 * (self.remove and -1 or 1), 0, 1)
+        height = height - height * (1 - self.alphaLerp) / 50
+
+        if self.alphaLerp <= 0 then
+            self:Remove()
+            self:Clear()
+        end
+
         self.width = 256
-        draw.CapsuleBox(width / 2, height / 2, self.width, self.thickness, 360, 45 / 2, self.anchor, Color(255, 255, 255, self.alpha))
-        draw.CapsuleBox(width / 2, height / 2, self.width, self.thickness, 360, 45 / 2 + 45, self.anchor, Color(255, 255, 255, self.alpha))
-        draw.CapsuleBox(width / 2, height / 2, self.width, self.thickness, 360, 45 / 2 + 90, self.anchor, Color(255, 255, 255, self.alpha))
-        draw.CapsuleBox(width / 2, height / 2, self.width, self.thickness, 360, 45 / 2 + 90 + 45, self.anchor, Color(255, 255, 255, self.alpha))
-        draw.CapsuleBox(width / 2, height / 2, self.width, self.thickness, 360, 45 / 2 + 0 + 180, self.anchor, Color(255, 255, 255, self.alpha))
-        draw.CapsuleBox(width / 2, height / 2, self.width, self.thickness, 360, 45 / 2 + 45 + 180, self.anchor, Color(255, 255, 255, self.alpha))
-        draw.CapsuleBox(width / 2, height / 2, self.width, self.thickness, 360, 45 / 2 + 90 + 180, self.anchor, Color(255, 255, 255, self.alpha))
-        draw.CapsuleBox(width / 2, height / 2, self.width, self.thickness, 360, 45 / 2 + 90 + 45 + 180, self.anchor, Color(255, 255, 255, self.alpha))
-        draw.DrawArc(width / 2, height / 2, self.radius, self.radius - 3, 360, 0, Color(255, 255, 255, 255))
-        draw.DrawArc(width / 2, height / 2, self.radius - 5, self.radius - 15, 360, 0, Color(255, 255, 255, self.alpha))
+        draw.DrawArc(width / 2, height / 2, self.radius, self.radius - 3, 360, 0, Color(255, 255, 255, 255 * self.alphaLerp))
+        draw.DrawArc(width / 2, height / 2, self.radius - 5, self.radius - 15, 360, 0, Color(255, 255, 255, self.alpha * self.alphaLerp))
         local y = Vector(width / 2, height / 2, 0)
         local x = Vector(gui.MouseX(), gui.MouseY(), 0)
         x:Sub(y)
+        local segments = 360 / #self.slots
+        local shiter =  segments / 2 --CurTime() * 50
 
-        for i = 0, 7 do
-            local a = math.rad((i / 8) * 360 - 45)
-            local str = string.GetFileFromFilename(mats[i + 1]:GetName())
-            draw.DrawRect(width / 2 - self.iconSize / 2 + math.sin(a) * self.iconRadius, height / 2 - self.iconSize / 2 + math.cos(a) * self.iconRadius, self.iconSize, self.iconSize, Color(255, 255, 255), mats[i + 1])
-            draw.DrawText(str:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end), "Jailbreak_Font_WardenMenu", width / 2 + math.sin(a) * self.textRadius, height / 2 + math.cos(a) * self.textRadius - 42 / 2, Color(255, 255, 255, 180), TEXT_ALIGN_CENTER)
-            print(panelAlpha[i])
-            if i == math.floor(x:Angle().yaw / 360 * 8 + 0.5) % 8 then
-                panelAlpha[i] = math.Clamp(panelAlpha[i] + FrameTime(), 0, 10)
+        selection = math.ceil(((x:Angle().yaw - shiter) % 360) / segments)
+        local shift = 90 --+ CurTime() * 50
+        for i = 1, #self.slots do
+            draw.CapsuleBox(width / 2, height / 2 - 2, self.width, self.thickness, 360,  -i * segments + shift + shiter, self.anchor, Color(255, 255, 255, self.alpha * self.alphaLerp))
+            local angle = math.rad(-i * segments + shift - shiter + segments / 2)
+            local str = commandType[i]
+            if i == math.ceil(((x:Angle().yaw - shiter) % 360) / segments) and insideSelection then
+                self.slots[i].ALPHA = math.Clamp(self.slots[i].ALPHA + FrameTime() * 100, 0, 25)
             else
-                panelAlpha[i] = math.Clamp(panelAlpha[i] - FrameTime(), 0, 10)
+                self.slots[i].ALPHA = math.Clamp(self.slots[i].ALPHA - FrameTime() * 100, 0, 25)
             end
 
-            draw.DrawArc(width / 2, height / 2, 250, self.radius, 45, i * 45 + 45 / 2, Color(0, 180, 255, self.panelAlpha[i]))
+            draw.DrawArc(width / 2, height / 2, width, self.radius, segments,  -i * segments + shift - shiter, Color(255, 255, 255,  self.slots[i].ALPHA))
+            draw.DrawRect(width / 2 - self.iconSize / 2 + math.sin(angle) * self.iconRadius, height / 2 - self.iconSize / 2 + math.cos(angle) * self.iconRadius, self.iconSize, self.iconSize, table.HasValue(activeCommands, i) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(self.slots[i].COLOR.r, self.slots[i].COLOR.g, self.slots[i].COLOR.b, 180 * self.alphaLerp), Material("jailbreak/vgui/" .. commandType[i] .. ".png", "smooth"))
+            draw.DrawText(str:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end), "Jailbreak_Font_WardenMenu", width / 2 + math.sin(angle) * self.textRadius, height / 2 + math.cos(angle) * self.textRadius - 42 / 2, table.HasValue(activeCommands, i) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(self.slots[i].COLOR.r, self.slots[i].COLOR.g, self.slots[i].COLOR.b, 180 * self.alphaLerp), TEXT_ALIGN_CENTER)
         end
 
-        LocalPlayer():ChatPrint(math.floor(x:Angle().yaw / 360 * 8 + 0.5) % 8)
-        draw.DrawArc(width / 2, height / 2, width, self.radius, 45, math.floor((-x:Angle().yaw + 90 - 45 / 2) / (360 / 8)) * 45 + 45 / 2, Color(0, 180, 255, 10))
+        if y:Distance(Vector(gui.MouseX(), gui.MouseY(), 0)) > self.radius then
+            self.panel:SetCursor("hand")
+            insideSelection = true
+        else
+            self.panel:SetCursor("arrow")
+            insideSelection = false
+        end
+    end
+
+    function self:Think()
+        if input.IsMouseDown(MOUSE_FIRST) then
+            self.clicked = true
+        end
+    end
+
+    function self:Exit()
+        if not self.clicked then
+            self.button:SendCommand(self.slots[selection].ACTION)
+        end
+
+        self.remove = true
+    end
+
+    self.button = vgui.Create("DButton", self.panel)
+    self.button:Dock(FILL)
+    self.button:SetText("")
+
+    function self.button:Paint()
+    end
+
+    function self.button:DoClick()
+        local slot = self:GetParent():GetParent().slots[selection]
+        self:SendCommand(slot.ACTION, slot.CLOSE)
+    end
+
+    function self.button:SendCommand(action, close)
+        if not insideSelection then return end
+
+        if action then
+            action()
+        end
+
+        if close then
+            self:GetParent():GetParent():Exit()
+        end
     end
 end
 
@@ -75,24 +129,20 @@ function WARDENMENU:PerformLayout(width, height)
     self.panel:SetSize(width, height)
 end
 
+function WARDENMENU:UpdateInfo()
+    net.Start("RequestCommands")
+    net.SendToServer()
+end
+
+function WARDENMENU:AddSlot(action, color, close)
+    local slot = {
+        ACTION = action,
+        COLOR = color,
+        ALPHA = 0,
+        CLOSE = close
+    }
+
+    table.insert(self.slots, slot)
+end
+
 vgui.Register("JailbreakWardenMenu", WARDENMENU)
-JB.ShowMenu = {}
-
-function JB.ShowMenu:Show()
-    self.menu = vgui.Create("JailbreakWardenMenu")
-    self.menu:SetSize(w, h)
-    self.menu:SetPos(0, 0)
-
-    JB.ShowMenu.Hide = function()
-        self.menu:Remove()
-        self.menu:Clear()
-    end
-end
-
-function GM:ScoreboardShow()
-    JB.ShowMenu:Show()
-end
-
-function GM:ScoreboardHide()
-    JB.ShowMenu:Hide()
-end

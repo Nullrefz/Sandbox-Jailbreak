@@ -24,7 +24,7 @@ function JB:InitiateVote()
     end
 
     if self.warden then
-        self.warden:RevokeWarden()
+        self:RevokeWarden()
     end
 
     net.Start("InitiateWardenVote")
@@ -44,16 +44,15 @@ function JB:InitiateVote()
 
     net.WriteTable(entries)
     net.Broadcast()
-    timer.Simple(GetConVar("jb_warden_vote_duration"):GetInt(), function() self:ConcludeVote() end)
+
+    timer.Simple(GetConVar("jb_warden_vote_duration"):GetInt(), function()
+        self:ConcludeVote()
+    end)
 end
 
 function JB:ConcludeVote()
     self:BreakVote()
     -- TODO: Count Total and Set Warden
-end
-
-function JB:SetWarden(guard)
-    self.warden = guard
 end
 
 function JB:CountVotes()

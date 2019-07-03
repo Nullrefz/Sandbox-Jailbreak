@@ -7,7 +7,6 @@ local PLAYERICON = {}
 function PLAYERICON:Init()
     self.playerIcon = vgui.Create("AvatarImage", self)
     self.playerIcon:SetPaintedManually(true)
- 
 end
 
 function PLAYERICON:PerformLayout(width, height)

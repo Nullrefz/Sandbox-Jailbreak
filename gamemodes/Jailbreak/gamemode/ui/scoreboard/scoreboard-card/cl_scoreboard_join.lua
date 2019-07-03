@@ -23,11 +23,9 @@ function JOINBUTTON:SetTeam(group)
     self:DrawSkin()
 end
 
-function JOINBUTTON:JoinTeam(group)
-    RunConsoleCommand("jb_jointeam", group)
-end
-
 function JOINBUTTON:DrawSkin()
+    local plyTeam = self.team
+
     self.panel = vgui.Create("DButton", self)
     self.panel:SetText("Join")
     self.panel:SetFont("Jailbreak_Font_ScoreboardJoin")
@@ -39,18 +37,20 @@ function JOINBUTTON:DrawSkin()
     end
 
     self.panel.DoClick = function()
-        self:JoinTeam(self.team)
+       net.Start("ChangeTeam")
+       net.WriteInt(plyTeam, 32)
+       net.SendToServer()
     end
 
     function self:Paint(width, height)
         if not self.team then return end
 
         if self.team == 1 then
-            draw.SkweredChamferedBox(0, height / 2, width, height, 2, toHRatio(10) / 2, Color(255, 153, 0))
-            draw.DrawSkewedRect(toHRatio(2), toVRatio(2), width - toHRatio(4), height - toVRatio(4), toHRatio(10), Color(239, 105, 0))
+            draw.SkweredChamferedBox(0, height / 2, width, height, 2, toHRatio(7) / 2, Color(255, 153, 0))
+            draw.DrawSkewedRect(toHRatio(2), toVRatio(2), width - toHRatio(4), height - toVRatio(4), toHRatio(7), Color(239, 105, 0))
         elseif self.team == 2 then
-            draw.SkweredChamferedBox(0, height / 2, width, height, 2, toHRatio(10) / 2, Color(0, 174, 239))
-            draw.DrawSkewedRect(toHRatio(2), toVRatio(2), width - toHRatio(4), height - toVRatio(4), toHRatio(10), Color(0, 144, 255))
+            draw.SkweredChamferedBox(0, height / 2, width, height, 2, toHRatio(7) / 2, Color(0, 174, 239))
+            draw.DrawSkewedRect(toHRatio(2), toVRatio(2), width - toHRatio(4), height - toVRatio(4), toHRatio(7), Color(0, 144, 255))
         end
     end
 

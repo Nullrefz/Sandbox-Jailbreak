@@ -66,9 +66,6 @@ function ChamferedBox(...)
         seg = 64
     end
 
-    width = math.Round(width)
-    height = math.Round(height)
-    radius = math.Round(radius)
     local shortEdge = 0
 
     if width >= height then

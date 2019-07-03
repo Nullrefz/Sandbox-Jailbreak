@@ -36,10 +36,21 @@ function ply:SendHealthStatus()
     net.WriteInt(self.shield, 32)
     net.WriteInt(self.hp, 32)
     net.WriteInt(self.maxShield, 32)
-    net.Send(self)
+
+    if not self.spectators then
+        net.Send(self)
+
+        return
+    end
+
+    local playersToUpdate = {}
+    table.insert(playersToUpdate, self)
+    table.Add(playersToUpdate, self.spectators)
+    net.Send(playersToUpdate)
 end
 
 function ply:LoseHealth()
+    if not self.hp then return end
     if (self.hp + math.floor(self.shield)) <= self:Health() then return end
     local dmg = (self.hp + self.shield) - self:Health()
 
@@ -52,7 +63,6 @@ function ply:LoseHealth()
         else
             dmg = 0
         end
-        --`
     end
 
     if dmg > 0 then
@@ -63,6 +73,7 @@ function ply:LoseHealth()
 end
 
 function ply:GainHealth()
+    if not self.hp then return end
     if (self.hp + self.shield) >= self:Health() then return end
     gain = self:Health() - (self.hp + self.shield)
 
@@ -94,6 +105,22 @@ function ply:GenerateShield()
     end
 end
 
+function ply:SetupHealth()
+    if not self:Alive() then return end
+
+    if self:Team() == TEAM_GUARDS then
+        if self:IsWarden() then
+            self:GenerateHealth(GetConVar("jb_guards_regen_health"):GetInt(), GetConVar("jb_warden_max_regen"):GetInt())
+            self:SetArmor(GetConVar("jb_warden_max_armor"):GetInt())
+        else
+            self:GenerateHealth(GetConVar("jb_guards_regen_health"):GetInt(), GetConVar("jb_guards_max_regen"):GetInt())
+            self:SetArmor(GetConVar("jb_guards_max_armor"):GetInt())
+        end
+    else
+        self:GenerateHealth(GetConVar("jb_prisoners_regen_health"):GetInt(), GetConVar("jb_prisoners_max_regen"):GetInt())
+    end
+end
+
 hook.Add("PlayerDeath", "SendDied", function(victim, inflictor, attacker)
     JB:SendPlayerDied(victim)
 end)
@@ -103,10 +130,32 @@ hook.Add("PlayerSilentDeath", "SendSilentDied", function(pl)
 end)
 
 function JB:SendPlayerDied(pl)
+    pl:SetArmor(0)
     net.Start("PlayerDied")
     net.Send(pl)
 end
 
-net.Receive("RequestHealth", function(ln, pl) 
+net.Receive("RequestHealth", function(ln, pl)
     pl:SendHealthStatus()
+end)
+
+function JB:HandleWardenHealth(oldWarden, newWarden)
+    if oldWarden then
+        oldWarden:SetupHealth()
+    end
+
+    if newWarden then
+        newWarden:GenerateHealth(GetConVar("jb_guards_regen_health"):GetInt(), GetConVar("jb_warden_max_regen"):GetInt())
+        newWarden:SetArmor(GetConVar("jb_warden_max_armor"):GetInt())
+    end
+end
+
+hook.Add("PlayerSetWarden", "OnWardenSet", function(oldWarden, newWarden)
+    JB:HandleWardenHealth(oldWarden, newWarden)
+end)
+
+hook.Add("SpectatorChanged", "SendHealthUpdate", function(pl)
+    if IsValid(pl) then
+        pl:SendHealthStatus()
+    end
 end)

@@ -39,11 +39,11 @@ function VOTEBAR:Init()
         render.SetStencilReferenceValue(1)
 
         if (#team.GetPlayers(TEAM_GUARDS) > 0) then
-            DrawBar(0, width * 0.6, height, 3, #team.GetPlayers(TEAM_GUARDS), self.guardProgress, Color(0, 225, 255, 255))
+            DrawBar(0, width * 0.6, height, 3, #team.GetPlayers(TEAM_GUARDS), self.guardProgress, Color(0, 225, 255, 255), mats.Bar)
         end
 
         if (#team.GetPlayers(TEAM_PRISONERS) > 0) then
-            DrawBar(self.guardProgress * width * 0.6, width * 0.4, height, 3, #team.GetPlayers(TEAM_PRISONERS), self.prisonnerProgress, Color(255, 150, 50, 255))
+            DrawBar(self.guardProgress * width * 0.6, width * 0.4, height, 3, #team.GetPlayers(TEAM_PRISONERS), self.prisonnerProgress, Color(255, 150, 50, 255), mats.Bar)
         end
 
         render.SetStencilEnable(false)
@@ -54,17 +54,6 @@ end
 function VOTEBAR:SetVotePercentage(guards, prisoners)
      guardPercentage = guards
      prisonersPercentage = prisoners
-end
-
-function DrawBar(offset, width, height, skew, divisions, prog, color)
-    local wide = width / divisions
-    local progress = prog * divisions
-
-    for i = 1, math.Clamp(divisions, 0, math.ceil(progress)) do
-        local fill = math.Clamp(progress, 0, 1)
-        progress = progress - fill
-        draw.DrawSkewedRect((i - 1) * wide - skew + offset, 0, (wide * fill) + skew / 2, height, skew, color, mats.BAR)
-    end
 end
 
 function VOTEBAR:PerformLayout(width, height)

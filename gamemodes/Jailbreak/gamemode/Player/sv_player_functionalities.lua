@@ -11,13 +11,7 @@ end
     Desc: Disables players respawn
 -----------------------------------------------------------]]
 function JB:DisableRespawns()
-    hook.Add(
-        "PlayerDeathThink",
-        "Disable Respawns",
-        function()
-            return false
-        end
-    )
+    hook.Add("PlayerDeathThink", "Disable Respawns", function() return false end)
 end
 
 --[[---------------------------------------------------------
@@ -31,7 +25,6 @@ function JB:SpawnAllPlayers()
         v:Spawn()
     end
 end
-
 
 --[[---------------------------------------------------------
     Name: jailbreak:KillAllPlayers()
@@ -110,4 +103,51 @@ function JB:GetAlivePlayersByTeam(teamIndex)
     end
 
     return alivePlayers
+end
+
+--[[---------------------------------------------------------
+    Name: jailbreak:SetSelfCollision()
+    Desc: Sets if players should self collide 
+    Args: • enabled         -- collision enabled
+          • playerTeam      -- chosen team
+-----------------------------------------------------------]]
+function JB:SetSelfCollision(enabled, playerTeam)
+    for k, v in pairs(playerTeam and playerTeam or player.GetAll()) do
+        v:SetNoCollideWithTeammates(enabled)
+    end
+end
+
+--[[---------------------------------------------------------
+    Name: jailbreak:SetFriendlyFire()
+    Desc: Sets if players can hurt team members
+    Args: • enabled         -- friendly fire enabled
+          • playerTeam      -- chosen team
+-----------------------------------------------------------]]
+function JB:SetFriendlyFire(enabled, chosenTeam)
+    hook.Add("PlayerShouldTakeDamage", "FriendFire", function(ply, attacker)
+        if attacker:IsPlayer() then
+            if not chosenTeam and ply:Team() == attacker:Team() then return enabled end
+            if ply:Team() == chosenTeam and attacker:Team() == chosenTeam then return enabled end
+        end
+
+        return true
+    end)
+end
+
+--[[---------------------------------------------------------
+    Name: jailbreak:SetMicEnabled()
+    Desc: Sets if players can use mic
+    Args: • enabled         -- mic enabled
+          • playerTeam      -- chosen team
+-----------------------------------------------------------]]
+function JB:SetMicEnabled(enabled, chosenTeam)
+    hook.Add("PlayerCanHearPlayersVoice", "SetMicEnabled", function(listener, talker)
+        if not chosenTeam then
+            return enabled
+        else
+            if talker:Team() == chosenTeam then return enabled end
+
+            return true
+        end
+    end)
 end
