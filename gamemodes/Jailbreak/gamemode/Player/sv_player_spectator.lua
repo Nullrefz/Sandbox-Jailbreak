@@ -76,19 +76,20 @@ end
 
 function JB:SpectatorKeyPress(ply, key)
     if not IsValid(ply) or ply:Alive() then return end
-
     if ply:KeyDown(key) and self.spectate[key] then
         self.spectate[key](ply)
     end
 end
 
 hook.Add("PlayerDeath", "Holdspectate", function(ply)
-    --ply:StartSpectating()
+    timer.Simple(2, function()
+        ply:StartSpectating()
+    end)
 end)
 
 hook.Add("KeyPress", "JailBreakSpectatorControls", function(ply, key)
-    --timer.Simple(3, function() ply:StartSpectating() end)
-end)
+    JB:SpectatorKeyPress(ply, key)
+end) --timer.Simple(3, function() ply:StartSpectating() end)
 
 function JB:SetupSpectators()
     self:AddSpectatorAction(IN_ATTACK, function(ply)
@@ -112,7 +113,7 @@ function JB:SetupSpectators()
 end
 
 function player:StartSpectating()
-    if  not self:Alive() and self:GetObserverMode() ~= OBS_MODE_ROAMING then
+    if not self:Alive() and self:GetObserverMode() ~= OBS_MODE_ROAMING then
         self:CycleSpectateMode(OBS_MODE_ROAMING)
         self:SetMoveType(MOVETYPE_NOCLIP)
     end
@@ -128,7 +129,7 @@ function player:UpdateHud(target)
     net.Send(self)
 end
 
-hook.Add("Initialize", "InitializeSpectators", JB:SetupSpectators())
+hook.Add("Initialize", "InitializeSpectators", function() JB:SetupSpectators() end)
 
 hook.Add("PlayerDeathThink", "DisableSpectatorRespawns", function(ply)
     if ply:Team() > Team.GUARDS then return false end
