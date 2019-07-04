@@ -1,6 +1,10 @@
-wardenMenu = {"games", "commands", "actions", "calendar"}
-calendar = {"freeday", "warday", "hidenseek", "jokeDay", "weepingangles", "salty spitoon"}
+wardenMenu = {"waypoint", "commands", "actions", "calendar"}
+calendar = {"freeday", "warday", "hidenseek", "weepingangles", "contest", "competition"}
+contest = {"jokeday", "foodday", "trivia", "salty spitoon", "american idol", "custom"}
+competition = {"firstlastreaction", "simonsay's", "redgreenlight", "snitch", "gamesRoom", "custom"}
 actions = {"friendlyfire", "teamcollision", "guardmute"}
+waypointMenu = {"line", "waypoint", "avoid", "warning", "cancelWaypoint"}
+lastRequest = {"TicTacToe", "knifeBattle", "freeday", "exclusivefreeday", "calendar", "challenge", "custom"}
 if SERVER then
     util.AddNetworkString("UpdateCommands")
 
@@ -28,4 +32,16 @@ if SERVER then
             --daysFunction["freeday"]()
         end
     end)
+
+    function JB:SetFreeday()
+    end
+
+    function JB:SetWarday()
+    end
+
+    function JB:HideNSeek()
+    end
+
+    function JB:ContestDay()
+    end
 end
