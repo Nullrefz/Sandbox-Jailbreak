@@ -21,7 +21,7 @@ surface.CreateFont("Jailbreak_Font_WardenMenu", {
 function WARDENMENU:Init()
     --self.UpdateInfo()
     self.slots = {}
-
+    self.menu = {}
     if LocalPlayer() ~= warden then
         self:Remove()
 
@@ -65,7 +65,7 @@ function WARDENMENU:Init()
         for i = 1, #self.slots do
             draw.CapsuleBox(width / 2, height / 2 - 2, self.width, self.thickness, 360,  -i * segments + shift + shiter, self.anchor, Color(255, 255, 255, self.alpha * self.alphaLerp))
             local angle = math.rad(-i * segments + shift - shiter + segments / 2)
-            local str = commandType[i]
+            local str = self.slots[i].NAME
             if i == math.ceil(((x:Angle().yaw - shiter) % 360) / segments) and insideSelection then
                 self.slots[i].ALPHA = math.Clamp(self.slots[i].ALPHA + FrameTime() * 100, 0, 25)
             else
@@ -73,7 +73,7 @@ function WARDENMENU:Init()
             end
 
             draw.DrawArc(width / 2, height / 2, width, self.radius, segments,  -i * segments + shift - shiter, Color(255, 255, 255,  self.slots[i].ALPHA))
-            draw.DrawRect(width / 2 - self.iconSize / 2 + math.sin(angle) * self.iconRadius, height / 2 - self.iconSize / 2 + math.cos(angle) * self.iconRadius, self.iconSize, self.iconSize, table.HasValue(activeCommands, i) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(self.slots[i].COLOR.r, self.slots[i].COLOR.g, self.slots[i].COLOR.b, 180 * self.alphaLerp), Material("jailbreak/vgui/" .. commandType[i] .. ".png", "smooth"))
+            draw.DrawRect(width / 2 - self.iconSize / 2 + math.sin(angle) * self.iconRadius, height / 2 - self.iconSize / 2 + math.cos(angle) * self.iconRadius, self.iconSize, self.iconSize, table.HasValue(activeCommands, i) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(self.slots[i].COLOR.r, self.slots[i].COLOR.g, self.slots[i].COLOR.b, 180 * self.alphaLerp), Material("jailbreak/vgui/" .. self.slots[i].NAME .. ".png", "smooth"))
             draw.DrawText(str:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end), "Jailbreak_Font_WardenMenu", width / 2 + math.sin(angle) * self.textRadius, height / 2 + math.cos(angle) * self.textRadius - 42 / 2, table.HasValue(activeCommands, i) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(self.slots[i].COLOR.r, self.slots[i].COLOR.g, self.slots[i].COLOR.b, 180 * self.alphaLerp), TEXT_ALIGN_CENTER)
         end
 
@@ -134,8 +134,9 @@ function WARDENMENU:UpdateInfo()
     net.SendToServer()
 end
 
-function WARDENMENU:AddSlot(action, color, close)
+function WARDENMENU:AddSlot(name, action, color, close)
     local slot = {
+        NAME = name,
         ACTION = action,
         COLOR = color,
         ALPHA = 0,
@@ -145,4 +146,4 @@ function WARDENMENU:AddSlot(action, color, close)
     table.insert(self.slots, slot)
 end
 
-vgui.Register("JailbreakWardenMenu", WARDENMENU)
+vgui.Register("JailbreakOptionMenu", WARDENMENU)

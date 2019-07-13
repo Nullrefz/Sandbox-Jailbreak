@@ -35,7 +35,9 @@ surface.CreateFont("Jailbreak_Font_WardenName", {
     additive = false,
     outline = false
 })
+
 local percent = 0
+
 function WARDENBAR:Init()
     self.background = vgui.Create("DImage", self)
     self.wardenIcon = vgui.Create("CircularAvatar", self.background)
@@ -48,7 +50,7 @@ function WARDENBAR:Init()
     net.SendToServer()
 
     function self:Think()
-        self.background:SetImageColor(Color(255,255,255,255 * percent))
+        self.background:SetImageColor(Color(255, 255, 255, 255 * percent))
 
         if self.warden ~= warden then
             self.warden = warden
@@ -65,6 +67,7 @@ function WARDENBAR:Init()
         else
             percent = Lerp(FrameTime() * 5, percent, 0)
         end
+
         draw.DrawText("Warden", "Jailbreak_Font_WardenTitle", toHRatio(10), height / 2 - toVRatio(30) / 2 - toVRatio(18) / 2, Color(255, 255, 255, 150 * percent), TEXT_ALIGN_LEFT)
 
         if warden then
@@ -78,13 +81,14 @@ end
 function WARDENBAR:PerformLayout(width, height)
     self.background:SetSize(height, height)
     local iconSizePadding = 32
+
     if self.wardenIcon then
         self.wardenIcon:SetSize(height - toHRatio(iconSizePadding), height - toVRatio(iconSizePadding))
         self.wardenIcon:Center()
     end
 
     self.wardenInfo:SetPos(self.background:GetWide(), 0)
-    self.wardenInfo:SetSize(width - self.background:GetWide(), height )
+    self.wardenInfo:SetSize(width - self.background:GetWide(), height)
 end
 
 vgui.Register("JailbreakWardenBar", WARDENBAR)
