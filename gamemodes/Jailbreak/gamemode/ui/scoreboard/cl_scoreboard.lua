@@ -22,7 +22,7 @@ function SCOREBOARD:Init()
             playerGroup:SetPos(w / 2, h - playerGroup:GetTall())
         else
             playerGroup:Dock(TOP)
-            playerGroup:DockMargin(0, 0, 0, 0)
+            playerGroup:DockMargin(32, 0, 0, 0)
         end
 
         playerGroup:InvalidateLayout(true)
