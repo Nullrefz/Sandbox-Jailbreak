@@ -1,41 +1,19 @@
+commandType = {"walk", "mic", "crouch", "afk", "jumping", "sprinting", "freelook"}
+----------------------
 if CLIENT then
-    JB.commandMenu = {}
-
-    function JB.commandMenu:Show()
-        self.menu = vgui.Create("JailbreakOptionMenu")
-        self.menu:SetSize(w, h)
-        self.menu:SetPos(0, 0)
-
-        for k, v in ipairs(commandType) do
-            if v == "waypoint" then
-                self.menu:AddSlot(v, function()
-                    JB:SendWaypoint(0)
-                end, Color(255, 200, 0, 255), true)
-            elseif v == "calendar" then
-                self.menu:AddSlot(v, function()
-                    JB:OpenDayMenu()
-                end, Color(255, 200, 0), true)
-            else
-                self.menu:AddSlot(v, function()
-                    JB:SendCommand(v)
-                end, Color(200, 200, 200))
-            end
-        end
-
-        JB.commandMenu.Hide = function()
-            if self.menu:IsValid() then
-                self.menu:Exit()
-            end
-        end
-    end
-
     -- implement if player is warden
+    local commandMenu
+
     function GM:OnContextMenuOpen()
-        JB.commandMenu:Show()
+        if not commandMenu then
+            commandMenu = JB:AddCommandMenu()
+        end
+
+        commandMenu:Show()
     end
 
     function GM:OnContextMenuClose()
-        JB.commandMenu:Hide()
+        commandMenu:Hide()
     end
 
     function JB:SendCommand(command)
@@ -54,5 +32,24 @@ if CLIENT then
         net.Start("SendChosenDay")
         net.WriteInt(table.KeyFromValue(calendar, chosenDay), 32)
         net.SendToServer()
+    end
+
+    function JB:AddCommandMenu()
+        local slots = {}
+
+        for k, v in pairs(commandType) do
+            local slot = {}
+            slot.NAME = v
+            slot.CLOSE = true
+
+            slot.ACTION = function()
+                JB:SendCommand(v)
+            end
+
+            slot.COLOR = Color(255, 255, 255)
+            table.insert(slots, slot)
+        end
+
+        return self:RegistereMenu(slots)
     end
 end

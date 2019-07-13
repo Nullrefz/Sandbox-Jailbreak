@@ -1,7 +1,7 @@
-menuTypes = {"waypoint", "commands", "actions", "calendar", "lastRequest", "contest", "competition"}
+menuTypes = {}
 
 if CLIENT then
-    function JB:RegistereMenu(slots)
+    function JB:RegistereMenu(slots, menuName)
         local menu = {}
         menu.active = false
 
@@ -25,7 +25,7 @@ if CLIENT then
                 end
             end
         end
-
+        menuTypes["menuName"] = menu
         return menu
     end
 end

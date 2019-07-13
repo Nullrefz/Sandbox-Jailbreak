@@ -2,31 +2,6 @@ wardenMenu = {"commands", "actions", "waypoint", "calendar"}
 
 if CLIENT then
     local wardenSlots
-
-    -- JB.wardenMenu = {}
-    -- function JB.wardenMenu:Show()
-    --     self.active = true
-    --     self.menu = vgui.Create("JailbreakOptionMenu")
-    --     self.menu:SetSize(w, h)
-    --     self.menu:SetPos(0, 0)
-    --     for k, v in ipairs(wardenMenu) do
-    --         if v == "waypoint" then
-    --             self.menu:AddSlot(v, function()
-    --                 JB:SendWaypoint(0)
-    --             end, Color(255, 200, 0, 255), true)
-    --         else
-    --             self.menu:AddSlot(v, function()
-    --                 JB:OpenMenu(v)
-    --             end, Color(255, 255, 255), true)
-    --         end
-    --     end
-    --     JB.wardenMenu.Hide = function()
-    --         self.active = false
-    --         if self.menu:IsValid() then
-    --             self.menu:Exit()
-    --         end
-    --     end
-    -- end
     hook.Add("Think", "OpensWardenMenu", function()
         if not wardenSlots then return end
 
@@ -38,13 +13,13 @@ if CLIENT then
     end)
 
     hook.Add("Initialize", "AddWardenMenu", function()
-        wardenSlots = JB:AddMenu(wardenMenu)
+        wardenSlots = JB:AddWardenMenu(wardenMenu)
     end)
 
-    function JB:AddMenu(list)
+    function JB:AddWardenMenu()
         local slots = {}
 
-        for k, v in pairs(list) do
+        for k, v in pairs(wardenMenu) do
             local slot = {}
             slot.NAME = v
             slot.CLOSE = true
@@ -65,7 +40,6 @@ if CLIENT then
 
             table.insert(slots, slot)
         end
-        print("hello")
         return self:RegistereMenu(slots)
     end
 end
