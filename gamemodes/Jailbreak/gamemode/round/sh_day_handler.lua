@@ -1,10 +1,3 @@
-wardenMenu = {"waypoint", "commands", "actions", "calendar"}
-calendar = {"freeday", "warday", "hidenseek", "weepingangles", "contest", "competition"}
-contest = {"jokeday", "foodday", "trivia", "salty spitoon", "american idol", "custom"}
-competition = {"firstlastreaction", "simonsay's", "redgreenlight", "snitch", "gamesRoom", "custom"}
-actions = {"friendlyfire", "teamcollision", "guardmute"}
-waypointMenu = {"line", "waypoint", "avoid", "warning", "cancelWaypoint"}
-lastRequest = {"TicTacToe", "knifeBattle", "freeday", "exclusivefreeday", "calendar", "challenge", "custom"}
 if SERVER then
     util.AddNetworkString("UpdateCommands")
 
