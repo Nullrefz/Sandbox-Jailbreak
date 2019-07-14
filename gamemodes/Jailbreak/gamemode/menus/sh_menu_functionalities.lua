@@ -1,7 +1,9 @@
 menuTypes = {}
 
 if CLIENT then
-    function JB:RegistereMenu(slots, menuName)
+    JB.activeMenu = nil
+
+    function JB:RegisterMenu(slots, menuName)
         local menu = {}
         menu.active = false
 
@@ -25,7 +27,9 @@ if CLIENT then
                 end
             end
         end
+
         menuTypes["menuName"] = menu
+
         return menu
     end
 end

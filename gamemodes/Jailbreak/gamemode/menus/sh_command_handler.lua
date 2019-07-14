@@ -40,7 +40,7 @@ if CLIENT then
         for k, v in pairs(commandType) do
             local slot = {}
             slot.NAME = v
-            slot.CLOSE = true
+            slot.CLOSE = false
 
             slot.ACTION = function()
                 JB:SendCommand(v)
@@ -50,6 +50,6 @@ if CLIENT then
             table.insert(slots, slot)
         end
 
-        return self:RegistereMenu(slots)
+        return self:RegisterMenu(slots)
     end
 end

@@ -40,6 +40,6 @@ if CLIENT then
 
             table.insert(slots, slot)
         end
-        return self:RegistereMenu(slots)
+        return self:RegisterMenu(slots)
     end
 end
