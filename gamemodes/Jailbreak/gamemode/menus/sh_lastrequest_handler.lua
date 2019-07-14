@@ -44,22 +44,22 @@ if CLIENT then
 
     function JB:SendTicTacToe()
         net.Start("SendTicTacToe")
-        net.Send()
+        net.SendToServer()
     end
 
     function JB:SendKnifeBattle()
         net.Start("SendKnifeBattle")
-        net.Send()
+        net.SendToServer()
     end
 
     function JB:SendExclusiveFreeday()
         net.Start("SendExclusiveFreeday")
-        net.Send()
+        net.SendToServer()
     end
 
     function JB:SendCustomLR()
         net.Start("SendCustomLR")
-        net.Send()
+        net.SendToServer()
     end
 
     hook.Add("Initialize", "AddLRMenu", function()

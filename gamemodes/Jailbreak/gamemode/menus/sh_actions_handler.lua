@@ -7,7 +7,7 @@ if CLIENT then
         for k, v in pairs(actionsMenu) do
             local slot = {}
             slot.NAME = v
-            slot.CLOSE = true
+            slot.CLOSE = false
 
             if v == "friendlyfire" then
                 slot.ACTION = function()
@@ -36,22 +36,22 @@ if CLIENT then
 
     function JB:SendFriendlyFire()
         net.Start("ToggleFriendlyFire")
-        net.Send()
+        net.SendToServer()
     end
 
     function JB:SendTeamCollision()
         net.Start("ToggleTeamCollision")
-        net.Send()
+        net.SendToServer()
     end
 
     function JB:SendGuardMute()
         net.Start("ToggleGuardMute")
-        net.Send()
+        net.SendToServer()
     end
 
     function JB:SendOpenDoors()
         net.Start("OpenCellDoors")
-        net.Send()
+        net.SendToServer()
     end
 
     hook.Add("Initialize", "AddActionsMenu", function()
@@ -64,8 +64,26 @@ if SERVER then
     util.AddNetworkString("ToggleTeamCollision")
     util.AddNetworkString("ToggleGuardMute")
     util.AddNetworkString("OpenCellDoors")
-    net.Receive("ToggleFriendlyFire", function(ln, ply) end)
-    net.Receive("ToggleTeamCollision", function(ln, ply) end)
-    net.Receive("ToggleGuardMute", function(ln, ply) end)
-    net.Receive("OpenCellDoors", function(ln, ply) end)
+
+    net.Receive("ToggleFriendlyFire", function(ln, ply)
+        JB:SetFriendlyFire(enabled, Team.PRISONERS)
+    end)
+    net.Receive("ToggleTeamCollision", function(ln, ply)
+        JB:SetNoSelfCollision(enabled, Team.PRISONERS) end)
+    net.Receive("ToggleGuardMute", function(ln, ply)
+        JB:SetMicEnabled(enabled, Team.GUARDS)
+     end)
+    net.Receive("OpenCellDoors", function(ln, ply)
+        JB:OpenCells(JB.warden)
+     end)
+
+     hook.Add("WardenRevoked", "ResetActions", function()
+        activeActions = {}
+        JB:UpdateActions()
+    end)
+
+    net.Receive("RequestCommands", function(ln, ply)
+        JB:UpdateActions(ply)
+    end)
+
 end

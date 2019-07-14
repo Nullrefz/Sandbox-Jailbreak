@@ -33,22 +33,22 @@ if CLIENT then
 
             function JB:SendFreeday()
                 net.Start("SendFreeday")
-                net.Send()
+                net.SendToServer()
             end
 
             function JB:SendWarday()
                 net.Start("SendWarday")
-                net.Send()
+                net.SendToServer()
             end
 
             function JB:HidenSeek()
                 net.Start("SendHidenSeek")
-                net.Send()
+                net.SendToServer()
             end
 
             function JB:SendWeepingAngles()
                 net.Start("SendWeepingAngles")
-                net.Send()
+                net.SendToServer()
             end
 
             slot.COLOR = Color(255, 255, 255)

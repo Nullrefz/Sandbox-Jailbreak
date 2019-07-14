@@ -73,7 +73,7 @@ function WARDENMENU:Init()
             end
 
             draw.DrawArc(width / 2, height / 2, width, self.radius, segments,  -i * segments + shift - shiter, Color(255, 255, 255,  self.slots[i].ALPHA))
-            draw.DrawRect(width / 2 - self.iconSize / 2 + math.sin(angle) * self.iconRadius, height / 2 - self.iconSize / 2 + math.cos(angle) * self.iconRadius, self.iconSize, self.iconSize, table.HasValue(activeCommands, i) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(self.slots[i].COLOR.r, self.slots[i].COLOR.g, self.slots[i].COLOR.b, 180 * self.alphaLerp), Material("jailbreak/vgui/" .. self.slots[i].NAME .. ".png", "smooth"))
+            draw.DrawRect(width / 2 - self.iconSize / 2 + math.sin(angle) * self.iconRadius, height / 2 - self.iconSize / 2 + math.cos(angle) * self.iconRadius, self.iconSize, self.iconSize, table.HasValue(activeCommands, i) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(self.slots[i].COLOR.r, self.slots[i].COLOR.g, self.slots[i].COLOR.b, self.slots[i].COLOR.a * self.alphaLerp), Material("jailbreak/vgui/" .. self.slots[i].NAME .. ".png", "smooth"))
             draw.DrawText(str:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end), "Jailbreak_Font_WardenMenu", width / 2 + math.sin(angle) * self.textRadius, height / 2 + math.cos(angle) * self.textRadius - 42 / 2, table.HasValue(activeCommands, i) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(self.slots[i].COLOR.r, self.slots[i].COLOR.g, self.slots[i].COLOR.b, 180 * self.alphaLerp), TEXT_ALIGN_CENTER)
         end
 

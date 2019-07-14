@@ -4,10 +4,11 @@ if CLIENT then
     local menuActive = false
 
     hook.Add("Think", "OpensWardenMenu", function()
+
         if (LocalPlayer() == warden and input.IsKeyDown(KEY_F) and not menuActive) then
             menuActive = true
             JB:OpenMenu("wardenMenu")
-        elseif (LocalPlayer() == warden and not input.IsKeyDown(KEY_F) and menuActive) then
+        elseif (((LocalPlayer() == warden and not input.IsKeyDown(KEY_F)) or not LocalPlayer():Alive()) and menuActive) then
             JB:CloseMenu()
             menuActive = false
         end
