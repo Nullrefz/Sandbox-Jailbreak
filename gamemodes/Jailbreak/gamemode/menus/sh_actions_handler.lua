@@ -31,7 +31,7 @@ if CLIENT then
             table.insert(slots, slot)
         end
 
-        return self:RegisterMenu(slots)
+        return self:RegisterMenu(slots, "actions")
     end
 
     function JB:SendFriendlyFire()
@@ -53,6 +53,10 @@ if CLIENT then
         net.Start("OpenCellDoors")
         net.Send()
     end
+
+    hook.Add("Initialize", "AddActionsMenu", function()
+        JB:AddActionsMenu()
+    end)
 end
 
 if SERVER then

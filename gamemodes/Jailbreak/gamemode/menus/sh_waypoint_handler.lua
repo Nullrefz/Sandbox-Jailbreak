@@ -17,6 +17,10 @@ if CLIENT then
             table.insert(slots, slot)
         end
 
-        return self:RegisterMenu(slots)
+        return self:RegisterMenu(slots, "waypoint")
     end
+
+    hook.Add("Initialize", "AddWaypointMenu", function()
+        JB:AddWaypointMenu()
+    end)
 end

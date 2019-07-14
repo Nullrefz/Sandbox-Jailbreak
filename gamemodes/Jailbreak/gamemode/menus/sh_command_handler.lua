@@ -1,19 +1,13 @@
 commandType = {"walk", "mic", "crouch", "afk", "jumping", "sprinting", "freelook"}
-----------------------
+
 if CLIENT then
-    -- implement if player is warden
-    local commandMenu
 
     function GM:OnContextMenuOpen()
-        if not commandMenu then
-            commandMenu = JB:AddCommandMenu()
-        end
-
-        commandMenu:Show()
+        JB:OpenMenu("commands")
     end
 
     function GM:OnContextMenuClose()
-        commandMenu:Hide()
+        JB:CloseMenu()
     end
 
     function JB:SendCommand(command)
@@ -50,6 +44,10 @@ if CLIENT then
             table.insert(slots, slot)
         end
 
-        return self:RegisterMenu(slots)
+        return self:RegisterMenu(slots, "commands")
     end
+
+    hook.Add("Initialize", "AddCommandMenu", function()
+        JB:AddCommandMenu()
+    end)
 end

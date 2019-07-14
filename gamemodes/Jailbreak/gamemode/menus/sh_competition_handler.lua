@@ -17,7 +17,7 @@ if CLIENT then
             table.insert(slots, slot)
         end
 
-        return self:RegisterMenu(slots)
+        return self:RegisterMenu(slots, "competition")
     end
 
     function JB:SendCompetition(name)
@@ -25,6 +25,9 @@ if CLIENT then
         net.WriteString(name)
         net.SendToServer()
     end
+    hook.Add("Initialize", "AddCompetitionMenu", function()
+        JB:AddCompetitionMenu()
+    end)
 end
 
 if SERVER then

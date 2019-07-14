@@ -1,7 +1,7 @@
 lastRequestMenu = {"TicTacToe", "knifeBattle", "freeday", "exclusivefreeday", "calendar", "challenge", "custom"}
 
 if CLIENT then
-    function JB:AddActionsMenu()
+    function JB:AddLRMenu()
         local slots = {}
 
         for k, v in pairs(lastRequestMenu) do
@@ -39,7 +39,7 @@ if CLIENT then
             table.insert(slots, slot)
         end
 
-        return self:RegisterMenu(slots)
+        return self:RegisterMenu(slots, "lastrequest")
     end
 
     function JB:SendTicTacToe()
@@ -61,6 +61,10 @@ if CLIENT then
         net.Start("SendCustomLR")
         net.Send()
     end
+
+    hook.Add("Initialize", "AddLRMenu", function()
+        JB:AddLRMenu()
+    end)
 end
 
 if SERVER then

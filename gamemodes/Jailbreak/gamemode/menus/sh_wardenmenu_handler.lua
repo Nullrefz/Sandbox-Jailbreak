@@ -1,19 +1,20 @@
 wardenMenu = {"commands", "actions", "waypoint", "calendar"}
 
 if CLIENT then
-    local wardenSlots
-    hook.Add("Think", "OpensWardenMenu", function()
-        if not wardenSlots then return end
+    local menuActive = false
 
-        if (LocalPlayer() == warden and input.IsKeyDown(KEY_F) and not wardenSlots.active) then
-            wardenSlots:Show()
-        elseif (LocalPlayer() == warden and not input.IsKeyDown(KEY_F) and wardenSlots.Hide) then
-            wardenSlots:Hide()
+    hook.Add("Think", "OpensWardenMenu", function()
+        if (LocalPlayer() == warden and input.IsKeyDown(KEY_F) and not menuActive) then
+            menuActive = true
+            JB:OpenMenu("wardenMenu")
+        elseif (LocalPlayer() == warden and not input.IsKeyDown(KEY_F) and menuActive) then
+            JB:CloseMenu()
+            menuActive = false
         end
     end)
 
     hook.Add("Initialize", "AddWardenMenu", function()
-        wardenSlots = JB:AddWardenMenu(wardenMenu)
+        JB:AddWardenMenu(wardenMenu)
     end)
 
     function JB:AddWardenMenu()
@@ -40,6 +41,7 @@ if CLIENT then
 
             table.insert(slots, slot)
         end
-        return self:RegisterMenu(slots)
+
+        return self:RegisterMenu(slots, "wardenMenu")
     end
 end

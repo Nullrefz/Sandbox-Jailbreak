@@ -55,8 +55,12 @@ if CLIENT then
             table.insert(slots, slot)
         end
 
-        return self:RegisterMenu(slots)
+        return self:RegisterMenu(slots, "calendar")
     end
+
+    hook.Add("Initialize", "AddCalendarMenu", function()
+        JB:AddCalendarMenu()
+    end)
 end
 
 if SERVER then
