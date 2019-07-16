@@ -1,5 +1,5 @@
 include('sh_init.lua')
-activeCommands = {}
+
 warden = nil
 roundPhase = "Waiting"
 allowedGuardCount = 0

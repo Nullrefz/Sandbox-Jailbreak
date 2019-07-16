@@ -28,6 +28,7 @@ function JB:OpenCells(ply, ent)
             v:ChatPrint(ply:Name() .. " opened the cell doors")
         end
     end
+    hook.Run("CellDoorsOpened")
 end
 
 function JB:ValidateDoorButton(ent)
@@ -70,3 +71,7 @@ function JB:RemoveCloseButton()
         end
     end
 end
+
+hook.Add("PostCleanupMap", "SetCellDoorsClosed", function()
+    
+end)

@@ -2,7 +2,7 @@ if CLIENT then
     JB.activeMenu = {}
     menuTypes = {}
 
-    function JB:RegisterMenu(slots, menuName)
+    function JB:RegisterMenu(slots, menuName, referenceMenu)
         local menu = {}
 
         menu.Show = function()
@@ -13,6 +13,8 @@ if CLIENT then
             for k, v in ipairs(slots) do
                 self.panel:AddSlot(v.NAME, v.ACTION, v.COLOR, v.CLOSE)
             end
+
+            self.panel:HookMenu(referenceMenu)
 
             menu.Hide = function()
                 if self.panel:IsValid() then

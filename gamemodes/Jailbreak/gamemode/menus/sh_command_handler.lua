@@ -44,7 +44,7 @@ if CLIENT then
             table.insert(slots, slot)
         end
 
-        return self:RegisterMenu(slots, "commands")
+        return self:RegisterMenu(slots, "commands", commandType)
     end
 
     hook.Add("Initialize", "AddCommandMenu", function()

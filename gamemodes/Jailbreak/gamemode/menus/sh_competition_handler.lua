@@ -1,6 +1,7 @@
 competitionMenu = {"firstlastreaction", "simonsay's", "redgreenlight", "snitch", "gamesRoom", "custom"}
 
 if CLIENT then
+    activeCommands = {}
     function JB:AddCompetitionMenu()
         local slots = {}
 

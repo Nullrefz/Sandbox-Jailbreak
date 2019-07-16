@@ -18,7 +18,7 @@ if SERVER then
     local activeCommands = {}
 
     function JB:ToggleCommand(type)
-        print(type)
+         
 
         if table.HasValue(activeCommands, type) then
             table.RemoveByValue(activeCommands, type)
