@@ -14,7 +14,9 @@ if CLIENT then
                 self.panel:AddSlot(v.NAME, v.ACTION, v.COLOR, v.CLOSE)
             end
 
-            self.panel:HookMenu(referenceMenu)
+            if referenceMenu then
+                self.panel:HookMenu(referenceMenu)
+            end
 
             menu.Hide = function()
                 if self.panel:IsValid() then
@@ -35,7 +37,7 @@ if CLIENT then
     end
 
     function JB:CloseMenu()
-        if not self.activeMenu.Hide then return end
+        if not self.activeMenu or not self.activeMenu.Hide then return end
         self.activeMenu:Hide()
     end
 end
