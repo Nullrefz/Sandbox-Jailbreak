@@ -1,9 +1,10 @@
-commandType = {"walk", "mic", "crouch", "afk", "jumping", "sprinting", "waypoint", "freelook"}
 
 waypointType = {
     POINT = 0,
     LINE = 1
 }
+
+
 
 if SERVER then
     util.AddNetworkString("SendWardenCommand")
@@ -17,7 +18,8 @@ if SERVER then
     local activeCommands = {}
 
     function JB:ToggleCommand(type)
-        print(type)
+         
+
         if table.HasValue(activeCommands, type) then
             table.RemoveByValue(activeCommands, type)
         else

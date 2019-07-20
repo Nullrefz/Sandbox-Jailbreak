@@ -1,0 +1,26 @@
+waypointMenu = {"waypoint", "line", "avoid", "warning", "cancelWaypoint"}
+
+if CLIENT then
+    function JB:AddWaypointMenu()
+        local slots = {}
+
+        for k, v in pairs(waypointMenu) do
+            local slot = {}
+            slot.NAME = v
+            slot.CLOSE = true
+
+            slot.ACTION = function()
+                JB:SendWaypoint(k)
+            end
+
+            slot.COLOR = Color(255, 255, 255)
+            table.insert(slots, slot)
+        end
+
+        return self:RegisterMenu(slots, "waypoint")
+    end
+
+    hook.Add("Initialize", "AddWaypointMenu", function()
+        JB:AddWaypointMenu()
+    end)
+end

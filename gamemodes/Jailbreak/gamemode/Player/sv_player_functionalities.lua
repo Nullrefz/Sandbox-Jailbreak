@@ -112,7 +112,7 @@ end
           • playerTeam      -- chosen team
 -----------------------------------------------------------]]
 function JB:SetNoSelfCollision(enabled, playerTeam)
-    for k, v in pairs(playerTeam and playerTeam or player.GetAll()) do
+    for k, v in pairs(playerTeam and team.GetPlayers(playerTeam) or player.GetAll()) do
         v:SetNoCollideWithTeammates(enabled)
     end
 end
@@ -149,7 +149,7 @@ function JB:SetMicEnabled(enabled, chosenTeam)
 
     hook.Add("PlayerCanHearPlayersVoice", "SetMicEnabled", function(listener, talker)
         if not talker:Alive() then return false end
-
+        if talker == JB.warden then return true end
         if not chosenTeam then
             return enabled
         else

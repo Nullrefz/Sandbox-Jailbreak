@@ -1,6 +1,3 @@
-wardenMenu = {"games", "commands", "actions", "calendar"}
-calendar = {"freeday", "warday", "hidenseek", "jokeDay", "weepingangles", "salty spitoon"}
-actions = {"friendlyfire", "teamcollision", "guardmute"}
 if SERVER then
     util.AddNetworkString("UpdateCommands")
 
@@ -28,4 +25,16 @@ if SERVER then
             --daysFunction["freeday"]()
         end
     end)
+
+    function JB:SetFreeday()
+    end
+
+    function JB:SetWarday()
+    end
+
+    function JB:HideNSeek()
+    end
+
+    function JB:ContestDay()
+    end
 end

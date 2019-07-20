@@ -9,6 +9,7 @@ function JAILBREAKHUD:Init()
     self.weaponBar = vgui.Create("JailbreakWeaponBar", self.footer)
     self.commandBar = vgui.Create("JailbreakCommandBar", self.footer)
     self.wardenBar = vgui.Create("JailbreakWardenBar", self.header)
+    self.actionBar = vgui.Create("JailbreakActionBar", self)
 end
 
 function JAILBREAKHUD:PerformLayout(width, height)
@@ -49,8 +50,13 @@ function JAILBREAKHUD:PerformLayout(width, height)
     if self.commandBar then
         self.commandBar:Dock(LEFT)
         self.commandBar:SetWide(toHRatio(512))
-        self.commandBar:DockMargin(50,self.footer:GetTall() / 2, 0, self.footer:GetTall() / 2 - toVRatio(50))
-  
+        self.commandBar:DockMargin(50, self.footer:GetTall() / 2, 0, self.footer:GetTall() / 2 - toVRatio(50))
+    end
+
+    if self.actionBar then
+        self.actionBar:Dock(LEFT)
+        self.actionBar:SetWide(toHRatio(42))
+        self.actionBar:DockMargin(16, 0, 0, 0)
     end
 
     if self.weaponBar then
@@ -87,15 +93,12 @@ hook.Add("InitPostEntity", "Hook Hud After Init", function()
     net.Receive("PlayerSpawned", function()
         JB.hud:UpdatePanels()
     end)
-    net.Receive("PlayerDied", function()
-        --JB.hud:UpdatePanels()
-    end)
-end)
 
+    net.Receive("PlayerDied", function() end) --JB.hud:UpdatePanels()
+end)
 -- function GM:ScoreboardShow()
 --     JB.hud:Show()
 -- end
-
 -- function GM:ScoreboardHide()
 --     JB.hud:Hide()
 -- end

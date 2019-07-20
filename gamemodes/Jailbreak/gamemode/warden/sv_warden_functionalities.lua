@@ -25,8 +25,8 @@ function JB:SetWarden(guard)
 end
 
 function JB:RevokeWarden()
-    self:SetWarden(nil)
     hook.Run("WardenRevoked")
+    self:SetWarden(nil)
 end
 
 function JB:BroadcastWarden(ply)
