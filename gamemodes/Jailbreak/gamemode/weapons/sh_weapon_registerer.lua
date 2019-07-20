@@ -42,7 +42,7 @@ reregisterWeapon("weapon_radio", "weapon_jb_radio")
 reregisterWeapon("weapon_fists", "weapon_jb_hands")
 reregisterWeapon("weapon_empty", "weapon_jb_empty")
 
-hook.Add("Initialize", "JB.Initialize.ReplaceCSSWeapons", function()
+hook.Add(" JB_Initialize", "JB.Initialize.ReplaceCSSWeapons", function()
     for k, v in pairs(reregister) do
         weapons.Register({
             Base = v,

@@ -20,7 +20,7 @@ if CLIENT then
         return self:RegisterMenu(slots, "waypoint")
     end
 
-    hook.Add("Initialize", "AddWaypointMenu", function()
+    hook.Add(" JB_Initialize", "AddWaypointMenu", function()
         JB:AddWaypointMenu()
     end)
 end

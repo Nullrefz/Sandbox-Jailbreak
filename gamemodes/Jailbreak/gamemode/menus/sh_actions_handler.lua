@@ -55,7 +55,7 @@ if CLIENT then
         net.SendToServer()
     end
 
-    hook.Add("Initialize", "AddActionsMenu", function()
+    hook.Add(" JB_Initialize", "AddActionsMenu", function()
         JB:AddActionsMenu()
     end)
 

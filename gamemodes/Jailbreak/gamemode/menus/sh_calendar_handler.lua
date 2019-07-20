@@ -58,7 +58,7 @@ if CLIENT then
         return self:RegisterMenu(slots, "calendar")
     end
 
-    hook.Add("Initialize", "AddCalendarMenu", function()
+    hook.Add(" JB_Initialize", "AddCalendarMenu", function()
         JB:AddCalendarMenu()
     end)
 end

@@ -14,7 +14,7 @@ if CLIENT then
         end
     end)
 
-    hook.Add("Initialize", "AddWardenMenu", function()
+    hook.Add("JB_Initialize", "AddWardenMenu", function()
         JB:AddWardenMenu(wardenMenu)
     end)
 
@@ -28,7 +28,7 @@ if CLIENT then
 
             if v == "waypoint" then
                 slot.ACTION = function()
-                    JB:SendWaypoint(0)
+                    JB:SendWaypoint()
                 end
 
                 slot.COLOR = Color(255, 200, 0, 255)
