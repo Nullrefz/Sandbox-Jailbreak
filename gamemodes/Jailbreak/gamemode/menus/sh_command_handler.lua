@@ -16,11 +16,6 @@ if CLIENT then
         net.SendToServer()
     end
 
-    function JB:SendWaypoint(waypoint)
-        net.Start("SendWardenWaypoint")
-        --net.WriteInt(table.KeyFromValue(commandType, command), 32)
-        net.SendToServer()
-    end
 
     function JB:SendChosenDay(chosenDay)
         net.Start("SendChosenDay")
@@ -47,7 +42,53 @@ if CLIENT then
         return self:RegisterMenu(slots, "commands", commandType)
     end
 
-    hook.Add("Initialize", "AddCommandMenu", function()
+    hook.Add(" JB_Initialize", "AddCommandMenu", function()
         JB:AddCommandMenu()
     end)
+end
+
+if SERVER then
+    util.AddNetworkString("SendWardenCommand")
+    util.AddNetworkString("UpdateCommands")
+    util.AddNetworkString("ToggleCommand")
+    util.AddNetworkString("RequestCommands")
+
+    local activeCommands = {}
+
+    function JB:ToggleCommand(type)
+        if table.HasValue(activeCommands, type) then
+            table.RemoveByValue(activeCommands, type)
+        else
+            table.insert(activeCommands, type)
+        end
+
+        self:UpdateCommands()
+    end
+
+    function JB:UpdateCommands(ply)
+        net.Start("UpdateCommands")
+        net.WriteTable(activeCommands)
+
+        if ply then
+            net.Send(ply)
+        else
+            net.Broadcast()
+        end
+    end
+
+    hook.Add("WardenRevoked", "ResetCommands", function()
+        activeCommands = {}
+        JB:UpdateCommands()
+    end)
+
+    net.Receive("SendWardenCommand", function(ln, ply)
+        if not ply:IsWarden() then return end
+        JB:ToggleCommand(net.ReadInt(32))
+    end)
+
+    net.Receive("RequestCommands", function(ln, ply)
+        JB:UpdateCommands(ply)
+    end)
+
+
 end

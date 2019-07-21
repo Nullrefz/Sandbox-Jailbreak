@@ -58,6 +58,17 @@ function JB:ValidateWarden()
     end
 end
 
+
+function JB:ToggleWardenWeaponSwitch(active)
+    hook.Add("PlayerSwitchWeapon", "WaypointSwitchWeapon", function(ply)
+        if ply == JB.warden then
+            return active
+        else
+            return true
+        end
+    end)
+end
+
 function JB:PromotePlayer(ply)
     if ply:Team() == Team.GUARDS and not JB.warden and ply:Alive() and JB:GetActivePhase() == ROUND_PREPARING then
         JB:SetWarden(ply)
