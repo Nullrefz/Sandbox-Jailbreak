@@ -19,7 +19,7 @@ if SERVER then
 
     net.Receive("SetWaypoint", function()
         net.Start("UpdateWaypoint")
-        net:ToggleWardenWeaponSwitch(true)
+        JB:ToggleWardenWeaponSwitch(true)
         net.WriteTable(net.ReadTable())
         net.Broadcast()
     end)
@@ -28,9 +28,12 @@ end
 if CLIENT then
     JB.WardenWaypoint = {}
     local waypointPlaced = false
+    local enabled = false
 
     hook.Add("PostDrawOpaqueRenderables", "drawWaypoint", function()
+
         if enabled then
+
             if not waypointPlaced then
                 JB:PlaceWaypoint()
             else
@@ -41,8 +44,8 @@ if CLIENT then
 
     function JB:SetWaypoint()
         JB:DrawPoint()
-    end    
-    
+    end
+
     function JB:SendWaypoint(waypoint)
         net.Start("SendWardenWaypoint")
         --net.WriteInt(table.KeyFromValue(commandType, command), 32)
@@ -56,9 +59,9 @@ if CLIENT then
 
     local trace
     local pointColor = Color(255, 255, 255, 150)
-    local enabled = false
 
     function JB:PlaceWaypoint()
+
         if warden and LocalPlayer() == warden then
             pointColor = Color(255, 190, 0, 150)
             trace = LocalPlayer():GetEyeTrace()
@@ -85,11 +88,11 @@ if CLIENT then
             start = trace.HitPos,
             endpos = trace.HitPos + Vector(0, 0, -10000)
         })
-
         self:DrawWaypoint(tr)
     end
 
     net.Receive("PlaceWaypoint", function()
+        print("guie")
         enabled = true
         waypointPlaced = false
     end)
@@ -98,6 +101,4 @@ if CLIENT then
         waypointPlaced = true
         trace = net.ReadTable()
     end)
-
-
 end
