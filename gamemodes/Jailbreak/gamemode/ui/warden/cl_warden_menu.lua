@@ -94,7 +94,7 @@ function WARDENMENU:Init()
 
     function self:Exit()
         if not self.clicked then
-            self.button:SendCommand(self.slots[selection].ACTION)
+            self.button:SendCommand(self.slots[selection].REALEASEACTION)
         end
 
         self.remove = true
@@ -134,13 +134,14 @@ function WARDENMENU:UpdateInfo()
     net.SendToServer()
 end
 
-function WARDENMENU:AddSlot(name, action, color, close)
+function WARDENMENU:AddSlot(name, action, color, close, releaseAction)
     local slot = {
         NAME = name,
         ACTION = action,
         COLOR = color,
         ALPHA = 0,
-        CLOSE = close
+        CLOSE = close,
+        REALEASEACTION = releaseAction and releaseAction or action
     }
 
     table.insert(self.slots, slot)

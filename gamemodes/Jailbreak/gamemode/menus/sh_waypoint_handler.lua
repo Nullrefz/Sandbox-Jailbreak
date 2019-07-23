@@ -10,9 +10,12 @@ if CLIENT then
             slot.CLOSE = true
 
             slot.ACTION = function()
-                JB:SendWaypoint(k)
+                JB:SendWaypoint()
             end
 
+            slot.RELEASEACTION = function()
+                JB:SendWaypoint()
+            end
             slot.COLOR = Color(255, 255, 255)
             table.insert(slots, slot)
         end
