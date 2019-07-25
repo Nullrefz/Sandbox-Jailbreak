@@ -62,7 +62,7 @@ if CLIENT then
         net.SendToServer()
     end
 
-    hook.Add(" JB_Initialize", "AddLRMenu", function()
+    hook.Add("JB_Initialize", "AddLRMenu", function()
         JB:AddLRMenu()
     end)
 end

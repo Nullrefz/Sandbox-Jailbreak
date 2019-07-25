@@ -42,7 +42,7 @@ if CLIENT then
         return self:RegisterMenu(slots, "commands", commandType)
     end
 
-    hook.Add(" JB_Initialize", "AddCommandMenu", function()
+    hook.Add("JB_Initialize", "AddCommandMenu", function()
         JB:AddCommandMenu()
     end)
 end

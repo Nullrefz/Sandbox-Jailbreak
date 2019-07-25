@@ -26,7 +26,7 @@ if CLIENT then
         net.WriteString(name)
         net.SendToServer()
     end
-    hook.Add(" JB_Initialize", "AddCompetitionMenu", function()
+    hook.Add("JB_Initialize", "AddCompetitionMenu", function()
         JB:AddCompetitionMenu()
     end)
 end

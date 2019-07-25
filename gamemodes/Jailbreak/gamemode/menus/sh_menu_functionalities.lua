@@ -11,7 +11,7 @@ if CLIENT then
             self.panel:SetPos(0, 0)
 
             for k, v in ipairs(slots) do
-                self.panel:AddSlot(v.NAME, v.ACTION, v.COLOR, v.CLOSE)
+                self.panel:AddSlot(v.NAME, v.ACTION, v.COLOR, v.CLOSE, v.RELEASEACTION)
             end
 
             if referenceMenu then

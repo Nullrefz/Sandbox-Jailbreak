@@ -2,6 +2,7 @@ if SERVER then
     util.AddNetworkString("SendWardenWaypoint")
     util.AddNetworkString("UpdateWaypoint")
     util.AddNetworkString("PlaceWaypoint")
+    util.AddNetworkString("CancelWaypoint")
     util.AddNetworkString("SetWaypoint")
 
     net.Receive("SendWardenWaypoint", function(ln, ply)
@@ -13,7 +14,14 @@ if SERVER then
         self.warden:GiveWeapon("weapon_radio")
         self.warden:SelectWeapon("weapon_jb_radio")
         self:ToggleWardenWeaponSwitch(false)
-        net.Start("PlaceWaypoint")
+
+        if type == "cancelWaypoint" then
+            net.Start("CancelWaypoint")
+        else
+            net.Start("PlaceWaypoint")
+            net.WriteString(type)
+        end
+
         net.Broadcast()
     end
 
@@ -29,11 +37,10 @@ if CLIENT then
     JB.WardenWaypoint = {}
     local waypointPlaced = false
     local enabled = false
+    local currentWaypoint
 
     hook.Add("PostDrawOpaqueRenderables", "drawWaypoint", function()
-
         if enabled then
-
             if not waypointPlaced then
                 JB:PlaceWaypoint()
             else
@@ -48,7 +55,7 @@ if CLIENT then
 
     function JB:SendWaypoint(waypoint)
         net.Start("SendWardenWaypoint")
-        --net.WriteInt(table.KeyFromValue(commandType, command), 32)
+        net.WriteString(waypoint)
         net.SendToServer()
     end
 
@@ -57,11 +64,14 @@ if CLIENT then
         waypointPlaced = false
     end
 
+    net.Receive("cancelWaypoint", function()
+        JB:ClearWaypoints()
+    end)
+
     local trace
     local pointColor = Color(255, 255, 255, 150)
 
     function JB:PlaceWaypoint()
-
         if warden and LocalPlayer() == warden then
             pointColor = Color(255, 190, 0, 150)
             trace = LocalPlayer():GetEyeTrace()
@@ -73,7 +83,19 @@ if CLIENT then
                 net.SendToServer()
             end
 
-            JB:DrawPoint()
+            if "waypoint" then
+                JB:DrawPoint()
+            elseif "line" then
+                JB:DrawLineuppoint()
+            elseif "avoid" then
+                JB:DrawAvoidpoint()
+            elseif "question" then
+                JB:DrawQuestionPoint()
+            elseif "warning" then
+                JB:DrawWarningPoint()
+            else
+                JB:DrawPoint()
+            end
         end
     end
 
@@ -88,11 +110,12 @@ if CLIENT then
             start = trace.HitPos,
             endpos = trace.HitPos + Vector(0, 0, -10000)
         })
+
         self:DrawWaypoint(tr)
     end
 
     net.Receive("PlaceWaypoint", function()
-        print("guie")
+        currentWaypoint = net.ReadString()
         enabled = true
         waypointPlaced = false
     end)
