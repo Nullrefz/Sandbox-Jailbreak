@@ -10,7 +10,7 @@ if CLIENT then
             slot.CLOSE = true
 
             slot.ACTION = function()
-                JB:SendWaypoint(k)
+                JB:SendWaypoint(v)
             end
 
             slot.COLOR = Color(255, 255, 255)
