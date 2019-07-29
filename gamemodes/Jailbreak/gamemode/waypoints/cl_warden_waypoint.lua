@@ -22,7 +22,7 @@ function JB:DrawWaypoint(trace, prog, placed, color, mat)
     end
 
     cam.End3D2D()
-    cam.Start3D2D(trace.HitPos, trace.HitNormal:Angle() + Angle(0, (LocalPlayer():GetEyeTrace().HitPos - LocalPlayer():GetEyeTrace().StartPos):Angle().y, 0) + Angle(90,  -90, 90), math.Clamp(LocalPlayer():GetPos():Distance(trace.HitPos) / 100, 2, 15))
+    cam.Start3D2D(trace.HitPos, trace.HitNormal:Angle() + Angle(0, (LocalPlayer():GetEyeTrace().HitPos - LocalPlayer():GetEyeTrace().StartPos):Angle().y, 0) + Angle(90, -90, 90), math.Clamp(LocalPlayer():GetPos():Distance(trace.HitPos) / 100, 2, 15))
     local dist = math.Clamp(LocalPlayer():GetPos():Distance(trace.HitPos) / 100 - 1, 0, 1)
 
     if not placed then
@@ -38,7 +38,7 @@ function JB:DrawWaypoint(trace, prog, placed, color, mat)
     if mat then
         draw.DrawRect(-wid * 2, -12 + math.sin(CurTime() * 2) * 2, wid * 4, wid * 4, Color(255, 255, 255, 222 * dist * prog), mat)
     else
-        draw.DrawRect(-wid * 2, -4 + math.sin(CurTime() * 2) * 2, wid * 2, wid, Color(255, 255, 255, 222 * dist * prog), mats.ARROW)
+        draw.DrawRect(-wid / 2, -8 + math.sin(CurTime() * 2) * 2, wid, wid * 2, Color(255, 255, 255, 222 * dist * prog), mats.ARROW)
     end
 
     cam.End3D2D()
