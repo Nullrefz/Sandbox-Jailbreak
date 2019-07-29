@@ -4,7 +4,6 @@ if CLIENT then
     local menuActive = false
 
     hook.Add("Think", "OpensWardenMenu", function()
-
         if (LocalPlayer() == warden and input.IsKeyDown(KEY_F) and not menuActive) then
             menuActive = true
             JB:OpenMenu("wardenMenu")
@@ -14,7 +13,7 @@ if CLIENT then
         end
     end)
 
-    hook.Add("Initialize", "AddWardenMenu", function()
+    hook.Add("JB_Initialize", "AddWardenMenu", function()
         JB:AddWardenMenu(wardenMenu)
     end)
 
@@ -27,17 +26,19 @@ if CLIENT then
             slot.CLOSE = true
 
             if v == "waypoint" then
-                slot.ACTION = function()
-                    JB:SendWaypoint(0)
-                end
-
                 slot.COLOR = Color(255, 200, 0, 255)
-            else
-                slot.ACTION = function()
-                    JB:OpenMenu(v)
-                end
 
+                slot.RELEASEACTION = function()
+                    JB:SendWaypoint()
+                end
+            else
                 slot.COLOR = Color(255, 255, 255)
+                slot.RELEASEACTION = function()
+                end
+            end
+
+            slot.ACTION = function()
+                JB:OpenMenu(v)
             end
 
             table.insert(slots, slot)

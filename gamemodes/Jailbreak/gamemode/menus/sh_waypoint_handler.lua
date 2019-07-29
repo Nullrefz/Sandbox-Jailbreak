@@ -1,4 +1,4 @@
-waypointMenu = {"waypoint", "line", "avoid", "warning", "cancelWaypoint"}
+waypointMenu = {"waypoint", "line", "question", "avoid", "warning", "cancelWaypoint"}
 
 if CLIENT then
     function JB:AddWaypointMenu()
@@ -10,7 +10,7 @@ if CLIENT then
             slot.CLOSE = true
 
             slot.ACTION = function()
-                JB:SendWaypoint(k)
+                JB:SendWaypoint(v)
             end
 
             slot.COLOR = Color(255, 255, 255)
@@ -20,7 +20,7 @@ if CLIENT then
         return self:RegisterMenu(slots, "waypoint")
     end
 
-    hook.Add("Initialize", "AddWaypointMenu", function()
+    hook.Add("JB_Initialize", "AddWaypointMenu", function()
         JB:AddWaypointMenu()
     end)
 end
