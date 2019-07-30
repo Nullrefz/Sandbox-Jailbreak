@@ -35,11 +35,27 @@ function JB:DrawWaypoint(trace, prog, placed, color, mat)
         end
     end
 
+    surface.SetDrawColor(255, 255, 255, 222 * dist * prog)
+
     if mat then
-        draw.DrawRect(-wid * 2, -12 + math.sin(CurTime() * 2) * 2, wid * 4, wid * 4, Color(255, 255, 255, 222 * dist * prog), mat)
+        surface.SetMaterial(mat)
+        surface.DrawTexturedRect(-wid * 2, -12 + math.sin(CurTime() * 2) * 2, wid * 4, wid * 4)
     else
-        draw.DrawRect(-wid / 2, -8 + math.sin(CurTime() * 2) * 2, wid, wid * 2, Color(255, 255, 255, 222 * dist * prog), mats.ARROW)
+        surface.SetMaterial(mats.ARROW)
+        surface.DrawTexturedRect(-wid / 2, -8 + math.sin(CurTime() * 2) * 2, wid, wid * 2)
     end
 
     cam.End3D2D()
+end
+
+function JB:DrawAvoidpoint(trace, prog, placed)
+    JB:DrawWaypoint(trace, prog, placed, Color(255, 0, 0), Material("jailbreak/vgui/icons/avoid.png", "smooth"))
+end
+
+function JB:DrawQuestionPoint(trace, prog, placed)
+    JB:DrawWaypoint(trace, prog, placed, Color(0, 150, 225), Material("jailbreak/vgui/icons/question.png", "smooth"))
+end
+
+function JB:DrawWarningPoint(trace, prog, placed)
+    JB:DrawWaypoint(trace, prog, placed, Color(255, 200, 0), Material("jailbreak/vgui/icons/warning.png", "smooth"))
 end

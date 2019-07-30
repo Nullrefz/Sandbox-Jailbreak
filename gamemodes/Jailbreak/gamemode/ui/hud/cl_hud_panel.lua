@@ -7,7 +7,7 @@ function JAILBREAKHUD:Init()
     self.healthBar = vgui.Create("JailbreakHealthBar", self.footer)
     self.timerBar = vgui.Create("JailbreakTimerBar", self.footer)
     self.weaponBar = vgui.Create("JailbreakWeaponBar", self.footer)
-   --self.commandBar = vgui.Create("JailbreakCommandBar", self.footer)
+    self.commandBar = vgui.Create("JailbreakCommandBar", self.footer)
     self.wardenBar = vgui.Create("JailbreakWardenBar", self.header)
     self.actionBar = vgui.Create("JailbreakActionBar", self)
 end
