@@ -52,7 +52,6 @@ function ply:Setup()
     end
 
     self:ShouldDropWeapon(true)
-    --self:StripWeapons()
     self:SetPos(self:GetSpawnPos())
     self:ApplyModel()
     local col = team.GetColor(self:Team())

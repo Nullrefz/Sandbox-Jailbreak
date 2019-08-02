@@ -42,6 +42,8 @@ surface.CreateFont("Jailbreak_Font_RoundPhase", {
 
 local timeLeft = 0
 local roundTime = 0
+local curDay = ""
+local dayTime = 0
 
 function TIMERBAR:Init()
     if roundPhase == "" then
@@ -62,7 +64,7 @@ function TIMERBAR:Init()
         if roundPhase == "Waiting" then
             draw.DrawText("∞", "Jailbreak_Font_Counter", toHRatio(5), -1, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
         else
-            draw.DrawText(string.FormattedTime(math.Clamp(timeLeft - CurTime(), 0, timeLeft - CurTime()), "%02i:%02i"), "Jailbreak_Font_Counter", toHRatio(5), -1, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
+            draw.DrawText(string.FormattedTime(math.Clamp((CurTime() < dayTime and dayTime or timeLeft) - CurTime(), 0, (CurTime() < dayTime and dayTime or timeLeft) - CurTime()), "%02i:%02i"), "Jailbreak_Font_Counter", toHRatio(5), -1, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
         end
 
         if (roundPhase == "Waiting") then
@@ -88,8 +90,8 @@ function TIMERBAR:Init()
             draw.DrawSkewedRect(toHRatio(5), height / 2, width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 50))
         end
 
-        draw.DrawSkewedRect(toHRatio(5), height / 2, ((timeLeft - CurTime()) / roundTime) * width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 200))
-        draw.DrawText(tostring(roundPhase), "Jailbreak_Font_RoundPhase", toHRatio(2), height - 16, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
+        draw.DrawSkewedRect(toHRatio(5), height / 2, (((CurTime() < dayTime and dayTime or timeLeft) - CurTime()) / roundTime) * width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 200))
+        draw.DrawText(CurTime() < dayTime and curDay or tostring(roundPhase), "Jailbreak_Font_RoundPhase", toHRatio(2), height - 16, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
     end
 end
 
@@ -100,10 +102,17 @@ function TIMERBAR:PerformLayout(width, height)
     self.timeInfo:SetSize(width - self.stopWatch:GetWide(), height)
 end
 
+
 vgui.Register("JailbreakTimerBar", TIMERBAR)
 
 net.Receive("RoundChanged", function()
     roundPhase = net.ReadString()
     roundTime = net.ReadFloat()
     timeLeft = net.ReadFloat() + CurTime()
+    dayTime = 0
+end)
+
+net.Receive("SetDay", function()
+    curDay = net.ReadString()
+    dayTime = net.ReadFloat() + CurTime()
 end)
