@@ -10,6 +10,7 @@ function JAILBREAKHUD:Init()
     self.commandBar = vgui.Create("JailbreakCommandBar", self.footer)
     self.wardenBar = vgui.Create("JailbreakWardenBar", self.header)
     self.actionBar = vgui.Create("JailbreakActionBar", self)
+    self.notificationBar = vgui.Create("JailbreakNotificationBar", self.container)
 end
 
 function JAILBREAKHUD:PerformLayout(width, height)
@@ -63,6 +64,11 @@ function JAILBREAKHUD:PerformLayout(width, height)
         self.weaponBar:Dock(RIGHT)
         self.weaponBar:SetSize(toHRatio(250), toVRatio(100))
         self.weaponBar:DockMargin(0, toVRatio(42), toHRatio(42), 0)
+    end
+
+    if self.notificationBar then
+         self.notificationBar:Dock(BOTTOM)
+         self.notificationBar:SizeToContentsY()
     end
 end
 

@@ -1,6 +1,7 @@
 if SERVER then
     util.AddNetworkString("ShowButtonNotification")
     util.AddNetworkString("HideButtonNotification")
+    util.AddNetworkString("SendNotification")
     local ply = FindMetaTable("Player")
 
     function ply:ShowNotifyButton(ply, button, message)
@@ -17,5 +18,19 @@ if SERVER then
         ply.buttonNotificationActive = false
         net.Start("HideButtonNotification")
         net.Send(ply)
+    end
+
+    function JB:SendNotification(time, color, text, textColor, type)
+        net.Start("SendNotification")
+        net.WriteFloat(time)
+        net.WriteColor(color)
+        net.WriteString(text)
+        net.WriteColor(textColor)
+
+        if type then
+            net.WriteInt(type, 32)
+        end
+
+        net.Broadcast()
     end
 end
