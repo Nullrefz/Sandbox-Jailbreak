@@ -1,36 +1,48 @@
+JB.messageType = {
+    MESSAGE = 1,
+    WARNING = 2,
+    ERROR = 3
+}
+
 function JB:DrawNotification(notify)
-    self:StartNotification(notify.TIME, notify.COLOR, notify.TEXT, notify.TEXTCOLOR, notify.CALLBACK)
+    self:StartNotification(notify.TIME, notify.COLOR, notify.TEXT, notify.TEXTCOLOR, notify.CALLBACK, notify.TYPE)
 end
 
-function JB:StartNotification(time, color, text, textColor, callback)
+local mats = {
+    BAR = Material("jailbreak/vgui/Bar.png", "smooth")
+}
+
+function JB:StartNotification(time, color, text, textColor, callback, type)
     local notification = vgui.Create("JailbreakNotification")
-    notification:SetSize(258, 42)
-    notification:SetPos(w - 258, h - 512)
     notification:SetTime(time or 3)
     notification:SetColor(color or Color(255, 255, 255))
     notification:SetText(text or "Notification")
     notification:SetTextColor(textColor or Color(255, 255, 255))
     notification:SetCallBack(callback)
+    notification:SetType(type)
+    local len = notification.text:GetWide() + toHRatio(72)
+    notification:SetSize(len, 32)
+    notification:SetPos(w - len, h - 512)
 end
 
 local JAILBREAKNOTIFICATION = {}
 
-surface.CreateFont("Jailbreak_Font_42", {
+surface.CreateFont("Jailbreak_Font_32", {
     font = "Optimus",
-    extended = false,
-    size = 42,
-    weight = 5,
+    extended = true,
+    size = 32,
+    weight = 0,
     blursize = 0,
-    scanlines = 0,
-    antialias = false,
+    scanlines = 1,
+    antialias = true,
     underline = false,
-    italic = true,
+    italic = false,
     strikeout = false,
     symbol = false,
     rotary = false,
     shadow = false,
     additive = false,
-    outline = true
+    outline = false
 })
 
 function JAILBREAKNOTIFICATION:Init()
@@ -40,22 +52,26 @@ function JAILBREAKNOTIFICATION:Init()
     self.panel.devisions = 2
     self.panel.padding = 5
     self.panel.color = Color(255, 255, 255, 255)
+    self.panel.typeColor = Color(255, 255, 255)
     self.panel.text = ""
     self.panel.textColor = Color(0, 0, 0)
     self.panel.skew = toHRatio(7)
     self.time = 3
+    self.text = vgui.Create("DLabel", self.panel)
+    self.text:SetFont("Jailbreak_Font_32")
 
     function self.panel:Paint(width, height)
-        local wid = 0
-        local widPos =  width * (1 - self.progress) + self.skew * 2 + toHRatio(self.padding * self.devisions) * (1 - self.activeProgress)
+        local wid = self.skew * 2
+        local widPos = width * (1 - self.progress) + self.skew * 2 + toHRatio(self.padding * self.devisions) * (1 - self.activeProgress)
 
         for i = 1, self.devisions do
-            draw.DrawSkewedRect(wid + widPos, 0, toHRatio(16), height, self.skew, self.color)
+            draw.DrawSkewedRect(wid + widPos, 0, toHRatio(16), height, self.skew, self.typeColor, mats.BAR)
             wid = wid + toHRatio(9) + toHRatio(self.padding) * self.activeProgress
         end
 
-        draw.DrawSkewedRect(wid + widPos, 0, width - toHRatio(16) * 3, height, self.skew, self.color)
-        draw.DrawText(self.text, "Jailbreak_Font_42",wid + widPos, 0, self.textColor, TEXT_ALIGN_LEFT)
+        draw.DrawSkewedRect(wid + widPos, 0, width - toHRatio(16) * 3, height, self.skew, self.color, mats.BAR)
+        --draw.DrawText(self.text, "Jailbreak_Font_32", 0, -height / 4, self.textColor, TEXT_ALIGN_CENTER)
+        self:GetParent().text:SetPos(wid + widPos + 10, height / 4)
     end
 
     self:DoEntryAnimation()
@@ -63,6 +79,7 @@ end
 
 function JAILBREAKNOTIFICATION:PerformLayout(width, height)
     self.panel:Dock(FILL)
+    self.panel:SetWide(self.text:GetWide())
 end
 
 function JAILBREAKNOTIFICATION:DoEntryAnimation()
@@ -74,7 +91,7 @@ function JAILBREAKNOTIFICATION:DoEntryAnimation()
 end
 
 function JAILBREAKNOTIFICATION:DoActiveAnimation()
-    LerpFloat(0, 1, self.time * 0.1, function(activeProg)
+    LerpFloat(0, 1, self.time * 0.8, function(activeProg)
         self.panel.activeProgress = activeProg
     end, INTERPOLATION.SinLerp, function()
         self:DoEndingAnimation()
@@ -82,7 +99,7 @@ function JAILBREAKNOTIFICATION:DoActiveAnimation()
 end
 
 function JAILBREAKNOTIFICATION:DoEndingAnimation()
-    LerpFloat(1, 0, self.time * 0.8, function(activeProg)
+    LerpFloat(1, 0, self.time * 0.2, function(activeProg)
         self.panel.activeProgress = activeProg
     end, INTERPOLATION.CosLerp, function()
         self:DoExitAnimation()
@@ -93,8 +110,8 @@ function JAILBREAKNOTIFICATION:DoExitAnimation()
     LerpFloat(1, 0, 0.2, function(prog)
         self.panel.progress = prog
     end, INTERPOLATION.CosLerp, function()
-        if self.callback then
-            self.callback()
+        if self.panel.callback then
+            self.panel.callback()
         end
 
         self:Clear()
@@ -110,12 +127,23 @@ function JAILBREAKNOTIFICATION:SetTime(time)
     self.time = time
 end
 
+function JAILBREAKNOTIFICATION:SetType(type)
+    if type == JB.messageType.MESSAGE then
+        self.panel.typeColor = Color(255, 255, 255, 200)
+    elseif type == JB.messageType.WARNING then
+        self.panel.typeColor = Color(255, 175, 0, 255)
+    elseif type == JB.messageType.ERROR then
+        self.panel.typeColor = Color(255, 0, 0, 255)
+    end
+end
+
 function JAILBREAKNOTIFICATION:SetText(text)
-    self.panel.text = text
+    self.text:SetText(text)
+    self.text:SizeToContentsX(6)
 end
 
 function JAILBREAKNOTIFICATION:SetTextColor(color)
-    self.panel.textColor = color
+    self.text:SetTextColor(color)
 end
 
 function JAILBREAKNOTIFICATION:SetCallBack(callback)
@@ -123,14 +151,3 @@ function JAILBREAKNOTIFICATION:SetCallBack(callback)
 end
 
 vgui.Register("JailbreakNotification", JAILBREAKNOTIFICATION)
-
-concommand.Add("jb_notify", function()
-    local notifyTable = {
-        TIME = 3,
-        COLOR = Color(255, 255, 255),
-        TEXT = "Hello",
-        TEXTCOLOR = Color(0, 0, 0)
-    }
-
-    JB:DrawNotification(notifyTable)
-end)
