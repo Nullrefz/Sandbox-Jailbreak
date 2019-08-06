@@ -1,6 +1,9 @@
 local mats = {
     ARROW = Material("jailbreak/vgui/arrow.png", "smooth"),
-    ICON = Material("jailbreak/vgui/icons/avoid.png", "smooth")
+    ICON = Material("jailbreak/vgui/icons/avoid.png", "smooth"),
+    AVOID =  Material("jailbreak/vgui/icons/avoid.png", "smooth"),
+    QUESTION = Material("jailbreak/vgui/icons/question.png", "smooth"),
+    WARNING = Material("jailbreak/vgui/icons/warning.png", "smooth")
 }
 
 function JB:DrawWaypoint(trace, prog, placed, color, mat)
@@ -49,13 +52,13 @@ function JB:DrawWaypoint(trace, prog, placed, color, mat)
 end
 
 function JB:DrawAvoidpoint(trace, prog, placed)
-    JB:DrawWaypoint(trace, prog, placed, Color(255, 0, 0), Material("jailbreak/vgui/icons/avoid.png", "smooth"))
+    JB:DrawWaypoint(trace, prog, placed, Color(255, 0, 0), mats.AVOID)
 end
 
 function JB:DrawQuestionPoint(trace, prog, placed)
-    JB:DrawWaypoint(trace, prog, placed, Color(0, 150, 225), Material("jailbreak/vgui/icons/question.png", "smooth"))
+    JB:DrawWaypoint(trace, prog, placed, Color(0, 150, 225), mats.QUESTION)
 end
 
 function JB:DrawWarningPoint(trace, prog, placed)
-    JB:DrawWaypoint(trace, prog, placed, Color(255, 200, 0), Material("jailbreak/vgui/icons/warning.png", "smooth"))
+    JB:DrawWaypoint(trace, prog, placed, Color(255, 200, 0), mats.WARNING)
 end

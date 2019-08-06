@@ -70,7 +70,6 @@ function JAILBREAKNOTIFICATION:Init()
         end
 
         draw.DrawSkewedRect(wid + widPos, 0, width - toHRatio(16) * 3, height, self.skew, self.color, mats.BAR)
-        --draw.DrawText(self.text, "Jailbreak_Font_32", 0, -height / 4, self.textColor, TEXT_ALIGN_CENTER)
         self:GetParent().text:SetPos(wid + widPos + 10, height / 4)
     end
 
@@ -84,7 +83,9 @@ end
 
 function JAILBREAKNOTIFICATION:DoEntryAnimation()
     LerpFloat(0, 1, 0.2, function(prog)
-        self.panel.progress = prog
+        if self:IsValid() then
+            self.panel.progress = prog
+        end
     end, INTERPOLATION.SinLerp, function()
         self:DoActiveAnimation()
     end)
