@@ -20,17 +20,13 @@ if SERVER then
         net.Send(ply)
     end
 
-    function JB:SendNotification(time, color, text, textColor, type)
+    function JB:SendNotification(params)
         net.Start("SendNotification")
-        net.WriteFloat(time)
-        net.WriteColor(color)
-        net.WriteString(text)
-        net.WriteColor(textColor)
-
-        if type then
-            net.WriteInt(type, 32)
-        end
-
+        net.WriteFloat(params.TIME or 3)
+        net.WriteColor(params.COLOR or Color(255,255,255,150))
+        net.WriteString(params.TEXT or "")
+        net.WriteColor(params.TEXTCOLOR or Color(255,255,255))
+        net.WriteInt(params.TYPE or 1, 32)
         net.Broadcast()
     end
 end

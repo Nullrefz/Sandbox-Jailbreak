@@ -1,7 +1,6 @@
 if SERVER then
     util.AddNetworkString("SetDay")
     util.AddNetworkString("SendDay")
-
     net.Receive("SendDay", function(ln, ply)
         local day = net.ReadString()
         print (day)
@@ -26,6 +25,13 @@ if SERVER then
         self:OpenCells()
         self:RevokeWarden()
         self:SetDayPhase("Freeday", self:GetTimeLeft())
+        local notification = {
+            TEXT = "It's a Freeday!!!!!",
+            TYPE = 2,
+            TIME = 5
+        }
+        self:SendNotification(notification)
+        Entity( 1 ):EmitSound( "jailbreak/wow.mp3")
     end
 
     function JB:SetWarday()
