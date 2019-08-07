@@ -2,7 +2,7 @@ util.AddNetworkString("OnWardenSet")
 util.AddNetworkString("OnWardenRequest")
 util.AddNetworkString("RequestPromotion")
 local pl = FindMetaTable("Player")
-
+JB.warden = nil
 function pl:IsWarden()
     if JB.warden == self then return true end
 

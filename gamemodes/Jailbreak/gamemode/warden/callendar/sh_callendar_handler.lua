@@ -1,4 +1,5 @@
 if SERVER then
+    JB.dayPhase = ""
     util.AddNetworkString("SetDay")
     util.AddNetworkString("SendDay")
 
@@ -17,11 +18,16 @@ if SERVER then
         end
     end)
 
-    -- hook.Add("WardenRevoked", "WardenKilled", function()
-    --     if JB:GetActivePhase() == ROUND_ACTIVE then
-    --         JB:SetFreeday()
-    --     end
-    -- end)
+    hook.Add("jb_round_ending", "setup waiting", function()
+        JB.dayPhase = ""
+    end)
+
+    hook.Add("WardenRevoked", "WardenKilled", function()
+        if JB.warden and not JB.warden:Alive() and JB:GetActivePhase() == ROUND_ACTIVE and JB.dayPhase ~= "Freeday" then
+            JB:SetFreeday()
+        end
+    end)
+
     function JB:SetFreeday()
         self:OpenCells()
         self:RevokeWarden()
@@ -30,7 +36,8 @@ if SERVER then
         local notification = {
             TEXT = "It's a Freeday!!!!!",
             TYPE = 2,
-            TIME = 5
+            TIME = 5,
+            COLOR = Color(255, 175 ,0, 200)
         }
 
         self:SendNotification(notification)
@@ -38,9 +45,24 @@ if SERVER then
     end
 
     function JB:SetWarday()
-        self:SetDayPhase("Starting Warday", 3)
+        self:SetDayPhase("Starting Warday", 5)
+        local notification = {
+            TEXT = "Warday Staring Soon. Guards better hide",
+            TYPE = 2,
+            TIME = 5,
+            COLOR = Color(255, 175 ,0, 200)
+        }
 
-        timer.Simple(3, function()
+        self:SendNotification(notification)
+        timer.Simple(5, function()
+            local notify= {
+                TEXT = "Kill the other team!",
+                TYPE = 2,
+                TIME = 5,
+                COLOR = Color(255, 175 ,0, 200)
+            }
+    
+            self:SendNotification(notify)
             self:OpenCells()
             self:SetDayPhase("Warday", self:GetTimeLeft())
         end)
@@ -60,6 +82,7 @@ if SERVER then
     end
 
     function JB:SetDayPhase(name, dayTime)
+        self.dayPhase = name
         net.Start("SetDay")
         net.WriteString(name)
         net.WriteFloat(dayTime)

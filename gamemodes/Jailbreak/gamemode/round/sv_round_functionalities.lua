@@ -32,7 +32,6 @@ function JB:OpenCells(ply, ent)
     else
         local notification = {
             TEXT = ply:Name() .. " opened the cell doors",
-            COLOR = Color(team:GetColor(ply:Team()))
         }
 
         self:SendNotification(notification)

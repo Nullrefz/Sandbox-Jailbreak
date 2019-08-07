@@ -12,7 +12,6 @@ function NOTIFICATIONBAR:PerformLayout(width, height)
 end
 
 function NOTIFICATIONBAR:AddNotification(time, color, text, textColor, type)
-    print(time, color, text, textColor, type)
     local notification = vgui.Create("JailbreakNotification", self)
     notification:SetTime(time or 3)
     notification:SetColor(color or Color(255, 255, 255))

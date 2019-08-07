@@ -87,12 +87,14 @@ function JAILBREAKNOTIFICATION:DoEntryAnimation()
             self.panel.progress = prog
         end
     end, INTERPOLATION.SinLerp, function()
+        if not self:IsValid() then return end
         self:DoActiveAnimation()
     end)
 end
 
 function JAILBREAKNOTIFICATION:DoActiveAnimation()
     LerpFloat(0, 1, self.time * 0.8, function(activeProg)
+        if not self:IsValid() then return end
         self.panel.activeProgress = activeProg
     end, INTERPOLATION.SinLerp, function()
         self:DoEndingAnimation()
@@ -101,16 +103,21 @@ end
 
 function JAILBREAKNOTIFICATION:DoEndingAnimation()
     LerpFloat(1, 0, self.time * 0.2, function(activeProg)
+        if not self:IsValid() then return end
         self.panel.activeProgress = activeProg
     end, INTERPOLATION.CosLerp, function()
+        if not self:IsValid() then return end
         self:DoExitAnimation()
     end)
 end
 
 function JAILBREAKNOTIFICATION:DoExitAnimation()
     LerpFloat(1, 0, 0.2, function(prog)
+        if not self:IsValid() then return end
         self.panel.progress = prog
     end, INTERPOLATION.CosLerp, function()
+        if not self:IsValid() then return end
+
         if self.panel.callback then
             self.panel.callback()
         end
@@ -126,11 +133,17 @@ end
 
 function JAILBREAKNOTIFICATION:SetTime(time)
     self.time = time
+
+    timer.Simple(time + 1, function()
+        if not self.panel then return end
+        self:Clear()
+        self:Remove()
+    end)
 end
 
 function JAILBREAKNOTIFICATION:SetType(type)
     if type == JB.messageType.MESSAGE then
-        self.panel.typeColor = Color(255, 255, 255, 200)
+        self.panel.typeColor = Color(0, 220, 255, 200)
     elseif type == JB.messageType.WARNING then
         self.panel.typeColor = Color(255, 175, 0, 255)
     elseif type == JB.messageType.ERROR then
