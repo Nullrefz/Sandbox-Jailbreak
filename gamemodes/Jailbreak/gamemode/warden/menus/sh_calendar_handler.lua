@@ -1,4 +1,4 @@
-calendarMenu = {"freeday", "warday", "hidenseek", "weepingangles", "contest", "competition"}
+calendarMenu = {"freeday", "warday", "hidenseek", "weepingangels", "contest", "competition"}
 
 if CLIENT then
     function JB:AddCalendarMenu()
@@ -9,21 +9,9 @@ if CLIENT then
             slot.NAME = v
             slot.CLOSE = true
 
-            if v == "freeday" then
+            if v == "freeday" or v == "warday" or v == "hidenseek" or v == "weepingangels" then
                 slot.ACTION = function()
-                    JB:SendFreeday()
-                end
-            elseif v == "warday" then
-                slot.ACTION = function()
-                    JB:SendWarday()
-                end
-            elseif v == "hidenseek" then
-                slot.ACTION = function()
-                    JB:HidenSeek()
-                end
-            elseif v == "weepingangles" then
-                slot.ACTION = function()
-                    JB:SendWeepingAngles()
+                    JB:SendDay(v)
                 end
             else
                 slot.ACTION = function()
@@ -31,23 +19,9 @@ if CLIENT then
                 end
             end
 
-            function JB:SendFreeday()
-                net.Start("SendFreeday")
-                net.SendToServer()
-            end
-
-            function JB:SendWarday()
-                net.Start("SendWarday")
-                net.SendToServer()
-            end
-
-            function JB:HidenSeek()
-                net.Start("SendHidenSeek")
-                net.SendToServer()
-            end
-
-            function JB:SendWeepingAngles()
-                net.Start("SendWeepingAngles")
+            function JB:SendDay(day)
+                net.Start("SendDay")
+                net.WriteString(day)
                 net.SendToServer()
             end
 
@@ -61,15 +35,4 @@ if CLIENT then
     hook.Add("JB_Initialize", "AddCalendarMenu", function()
         JB:AddCalendarMenu()
     end)
-end
-
-if SERVER then
-    util.AddNetworkString("SendFreeday")
-    util.AddNetworkString("SendWarday")
-    util.AddNetworkString("SendHidenSeek")
-    util.AddNetworkString("SendWeepingAngles")
-    net.Receive("SendFreeday", function(ln, ply) end)
-    net.Receive("SendWarday", function(ln, ply) end)
-    net.Receive("SendHidenSeek", function(ln, ply) end)
-    net.Receive("SendWeepingAngles", function(ln, ply) end)
 end
