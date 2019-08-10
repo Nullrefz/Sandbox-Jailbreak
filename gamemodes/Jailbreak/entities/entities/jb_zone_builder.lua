@@ -11,8 +11,8 @@ function ENT:Initialize()
 
 		self:SetModel( "models/maxofs2d/hover_classic.mdl" )
 
-		local min = Vector( 1, 1, 1 ) * Radius * -0.5
-		local max = Vector( 1, 1, 1 ) * Radius * 0.5
+		local min = Vector( 1, 1, 1 ) * Radius * -0.1
+		local max = Vector( 1, 1, 1 ) * Radius * 0.1
 
 		self:PhysicsInitBox( min, max )
 
