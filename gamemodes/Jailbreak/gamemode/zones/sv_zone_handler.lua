@@ -28,7 +28,8 @@ function ply:CheckRestrictions(zone, ID)
         if k == zone then
             self:SetPos(self:GetSpawnPos())
             local notification = {
-                TEXT = "You must stay in the " .. zone,
+                TEXT = v,
+                TARGET = self,
                 TYPE = 2
             }
             JB:SendNotification(notification)
@@ -42,6 +43,10 @@ function ply:RestrictZone(zoneName, message)
     end
 
     self.restrictedZones[zoneName] = message
+end
+
+function ply:ClearRestrictions()
+    self.restrictedZones = {}
 end
 
 function ply:WarnZone(zoneName, message)

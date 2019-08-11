@@ -97,6 +97,7 @@ function JAILBREAKNOTIFICATION:DoActiveAnimation()
         if not self:IsValid() then return end
         self.panel.activeProgress = activeProg
     end, INTERPOLATION.SinLerp, function()
+        if not self:IsValid() then return end
         self:DoEndingAnimation()
     end)
 end
