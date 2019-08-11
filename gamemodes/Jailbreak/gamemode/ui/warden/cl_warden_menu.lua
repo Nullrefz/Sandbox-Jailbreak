@@ -19,7 +19,7 @@ surface.CreateFont("Jailbreak_Font_WardenMenu", {
 })
 
 function WARDENMENU:Init()
-    --self.UpdateInfo()
+    self.UpdateInfo()
     self.slots = {}
     self.hookedMenu = {}
     self.menu = {}
@@ -74,14 +74,19 @@ function WARDENMENU:Init()
             else
                 self.slots[i].ALPHA = math.Clamp(self.slots[i].ALPHA - FrameTime() * 100, 0, 25)
             end
-
+            PrintTable(activeCommands)
             draw.DrawArc(width / 2, height / 2, width, self.radius, segments, -i * segments + shift - shiter, Color(255, 255, 255, self.slots[i].ALPHA))
-
             if self.slots[i].MAT then
-                draw.DrawRect(width / 2 - self.iconSize / 2 + math.sin(angle) * self.iconRadius, height / 2 - self.iconSize / 2 + math.cos(angle) * self.iconRadius, self.iconSize, self.iconSize, (self.hookedMenu and table.HasValue(self.hookedMenu, i)) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(self.slots[i].COLOR.r, self.slots[i].COLOR.g, self.slots[i].COLOR.b, self.slots[i].COLOR.a * self.alphaLerp), self.slots[i].MAT)
+                draw.DrawRect(
+                    width / 2 - self.iconSize / 2 + math.sin(angle) * self.iconRadius,
+                    height / 2 - self.iconSize / 2 + math.cos(angle) * self.iconRadius,
+                    self.iconSize,
+                    self.iconSize,
+                    table.HasValue(activeCommands, i) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(self.slots[i].COLOR.r, self.slots[i].COLOR.g, self.slots[i].COLOR.b,
+                    self.slots[i].COLOR.a * self.alphaLerp), self.slots[i].MAT)
             end
 
-            draw.DrawText(str:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end), "Jailbreak_Font_WardenMenu", width / 2 + math.sin(angle) * self.textRadius, height / 2 + math.cos(angle) * self.textRadius - 42 / 2, (self.hookedMenu and table.HasValue(self.hookedMenu, i)) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(self.slots[i].COLOR.r, self.slots[i].COLOR.g, self.slots[i].COLOR.b, self.slots[i].COLOR.a * self.alphaLerp), TEXT_ALIGN_CENTER)
+            draw.DrawText(str:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end), "Jailbreak_Font_WardenMenu", width / 2 + math.sin(angle) * self.textRadius, height / 2 + math.cos(angle) * self.textRadius - 42 / 2,  table.HasValue(activeCommands, i) and Color(255, 255, 255, 255 * self.alphaLerp) or Color(self.slots[i].COLOR.r, self.slots[i].COLOR.g, self.slots[i].COLOR.b, self.slots[i].COLOR.a * self.alphaLerp), TEXT_ALIGN_CENTER)
         end
 
         if y:Distance(Vector(gui.MouseX(), gui.MouseY(), 0)) > self.radius then

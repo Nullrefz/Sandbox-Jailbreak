@@ -35,7 +35,7 @@ if CLIENT then
                 JB:SendCommand(v)
             end
 
-            slot.COLOR = Color(255, 255, 255)
+            slot.COLOR = Color(255, 255, 255, 100)
             table.insert(slots, slot)
         end
 
