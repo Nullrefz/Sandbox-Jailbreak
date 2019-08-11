@@ -1,6 +1,6 @@
 "jailbreak"
 {
-	"base"		"base"
+	"base"		"sandbox"
 	"title"		"Jailbreak"
 	"maps"		"^jb_"
 	"menusystem"	"1"

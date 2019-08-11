@@ -40,7 +40,7 @@ surface.CreateFont("Jailbreak_Font_32", {
     strikeout = false,
     symbol = false,
     rotary = false,
-    shadow = false,
+    shadow = true,
     additive = false,
     outline = false
 })
