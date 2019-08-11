@@ -1,6 +1,5 @@
 contestMenu = {"jokeday", "foodday", "trivia", "salty spitoon", "american idol", "custom"}
 
-if CLIENT then
     function JB:AddContestMenu()
         local slots = {}
 
@@ -29,9 +28,3 @@ if CLIENT then
     hook.Add("JB_Initialize", "AddContestMenu", function()
         JB:AddContestMenu()
     end)
-end
-
-if SERVER then
-    util.AddNetworkString("SendContest")
-    net.Receive("SendContest", function(ln, ply) end)
-end

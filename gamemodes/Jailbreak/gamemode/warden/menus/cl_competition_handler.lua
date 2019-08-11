@@ -1,6 +1,5 @@
-competitionMenu = {"firstlastreaction", "simonsay's", "redgreenlight", "snitch", "gamesRoom", "custom"}
+competitionMenu = {"first last reaction", "simon say's", "simon say's machine", "red light green light", "snitch", "games room", "custom"}
 
-if CLIENT then
     activeCommands = {}
     function JB:AddCompetitionMenu()
         local slots = {}
@@ -29,9 +28,3 @@ if CLIENT then
     hook.Add("JB_Initialize", "AddCompetitionMenu", function()
         JB:AddCompetitionMenu()
     end)
-end
-
-if SERVER then
-    util.AddNetworkString("SendCompetition")
-    net.Receive("SendCompetition", function(ln, ply) end)
-end

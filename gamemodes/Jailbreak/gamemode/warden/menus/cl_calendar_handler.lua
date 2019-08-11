@@ -1,6 +1,5 @@
-calendarMenu = {"freeday", "warday", "hidenseek", "weepingangels", "contest", "competition"}
+calendarMenu = {"freeday", "warday", "hide & seek", "weeping angels", "contest", "competition", "purge day"}
 
-if CLIENT then
     function JB:AddCalendarMenu()
         local slots = {}
 
@@ -9,7 +8,7 @@ if CLIENT then
             slot.NAME = v
             slot.CLOSE = true
 
-            if v == "freeday" or v == "warday" or v == "hidenseek" or v == "weepingangels" then
+            if v == "freeday" or v == "warday" or v == "hide & seek" or v == "weeping angels" or v == "purge day" then
                 slot.ACTION = function()
                     JB:SendDay(v)
                 end
@@ -35,4 +34,3 @@ if CLIENT then
     hook.Add("JB_Initialize", "AddCalendarMenu", function()
         JB:AddCalendarMenu()
     end)
-end
