@@ -1,8 +1,14 @@
 JB.dayPhase = ""
+local timeLeft
 util.AddNetworkString("SetDay")
 util.AddNetworkString("SendDay")
 util.AddNetworkString("SendCompetition")
 util.AddNetworkString("SendContest")
+util.AddNetworkString("RequestDay")
+
+net.Receive("RequestDay", function(ln, ply)
+    JB:SetDayPhase(JB.dayPhase, timeLeft - CurTime(), ply)
+end)
 
 net.Receive("SendDay", function(ln, ply)
     local day = net.ReadString()
@@ -159,12 +165,17 @@ function JB:WeepingAngels()
     end)
 end
 
-function JB:SetDayPhase(name, dayTime)
+function JB:SetDayPhase(name, dayTime, ply)
     self.dayPhase = name
     net.Start("SetDay")
     net.WriteString(name)
     net.WriteFloat(dayTime)
-    net.Broadcast()
+    timeLeft = dayTime + CurTime()
+    if ply then
+        net.Send(ply)
+    else
+        net.Broadcast()
+    end
 end
 
 function JB:PurgeDay()

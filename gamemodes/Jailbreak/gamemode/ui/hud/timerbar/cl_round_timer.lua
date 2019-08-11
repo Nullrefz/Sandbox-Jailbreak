@@ -44,6 +44,7 @@ local timeLeft = 0
 local roundTime = 0
 local curDay = ""
 local dayTime = 0
+local daySpan = 0
 
 function TIMERBAR:Init()
     if roundPhase == "" then
@@ -90,7 +91,7 @@ function TIMERBAR:Init()
             draw.DrawSkewedRect(toHRatio(5), height / 2, width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 50))
         end
 
-        draw.DrawSkewedRect(toHRatio(5), height / 2, (((CurTime() < dayTime and dayTime or timeLeft) - CurTime()) / roundTime) * width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 200))
+        draw.DrawSkewedRect(toHRatio(5), height / 2, (((CurTime() < dayTime and dayTime or timeLeft) - CurTime()) / (CurTime() < dayTime and daySpan or roundTime)) * width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 200))
         draw.DrawText(CurTime() < dayTime and curDay or tostring(roundPhase), "Jailbreak_Font_RoundPhase", toHRatio(2), height - 16, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
     end
 end
@@ -101,7 +102,6 @@ function TIMERBAR:PerformLayout(width, height)
     self.timeInfo:SetPos(self.stopWatch:GetWide(), 0)
     self.timeInfo:SetSize(width - self.stopWatch:GetWide(), height)
 end
-
 
 vgui.Register("JailbreakTimerBar", TIMERBAR)
 
@@ -114,5 +114,6 @@ end)
 
 net.Receive("SetDay", function()
     curDay = net.ReadString()
-    dayTime = net.ReadFloat() + CurTime()
+    daySpan = net.ReadFloat()
+    dayTime = daySpan + CurTime()
 end)
