@@ -25,20 +25,12 @@ function JB:OpenCells(ply, ent)
         }
 
         self:SendNotification(notification)
-
-        for k, v in pairs(player.GetAll()) do
-            v:ChatPrint("The cell doors are now opened")
-        end
     else
         local notification = {
-            TEXT = ply:Name() .. " opened the cell doors",
+            TEXT = ply:Name() .. " opened the cell doors"
         }
 
         self:SendNotification(notification)
-
-        for k, v in pairs(player.GetAll()) do
-            v:ChatPrint(ply:Name() .. " opened the cell doors")
-        end
     end
 
     hook.Run("CellDoorsOpened")

@@ -10,7 +10,6 @@ function COMMANDBAR:Init()
     for i = 1, #commandType do
         local lerp = 0
         table.insert(slots, lerp)
-        print(commandType[i])
         mats[i] = Material("jailbreak/vgui/icons/" .. commandType[i] .. ".png", "smooth")
     end
 

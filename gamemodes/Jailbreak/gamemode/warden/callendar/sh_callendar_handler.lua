@@ -5,8 +5,6 @@ if SERVER then
 
     net.Receive("SendDay", function(ln, ply)
         local day = net.ReadString()
-        print(day)
-
         if day == "freeday" then
             JB:SetFreeday()
         elseif day == "warday" then

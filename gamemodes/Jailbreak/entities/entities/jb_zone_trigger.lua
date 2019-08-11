@@ -54,9 +54,9 @@ if SERVER then
         self.zoneName = type
         local col = Color(0, 0, 0)
 
-        for k, v in pairs(player.GetAll()) do
-            v:ChatPrint(self.zoneName)
-        end
+        -- for k, v in pairs(player.GetAll()) do
+        --     v:ChatPrint(self.zoneName)
+        -- end
 
         if self.zoneName == "none" then
             col = Color(0, 0, 0)
@@ -110,15 +110,15 @@ if SERVER then
     end
 
     function ENT:StartTouch(other)
-        -- if IsValid(other) and other:IsPlayer() then
-        --     ply:SetInKOSZone(self.zoneName)
-        -- end
+        if IsValid(other) and other:IsPlayer() and other:Alive() then
+            other:AddInZone(self.zoneName, self:EntIndex())
+        end
     end
 
     function ENT:EndTouch(other)
-        -- if IsValid(other) and other:IsPlayer() then
-        --     ply:SetInKOSZone(self.zone.NONE)
-        -- end
+        if IsValid(other) and other:IsPlayer() and other:Alive() then
+            other:RemoveFromZone(self.zoneName, self:EntIndex())
+        end
     end
 
     local a0 = Angle(0, 0, 0)

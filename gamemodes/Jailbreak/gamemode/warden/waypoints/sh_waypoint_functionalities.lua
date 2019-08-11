@@ -119,7 +119,6 @@ if CLIENT then
 
     net.Receive("PlaceWaypoint", function()
         currentWaypoint = net.ReadString()
-        print(currentWaypoint)
 
         enabled = true
         waypointPlaced = false
