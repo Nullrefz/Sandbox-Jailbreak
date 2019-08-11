@@ -32,6 +32,7 @@ if CLIENT then
     end
 
     function JB:OpenMenu(menuName)
+        self:AddCalendarMenu()
         self.activeMenu = menuTypes[menuName]
         self.activeMenu:Show()
     end

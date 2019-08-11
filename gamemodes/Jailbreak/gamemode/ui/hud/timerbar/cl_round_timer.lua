@@ -42,7 +42,7 @@ surface.CreateFont("Jailbreak_Font_RoundPhase", {
 
 local timeLeft = 0
 local roundTime = 0
-local curDay = ""
+curDay = ""
 local dayTime = 0
 local daySpan = 0
 

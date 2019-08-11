@@ -1,9 +1,10 @@
 calendarMenu = {"freeday", "warday", "hide & seek", "weeping angels", "contest", "competition", "purge day"}
 
-    function JB:AddCalendarMenu()
-        local slots = {}
+function JB:AddCalendarMenu()
+    local slots = {}
 
-        for k, v in pairs(calendarMenu) do
+    for k, v in pairs(calendarMenu) do
+        if self:CheckDay(v) then
             local slot = {}
             slot.NAME = v
             slot.CLOSE = true
@@ -27,10 +28,18 @@ calendarMenu = {"freeday", "warday", "hide & seek", "weeping angels", "contest",
             slot.COLOR = Color(255, 255, 255)
             table.insert(slots, slot)
         end
-
-        return self:RegisterMenu(slots, "calendar")
     end
 
-    hook.Add("JB_Initialize", "AddCalendarMenu", function()
-        JB:AddCalendarMenu()
-    end)
+    return self:RegisterMenu(slots, "calendar")
+end
+
+function JB:CheckDay(v)
+    print("today is " .. curDay)
+
+    if (v ~= "freeday" and v ~= "contest" and v ~= "competition") and curDay ~= "" then return false end
+    return true
+end
+
+hook.Add("JB_Initialize", "AddCalendarMenu", function()
+    JB:AddCalendarMenu()
+end)
