@@ -142,9 +142,11 @@ end
 -----------------------------------------------------------]]
 function JB:SetMicEnabled(enabled, chosenTeam)
     if chosenTeam == Team.PRISONERS then
-        for k, v in pairs(player.GetAll()) do
-            v:ChatPrint("prisonners are now " .. (enabled and "unmuted" or "muted"))
-        end
+        local notification = {
+            TEXT = "prisonners are now " .. (enabled and "unmuted" or "muted")
+        }
+
+        self:SendNotification(notification)
     end
 
     hook.Add("PlayerCanHearPlayersVoice", "SetMicEnabled", function(listener, talker)
