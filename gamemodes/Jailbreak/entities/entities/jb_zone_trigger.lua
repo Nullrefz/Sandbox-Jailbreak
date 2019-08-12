@@ -1,7 +1,7 @@
 AddCSLuaFile()
 ENT.Type = 'anim'
 ENT.Base = 'base_anim'
-ENT.zone = {"none", "kos", "armory", "mainArea", "club", "pharmacy", "gamesRoom", "prison", "toilets", "pool", "simonSays", "fourSquars", "field", "roof", "basketball", "volley", "cafeteria"}
+ENT.zone = {"none", "kos", "armory", "mainArea", "club", "pharmacy", "gamesRoom", "prison", "toilets", "pool", "simonSays", "fourSquars", "field", "roof", "basketball", "volley", "cafeteria", "tictactoe", "parkour", "bhop", "ring"}
 
 if SERVER then
     function ENT:Initialize()
@@ -54,9 +54,9 @@ if SERVER then
         self.zoneName = type
         local col = Color(0, 0, 0)
 
-        -- for k, v in pairs(player.GetAll()) do
-        --     v:ChatPrint(self.zoneName)
-        -- end
+        for k, v in pairs(player.GetAll()) do
+            v:ChatPrint(self.zoneName)
+        end
 
         if self.zoneName == "none" then
             col = Color(0, 0, 0)
@@ -94,6 +94,14 @@ if SERVER then
             col = Color(255, 50, 0)
         elseif self.zoneName == "cafeteria" then
             col = Color(0, 50, 150)
+        elseif self.zoneName == "tictactoe" then
+            col = Color(50, 50, 150)
+        elseif self.zoneName == "ring" then
+            col = Color(50, 50, 150)
+        elseif self.zoneName == "bhop" then
+            col = Color(50, 50, 50)
+        elseif self.zoneName == "parkour" then
+            col = Color(70, 70, 70)
         else
             col = Color(0, 0, 0)
         end
