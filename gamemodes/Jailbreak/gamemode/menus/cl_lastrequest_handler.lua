@@ -42,6 +42,7 @@ end
 
 function JB:SendLR(lastRequest)
     net.Start("SendLR")
+    net.WriteString(lastRequest)
     net.SendToServer()
 end
 

@@ -13,7 +13,12 @@ end)
 
 net.Receive("SendDay", function(ln, ply)
     local day = net.ReadString()
-    JB:HandleDay(day)
+
+    if ply:Team() == Team.PRISONERS then
+        JB:SetNextDay(ply, day)
+    else
+        JB:HandleDay(day)
+    end
 end)
 
 function JB:HandleDay(day)
@@ -27,19 +32,21 @@ function JB:HandleDay(day)
         JB:WeepingAngels()
     elseif day == "purge day" then
         JB:PurgeDay()
+    else
+        JB:SetDay(day)
     end
 end
 
-function JB:SetNextDay(day)
+function JB:SetNextDay(ply, day)
+    local notification = {
+        TEXT = ply:Name() .. " has set the next day to " .. day,
+        TYPE = 2,
+        TIME = 10
+    }
+
+    self:SendNotification(notification)
     self.nextDay = day
 end
-
-hook.Add("jb_round_active", "HonorLR", function()
-    if JB.nextDay ~= "" then
-        JB:HandleDay(day)
-        JB.nextDay = ""
-    end
-end)
 
 net.Receive("SendCompetition", function(ln, ply)
     JB:SetDay(net.ReadString())

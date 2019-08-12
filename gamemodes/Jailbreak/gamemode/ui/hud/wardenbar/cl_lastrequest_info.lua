@@ -11,7 +11,7 @@ function LRBAR:Init()
     percent = 0
 
     net.Receive("SetLR", function()
-        self.lastRequest:SetText(self.lr)
+        self.lr = net.ReadString()
     end)
 
     function self:Paint(width, height)
@@ -31,8 +31,8 @@ function LRBAR:PerformLayout(width, height)
 end
 
 function LRBAR:UpdateInfo()
-    --net.Start("RequestLR")
-    --net.SendToServer()
+    net.Start("RequestLR")
+    net.SendToServer()
 end
 
 vgui.Register("JailbreakLRBar", LRBAR)

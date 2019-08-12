@@ -36,8 +36,7 @@ function JAILBREAKWARDENJOINER:Think()
         self.panel:SetText("Game Cannot Start Without Guards")
     elseif LocalPlayer():Team() == Team.GUARDS and #team.GetPlayers(Team.PRISONERS) == 0 and #team.GetPlayers(Team.GUARDS) > 1 then
         self.panel:SetText("Game Cannot Start Without Prisoners")
-    elseif LocalPlayer():Team() == Team.GUARDS and not warden and roundPhase == "Preparing" then
-        self.panel:SetText("Use Mic To Become Warden")
+
     else
         self.panel:SetText("")
     end

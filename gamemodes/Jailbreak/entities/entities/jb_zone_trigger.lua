@@ -54,9 +54,9 @@ if SERVER then
         self.zoneName = type
         local col = Color(0, 0, 0)
 
-        for k, v in pairs(player.GetAll()) do
-            v:ChatPrint(self.zoneName)
-        end
+        -- for k, v in pairs(player.GetAll()) do
+        --     v:ChatPrint(self.zoneName)
+        -- end
 
         if self.zoneName == "none" then
             col = Color(0, 0, 0)

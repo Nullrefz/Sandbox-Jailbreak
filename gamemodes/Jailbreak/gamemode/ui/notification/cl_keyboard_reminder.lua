@@ -52,9 +52,9 @@ vgui.Register("ButtonNotify", BUTTONOTIFY)
 
 hook.Add("InitPostEntity", "ShowButtonNotification", function()
     local buttonNotify = vgui.Create("ButtonNotify")
-    buttonNotify:SetSize(256, 128)
+    buttonNotify:SetSize(512, 128)
     buttonNotify:Center()
-    buttonNotify:SetPos(w / 2 - 128, h / 2 + 128)
+    buttonNotify:SetPos(w / 2 - 256, h / 2 + 128)
     buttonNotify:Hide()
 
     net.Receive("ShowButtonNotification", function()
@@ -70,7 +70,7 @@ hook.Add("InitPostEntity", "ShowButtonNotification", function()
     hook.Add("Think", "DrawWeaponOutline", function()
         local trace = LocalPlayer():GetEyeTrace()
 
-        if  LocalPlayer():Alive() and trace.Entity:IsWeapon() and LocalPlayer():GetPos():Distance(trace.Entity:GetPos()) < 100 and not LocalPlayer():HasWeapon(JB:GetWeapon(trace.Entity)) then
+        if LocalPlayer():Alive() and trace.Entity:IsWeapon() and LocalPlayer():GetPos():Distance(trace.Entity:GetPos()) < 100 and not LocalPlayer():HasWeapon(JB:GetWeapon(trace.Entity)) then
             key = "E"
             message = "Pick Up"
 
@@ -79,6 +79,53 @@ hook.Add("InitPostEntity", "ShowButtonNotification", function()
             end
         elseif buttonNotify:IsVisible() then
             buttonNotify:Hide()
+        end
+    end)
+end)
+
+hook.Add("InitPostEntity", "ShowWardenJoin", function()
+    local buttonNotif = vgui.Create("ButtonNotify")
+    buttonNotif:SetSize(512, 128)
+    buttonNotif:Center()
+    buttonNotif:SetPos(w / 2 - 256, h / 2 + 128)
+    buttonNotif:Hide()
+
+    hook.Add("Think", "DrawMicJoin", function()
+        if LocalPlayer():Alive() and LocalPlayer():Team() == Team.GUARDS and not warden and roundPhase == "Preparing" then
+            key = "X"
+            message = "Use Mic To Become Warden"
+
+            if not buttonNotif:IsVisible() then
+                buttonNotif:Show()
+            end
+        elseif (warden or roundPhase ~= "Preparing") and buttonNotif:IsVisible() then
+            buttonNotif:Hide()
+        end
+    end)
+end)
+
+hook.Add("InitPostEntity", "HandleLR", function()
+    local button = vgui.Create("ButtonNotify")
+    button:SetSize(512, 128)
+    button:Center()
+    button:SetPos(w / 2 - 256, h / 2 + 128)
+    button:Hide()
+    local lrPlayer
+
+    net.Receive("SetLRPlayer", function()
+        lrPlayer = player.GetBySteamID(net.ReadString())
+    end)
+
+    hook.Add("Think", "DrawLR", function()
+        if LocalPlayer() == lrPlayer and LocalPlayer():Alive() and LocalPlayer():Team() == Team.PRISONERS then
+            key = "C"
+            message = "Hold to Open Last Request Menu"
+
+            if not button:IsVisible() then
+                button:Show()
+            end
+        elseif (LocalPlayer() ~= lrPlayer or not LocalPlayer():Alive() or LocalPlayer():Team() ~= Team.PRISONERS) and button:IsVisible() then
+            button:Hide()
         end
     end)
 end)
