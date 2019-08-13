@@ -152,6 +152,7 @@ function JB:SetMicEnabled(enabled, chosenTeam)
     hook.Add("PlayerCanHearPlayersVoice", "SetMicEnabled", function(listener, talker)
         if not talker:Alive() then return false end
         if talker == JB.warden then return true end
+
         if not chosenTeam then
             return enabled
         else
@@ -160,4 +161,22 @@ function JB:SetMicEnabled(enabled, chosenTeam)
             return true
         end
     end)
+end
+
+util.AddNetworkString("SendHighlights")
+
+function JB:HighlightPlayer(players, targets)
+    net.Start("SendHighlights")
+
+    if players then
+        net.WriteTable(players)
+    end
+
+    if targets then
+        for k, v in pairs(targets) do
+            net.Send(v)
+        end
+    else
+        net.Broadcast()
+    end
 end
