@@ -170,6 +170,8 @@ function JB:HighlightPlayer(players, targets)
 
     if players then
         net.WriteTable(players)
+    else
+        net.WriteTable({})
     end
 
     if targets then

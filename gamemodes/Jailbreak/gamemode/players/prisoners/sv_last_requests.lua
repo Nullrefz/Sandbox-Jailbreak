@@ -71,7 +71,7 @@ end
 function JB:EndLR()
     self.curLRDay = ""
     self:HighlightPlayer()
-    UpdateLR()
+    self:UpdateLR()
 end
 
 net.Receive("RequestLR", function(ln, ply)
@@ -82,7 +82,7 @@ hook.Add("jb_round_active", "HonorLR", function()
     JB:ConsumerLR()
 end)
 
-hook.Add("jb_round_Ending", "ResetLR", function()
+hook.Add("jb_round_ending", "ResetLR", function()
     JB:EndLR()
 end)
 
