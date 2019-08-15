@@ -19,12 +19,6 @@ function JB:AddCalendarMenu()
                 end
             end
 
-            function JB:SendDay(day)
-                net.Start("SendDay")
-                net.WriteString(day)
-                net.SendToServer()
-            end
-
             slot.COLOR = Color(255, 255, 255)
             table.insert(slots, slot)
         end
@@ -33,10 +27,15 @@ function JB:AddCalendarMenu()
     return self:RegisterMenu(slots, "calendar")
 end
 
-function JB:CheckDay(v)
-    print("today is " .. curDay)
+function JB:SendDay(day)
+    net.Start("SendDay")
+    net.WriteString(day)
+    net.SendToServer()
+end
 
+function JB:CheckDay(v)
     if (v ~= "freeday" and v ~= "contest" and v ~= "competition") and curDay ~= "" then return false end
+
     return true
 end
 

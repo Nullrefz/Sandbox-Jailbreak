@@ -9,6 +9,8 @@ function JAILBREAKHUD:Init()
     self.weaponBar = vgui.Create("JailbreakWeaponBar", self.footer)
     self.commandBar = vgui.Create("JailbreakCommandBar", self.footer)
     self.wardenBar = vgui.Create("JailbreakWardenBar", self.header)
+    self.lastRequestBar = vgui.Create("JailbreakLRBar", self.header)
+
     self.actionBar = vgui.Create("JailbreakActionBar", self)
     self.notificationBar = vgui.Create("JailbreakNotificationBar", self.container)
 end
@@ -44,7 +46,7 @@ function JAILBREAKHUD:PerformLayout(width, height)
     if self.wardenBar then
         self.wardenBar:Dock(LEFT)
         self.wardenBar:DockMargin(toHRatio(42), toVRatio(24), 0, toVRatio(16))
-        self.wardenBar:SetSize(toHRatio(250), toVRatio(69))
+        self.wardenBar:SetSize(toHRatio(250 - 24    ), toVRatio(69))
         self.wardenBar:SetPos(toHRatio(42), toVRatio(24))
     end
 
@@ -69,6 +71,13 @@ function JAILBREAKHUD:PerformLayout(width, height)
     if self.notificationBar then
          self.notificationBar:Dock(BOTTOM)
          self.notificationBar:SizeToContentsY()
+    end
+
+    if self.lastRequestBar then
+        self.lastRequestBar:Dock(LEFT)
+        self.lastRequestBar:DockMargin(toHRatio(0), toVRatio(24), 0, toVRatio(16))
+        self.lastRequestBar:SetSize(toHRatio(250), toVRatio(69))
+        self.lastRequestBar:SetPos(0, toVRatio(32))
     end
 end
 

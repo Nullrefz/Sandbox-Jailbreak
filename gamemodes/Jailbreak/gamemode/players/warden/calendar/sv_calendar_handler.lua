@@ -1,4 +1,5 @@
 JB.dayPhase = ""
+JB.nextDay = ""
 local timeLeft
 util.AddNetworkString("SetDay")
 util.AddNetworkString("SendDay")
@@ -13,6 +14,14 @@ end)
 net.Receive("SendDay", function(ln, ply)
     local day = net.ReadString()
 
+    if ply:Team() == Team.PRISONERS then
+        JB:SetNextDay(ply, day)
+    else
+        JB:HandleDay(day)
+    end
+end)
+
+function JB:HandleDay(day)
     if day == "freeday" then
         JB:SetFreeday()
     elseif day == "warday" then
@@ -23,8 +32,21 @@ net.Receive("SendDay", function(ln, ply)
         JB:WeepingAngels()
     elseif day == "purge day" then
         JB:PurgeDay()
+    else
+        JB:SetDay(day)
     end
-end)
+end
+
+function JB:SetNextDay(ply, day)
+    local notification = {
+        TEXT = ply:Name() .. " has set the next day to " .. day,
+        TYPE = 2,
+        TIME = 10
+    }
+
+    self:SendNotification(notification)
+    self.nextDay = day
+end
 
 net.Receive("SendCompetition", function(ln, ply)
     JB:SetDay(net.ReadString())
@@ -171,6 +193,7 @@ function JB:SetDayPhase(name, dayTime, ply)
     net.WriteString(name)
     net.WriteFloat(dayTime)
     timeLeft = dayTime + CurTime()
+
     if ply then
         net.Send(ply)
     else
