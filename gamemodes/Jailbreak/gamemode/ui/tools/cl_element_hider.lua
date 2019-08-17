@@ -1,10 +1,10 @@
 local hide = {
     CHudAmmo = true,
     CHudBattery = true,
-    -- CHudWeaponSelection = true,
+    CHudWeaponSelection = true,
     -- CHudChat = true,
     -- CHudCrosshair = true,
-     CHudDamageIndicator = true,
+    CHudDamageIndicator = true,
     -- CHudDeathNotice = true,
     CHudHealth = true
 }
