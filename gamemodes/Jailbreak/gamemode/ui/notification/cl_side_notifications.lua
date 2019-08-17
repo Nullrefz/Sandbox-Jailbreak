@@ -65,11 +65,11 @@ function JAILBREAKNOTIFICATION:Init()
         local widPos = width * (1 - self.progress) + self.skew * 2 + toHRatio(self.padding * self.devisions) * (1 - self.activeProgress)
 
         for i = 1, self.devisions do
-            draw.DrawSkewedRect(wid + widPos, 0, toHRatio(16), height, self.skew, self.typeColor, mats.BAR)
+            draw.DrawSkewedRect(wid + widPos, 0, toHRatio(16), height, self.skew, self.typeColor)
             wid = wid + toHRatio(9) + toHRatio(self.padding) * self.activeProgress
         end
 
-        draw.DrawSkewedRect(wid + widPos, 0, width - toHRatio(16) * 3, height, self.skew, self.color, mats.BAR)
+        draw.DrawSkewedRect(wid + widPos, 0, width - toHRatio(16) * 3, height, self.skew, self.color)
         self:GetParent().text:SetPos(wid + widPos + 10, height / 4)
     end
 
