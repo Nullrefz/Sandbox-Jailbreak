@@ -50,7 +50,7 @@ function JAILBREAKNOTIFICATION:Init()
     self.panel.progress = 0
     self.panel.activeProgress = 0
     self.panel.devisions = 2
-    self.panel.padding = 5
+    self.panel.padding = toHRatio(5)
     self.panel.color = Color(255, 255, 255, 255)
     self.panel.typeColor = Color(255, 255, 255)
     self.panel.text = ""
