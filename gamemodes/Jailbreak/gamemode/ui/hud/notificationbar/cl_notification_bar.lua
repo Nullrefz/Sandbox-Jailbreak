@@ -31,7 +31,7 @@ function NOTIFICATIONBAR:AddNotification(time, color, text, textColor, type)
 end
 
 function NOTIFICATIONBAR:Think()
-    totalHeight = Lerp(FrameTime() * 10, totalHeight, #activeNotification * 45)
+    totalHeight = Lerp(FrameTime() * 5, totalHeight, #activeNotification * 45)
     self:SetTall(totalHeight)
 
     for i = 1, #activeNotification do

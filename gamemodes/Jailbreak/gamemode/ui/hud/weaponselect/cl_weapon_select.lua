@@ -65,7 +65,7 @@ function WEAPONSELECT:SortWeapons()
     self.percentage = 2
     self.nextSelect = CurTime() + 0.1
     self.weapons = LocalPlayer():GetWeapons()
-    if #self.weapons == 0 then return end
+    if self.weapons or #self.weapons == 0 then return end
     self.curIndex = self.curIndex % #LocalPlayer():GetWeapons()
     table.sort(self.weapons, function(a, b) return (a:GetSlot() * 1000 + a:GetSlotPos()) < (b:GetSlot() * 1000 + b:GetSlotPos()) end)
     input.SelectWeapon(self.weapons[self.curIndex + 1])
@@ -100,7 +100,7 @@ surface.CreateFont("Jailbreak_Font_Weapon_Select", {
 function DrawInfinitBar(x, y, width, height, skew, divisions, index, color, mat, weaponMat, weapons, showPercentage)
     height = height / 2
     width = width / 2
-    if not LocalPlayer():Alive() or not weapons then return end
+    if not LocalPlayer():Alive() or not weapons or not weaponMat then return end
     -- local pivot = math.floor(index / divisions)
     curPos = Lerp(FrameTime() * 10, curPos, index * width)
     local dist = (index * width - curPos) / (index * width)
@@ -116,5 +116,5 @@ function DrawInfinitBar(x, y, width, height, skew, divisions, index, color, mat,
         draw.DrawText(string.Replace(weapons[i]:GetClass(), "weapon_jb_", ""), "Jailbreak_Font_Ammo", offsetX + width / 2, 32 - offsetY, Color(255, 255, 255, 255 * percentage), TEXT_ALIGN_CENTER) -- - pivot * width * divisions + j * width * divisions + width / 2
         draw.DrawRect(offsetX + 24 / 2, -offsetY - 12, width - 24, width - 24, Color(255, 255, 255, 255 * percentage), weaponMat[i])
     end
--- end
+    -- end
 end
