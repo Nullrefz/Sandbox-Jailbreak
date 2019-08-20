@@ -10,6 +10,15 @@ function KILLFEEDBAR:Paint(width, height)
 end
 
 function KILLFEEDBAR:StartEntryAnimation()
+    timer.Simple(5, function()
+        self:Remove()
+    end)
+end
+
+function KILLFEEDBAR:PerformLayout(width, height)
+    self.victimIcon:SetSize(width / 4, height)
+    self.murdererIcon:SetSize(width / 4, height)
+    self.murdererIcon:AlignRight()
 end
 
 function KILLFEEDBAR:AssignPlayers(victim, murderer)

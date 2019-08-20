@@ -14,6 +14,7 @@ function JAILBREAKHUD:Init()
     self.actionBar = vgui.Create("JailbreakActionBar", self)
     self.voicePanelBar = vgui.Create("JailbreakVoicePanel", self.container)
     self.notificationBar = vgui.Create("JailbreakNotificationBar", self.container)
+    self.killFeed = vgui.Create("JailbreakKillFeedPanel", self)
 end
 
 function JAILBREAKHUD:PerformLayout(width, height)
@@ -86,6 +87,11 @@ function JAILBREAKHUD:PerformLayout(width, height)
         self.lastRequestBar:SetPos(0, toVRatio(32))
     end
 
+    if self.killFeed then
+        self.killFeed:SetWide(toHRatio(256))
+        self.killFeed:AlignRight()
+    end
+
     if self.weaponSelect then
         self.weaponSelect:SetSize(self.header:GetWide(), self.header:GetTall())
     else
@@ -117,15 +123,5 @@ function JB.hud:UpdatePanels()
 end
 
 hook.Add("InitPostEntity", "Hook Hud After Init", function()
-    net.Receive("PlayerSpawned", function()
-        JB.hud:UpdatePanels()
-    end)
-
-    net.Receive("PlayerDied", function() end) --JB.hud:UpdatePanels()
+    JB.hud:UpdatePanels()
 end)
--- function GM:ScoreboardShow()
---     JB.hud:Show()
--- end
--- function GM:ScoreboardHide()
---     JB.hud:Hide()
--- end

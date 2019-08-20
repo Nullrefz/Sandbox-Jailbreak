@@ -124,7 +124,10 @@ if SERVER then
     end
 
     function ENT:EndTouch(other)
-        if other and IsValid(other) and other:IsPlayer() and other:Alive() then
+        if other and
+         IsValid(other) and
+          other:IsPlayer() and 
+          other:Alive() then
             other:RemoveFromZone(self.zoneName, self:EntIndex())
         end
     end

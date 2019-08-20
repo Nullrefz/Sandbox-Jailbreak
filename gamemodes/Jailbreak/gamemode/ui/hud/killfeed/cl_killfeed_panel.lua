@@ -4,29 +4,37 @@ local totalHeight = 0
 function KILLFEEDPANEL:Init()
     self.noticePool = {}
 
-    net.Receive("PlayerDied", function()
-        self:AddDeathNotice(player.GetBySteamID(net.ReadString()), player.GetBySteamID64(net.ReadString()))
+    net.Receive("PlayerNoticeDied", function()
+        local victim = net.ReadEntity()
+        local killer = net.ReadEntity()
+        self:AddDeathNotice(victim, killer)
     end)
 end
 
-function VOICEPANEL:Think(width, height)
-    self:SetTall(Lerp(FrameTime() * 20, self:GetTall(), totalHeight))
+function KILLFEEDPANEL:Think(width, height)
+    self:SetTall(Lerp(FrameTime() * 10, self:GetTall(), totalHeight))
 
-    --    if not table.IsEmpty(self.voiceBars) then return end
-    for i = 1, #self.voiceBars do
+    for i = 1, #self.noticePool do
         if IsValid(v) then
-            v:SetPos(self:GetWide() - v:GetWide(), i * v:GetTall())
+            v:SetPos(0, (i - 1) * v:GetTall())
         end
     end
 end
 
-function VOICEPANEL:AddDeathNotice(victim, killer)
+function KILLFEEDPANEL:AddDeathNotice(victim, killer)
+    print(victim, killer)
+    print(IsValid(victim), IsValid(killer))
+    if not IsValid(victim) or not IsValid(killer) then return end
     local deathNotice = vgui.Create("JailbreakKillFeedBar", self)
-    table.insert(self.noticePool, deathNotice)
     deathNotice:AssignPlayers(victim, killer)
-    deathNotice:SetSize(self:GetWide(), 45)
+    deathNotice:SetSize(toHRatio(256), toVRatio(45))
     deathNotice:StartEntryAnimation()
-    totalHeight = totalHeight + v:GetTall() * #self.noticePool
+    table.insert(self.noticePool, deathNotice)
+    totalHeight = toVRatio(45) * #self.noticePool
+    print(totalHeight)
+end
+
+function KILLFEEDPANEL:PerformLayout(width, height)
 end
 
 vgui.Register("JailbreakKillFeedPanel", KILLFEEDPANEL)
