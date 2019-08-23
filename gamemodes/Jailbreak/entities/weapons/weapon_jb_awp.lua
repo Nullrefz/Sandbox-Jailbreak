@@ -6,7 +6,7 @@ if (CLIENT) then
     SWEP.Slot = 3
     SWEP.SlotPos = 1
     SWEP.IconLetter = "r"
-    killicon.AddFont("weapon_awp", "CSKillIcons", SWEP.IconLetter, Color(255, 255, 255, 150))
+
 end
 
 SWEP.HoldType = "ar2"

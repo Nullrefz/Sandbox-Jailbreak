@@ -88,7 +88,8 @@ function JAILBREAKHUD:PerformLayout(width, height)
     end
 
     if self.killFeed then
-        self.killFeed:SetWide(toHRatio(256))
+        self.killFeed:SetWide(toHRatio(1024))
+        self.killFeed:SetPos(0, toVRatio(8))
         self.killFeed:AlignRight()
     end
 

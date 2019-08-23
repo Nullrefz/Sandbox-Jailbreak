@@ -7,7 +7,7 @@ if (CLIENT) then
     SWEP.SlotPos = 1
     SWEP.IconLetter = "t"
     SWEP.ViewModelFlip = false
-    killicon.AddFont("weapon_famas", "CSKillIcons", SWEP.IconLetter, Color(255, 80, 0, 255))
+
 end
 
 SWEP.HoldType = "smg"
