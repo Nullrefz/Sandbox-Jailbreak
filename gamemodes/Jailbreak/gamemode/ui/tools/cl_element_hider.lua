@@ -5,7 +5,7 @@ local hide = {
     -- CHudChat = true,
     -- CHudCrosshair = true,
     CHudDamageIndicator = true,
-    -- CHudDeathNotice = true,
+    CHudDeathNotice = true,
     CHudHealth = true
 }
 

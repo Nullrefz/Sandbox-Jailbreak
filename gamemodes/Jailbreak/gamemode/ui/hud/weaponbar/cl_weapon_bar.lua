@@ -51,7 +51,12 @@ function WEAPONBAR:PerformLayout(width, height)
 end
 
 function WEAPONBAR:PAINT(width, height)
-    --killicon.Draw( 0, 0, "weapon_awp", 50 )
+ 
+
+
+
+
+
 end
 
 vgui.Register("JailbreakWeaponBar", WEAPONBAR)
