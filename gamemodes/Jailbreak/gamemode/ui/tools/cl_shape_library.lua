@@ -279,6 +279,7 @@ function DrawArc(x, y, radius1, radius2, rot, angle, color, material)
 end
 
 function DrawRect(x, y, width, height, color, material)
+    NoTexture()
     local coord = {}
 
     table.insert(coord, {

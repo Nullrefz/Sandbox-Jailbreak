@@ -10,7 +10,7 @@ function WEAPONSELECT:Init()
     self.curIndex = 1
     self:SortWeapons()
     self.percentage = 0
-
+    self.nextSelect = 0
     function self:Paint(width, height)
         DrawInfinitBar(width / 2 + width * 0.1, 0, width * 0.1, 128, 10, #self.weapons, self.curIndex + 1, Color(255, 255, 255), mats.BAR, self.mats, self.weapons, self.percentage)
         self.percentage = math.Clamp(self.percentage - FrameTime() * 2, 0, 10)
