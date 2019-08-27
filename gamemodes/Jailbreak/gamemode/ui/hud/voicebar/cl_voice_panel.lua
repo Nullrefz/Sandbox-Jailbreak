@@ -25,7 +25,7 @@ function VOICEPANEL:Think(width, height)
 
     for k, v in pairs(self.voiceBars) do
         if IsValid(v) then
-            v:SetPos(self:GetWide() - v:GetWide(), i * v:GetTall())
+            v:SetPos(self:GetWide() - v:GetWide(), i * (v:GetTall() + toVRatio(4)))
         end
 
         i = i + 1
@@ -46,10 +46,12 @@ function VOICEPANEL:AddVoiceBar(ply)
     local len = voiceBar.nameText:GetWide() + toHRatio(72 + voiceBar.skew * 6)
     voiceBar:SetSize(len, 45)
     voiceBar:StartEntryAnimation()
-    totalHeight = 0
+    totalHeight = 45
 
     for k, v in pairs(self.voiceBars) do
-        totalHeight = totalHeight + v:GetTall()
+        if v and IsValid(v) then
+            totalHeight = totalHeight + v:GetTall() + toVRatio(4)
+        end
     end
 end
 

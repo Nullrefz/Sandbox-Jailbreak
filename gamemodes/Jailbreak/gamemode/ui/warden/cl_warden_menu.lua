@@ -23,13 +23,6 @@ function WARDENMENU:Init()
     self.slots = {}
     self.hookedMenu = {}
     self.menu = {}
-
-    if LocalPlayer() ~= warden then
-        self:Remove()
-
-        return
-    end
-
     self.panel = vgui.Create("Panel", self)
     self.panel:MakePopup()
     self.thickness = 2

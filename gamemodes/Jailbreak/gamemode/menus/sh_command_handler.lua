@@ -1,12 +1,13 @@
 commandType = {"walk", "mic", "crouch", "afk", "jumping", "sprinting", "freelook"}
 
 if CLIENT then
-
     function GM:OnContextMenuOpen()
+        if LocalPlayer() ~= warden then return end
         JB:OpenMenu("commands")
     end
 
     function GM:OnContextMenuClose()
+        if LocalPlayer() ~= warden then return end
         JB:CloseMenu()
     end
 
@@ -15,7 +16,6 @@ if CLIENT then
         net.WriteInt(table.KeyFromValue(commandType, command), 32)
         net.SendToServer()
     end
-
 
     function JB:SendChosenDay(chosenDay)
         net.Start("SendChosenDay")
@@ -52,7 +52,6 @@ if SERVER then
     util.AddNetworkString("UpdateCommands")
     util.AddNetworkString("ToggleCommand")
     util.AddNetworkString("RequestCommands")
-
     local activeCommands = {}
 
     function JB:ToggleCommand(type)
@@ -89,6 +88,4 @@ if SERVER then
     net.Receive("RequestCommands", function(ln, ply)
         JB:UpdateCommands(ply)
     end)
-
-
 end

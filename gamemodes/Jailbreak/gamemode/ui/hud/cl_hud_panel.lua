@@ -95,8 +95,6 @@ function JAILBREAKHUD:PerformLayout(width, height)
 
     if self.weaponSelect then
         self.weaponSelect:SetSize(self.header:GetWide(), self.header:GetTall())
-    else
-        print("doesnt exist")
     end
 end
 

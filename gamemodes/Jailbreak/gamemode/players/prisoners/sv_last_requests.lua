@@ -65,12 +65,14 @@ function JB:InitiateLR(ply)
     self:SendNotification(notification)
     local playersToHighlight = {ply}
     self:HighlightPlayer(playersToHighlight)
+    self:SetLRPlayer(ply)
     -- Give them access to the menu
 end
 
 function JB:EndLR()
     self.curLRDay = ""
     self:HighlightPlayer()
+    self:SetLRPlayer(ply)
     self:UpdateLR()
 end
 
@@ -85,6 +87,17 @@ end)
 hook.Add("jb_round_ending", "ResetLR", function()
     JB:EndLR()
 end)
+
+function JB:SetLRPlayer(ply)
+    net.Start("SetLRPlayer")
+    net.WriteEntity(ply)
+
+    if ply then
+        net.Send(ply)
+    else
+        net.Broadcast()
+    end
+end
 
 function JB:CheckLR()
     if #self:GetAlivePlayersByTeam(Team.PRISONERS) ~= 1 or self.dayPhase == "Purge Day" or self.dayPhase == "Warday" or self:GetActivePhase() ~= "Active" then return end

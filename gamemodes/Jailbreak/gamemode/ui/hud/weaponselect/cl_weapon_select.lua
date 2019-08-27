@@ -65,7 +65,7 @@ function WEAPONSELECT:SortWeapons()
     self.percentage = 2
     self.nextSelect = CurTime() + 0.1
     self.weapons = LocalPlayer():GetWeapons()
-    if self.weapons or #self.weapons == 0 then return end
+    if not self.weapons or #self.weapons == 0 then return end
     self.curIndex = self.curIndex % #LocalPlayer():GetWeapons()
     table.sort(self.weapons, function(a, b) return (a:GetSlot() * 1000 + a:GetSlotPos()) < (b:GetSlot() * 1000 + b:GetSlotPos()) end)
     input.SelectWeapon(self.weapons[self.curIndex + 1])

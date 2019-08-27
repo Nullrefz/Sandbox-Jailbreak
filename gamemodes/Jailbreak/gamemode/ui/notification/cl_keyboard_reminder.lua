@@ -104,28 +104,3 @@ hook.Add("InitPostEntity", "ShowWardenJoin", function()
     end)
 end)
 
-hook.Add("InitPostEntity", "HandleLR", function()
-    local button = vgui.Create("ButtonNotify")
-    button:SetSize(512, 128)
-    button:Center()
-    button:SetPos(w / 2 - 256, h / 2 + 128)
-    button:Hide()
-    local lrPlayer
-
-    net.Receive("SetLRPlayer", function()
-        lrPlayer = player.GetBySteamID(net.ReadString())
-    end)
-
-    hook.Add("Think", "DrawLR", function()
-        if LocalPlayer() == lrPlayer and LocalPlayer():Alive() and LocalPlayer():Team() == Team.PRISONERS then
-            key = "C"
-            message = "Hold to Open Last Request Menu"
-
-            if not button:IsVisible() then
-                button:Show()
-            end
-        elseif (LocalPlayer() ~= lrPlayer or not LocalPlayer():Alive() or LocalPlayer():Team() ~= Team.PRISONERS) and button:IsVisible() then
-            button:Hide()
-        end
-    end)
-end)
