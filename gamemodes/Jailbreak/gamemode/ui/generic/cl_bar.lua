@@ -5,7 +5,7 @@ function DrawBar(x, width, height, skew, divisions, prog, color, mat)
     for i = 1, divisions do
         local fill = math.Clamp(progress, 0, 1)
         progress = progress - fill
-        draw.DrawSkewedRect((i - 1) * wide - skew + x, 0, (wide * fill) + skew / 2, height, skew, color, mat)
+        draw.DrawSkewedRect((i - 1) * wide - skew + x, 0, (wide * fill) + skew / 2, height, skew, color)
     end
 end
 
