@@ -129,7 +129,7 @@ function player:UpdateHud(target)
     net.Send(self)
 end
 
-hook.Add(" JB_Initialize", "InitializeSpectators", function() JB:SetupSpectators() end)
+hook.Add("JB_Initialize", "InitializeSpectators", function() JB:SetupSpectators() end)
 
 hook.Add("PlayerDeathThink", "DisableSpectatorRespawns", function(ply)
     if ply:Team() > Team.GUARDS then return false end
