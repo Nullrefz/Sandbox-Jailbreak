@@ -20,16 +20,19 @@ net.Receive("SendLR", function(ln, ply)
         JB:SetCustom()
     elseif lastRequest ~= "" then
         local notification = {
-            TEXT = "Next round is gonna be a " .. v,
+            TEXT = "Next round is gonna be " .. lastRequest,
             TYPE = 2,
             TIME = 5,
             COLOR = Color(255, 175, 0, 200)
         }
+
         JB:SendNotification(notification)
-        --End the round
+        JB:SetRoundEnding()
+        JB.nextDay = lastRequest
     end
 end)
 
+--End the round
 function JB:SetTicTacToe()
     -- TP players to tic tac toe
 end
@@ -46,7 +49,7 @@ function JB:SetCustom()
     -- Open Message Text
 end
 
-function JB:ConsumerLR()
+function JB:ConsumeLR()
     if self.nextDay ~= "" then
         self.curLR = self.nextDay
         self:HandleDay(self.curLR)
@@ -89,7 +92,7 @@ net.Receive("RequestLR", function(ln, ply)
 end)
 
 hook.Add("jb_round_active", "HonorLR", function()
-    JB:ConsumerLR()
+    JB:ConsumeLR()
 end)
 
 hook.Add("jb_round_ending", "ResetLR", function()

@@ -35,7 +35,7 @@ function LOGSWINDOW:Init()
     function self.header:Paint(width, height)
         draw.DrawRect(0, 0, width, height, Color(25, 25, 25))
         draw.DrawRect(0, height - height * 0.05, width, height * 0.05, Color(0, 150, 255))
-        draw.DrawText("Logs", "Jailbreak_Font_70", width / 2 - 74 / 2, -toVRatio(4), Color(255, 255, 255), TEXT_ALIGN_CENTER)
+        draw.DrawText("Logs (coming soon)", "Jailbreak_Font_70", width / 2 - 74 / 2, -toVRatio(4), Color(255, 255, 255), TEXT_ALIGN_CENTER)
     end
 
     self.closeButton = vgui.Create("DImageButton", self.header)

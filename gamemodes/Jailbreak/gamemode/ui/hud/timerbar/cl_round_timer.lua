@@ -113,7 +113,13 @@ net.Receive("RoundChanged", function()
 end)
 
 net.Receive("SetDay", function()
-    curDay = net.ReadString()
-    daySpan = net.ReadFloat()
-    dayTime = daySpan + CurTime()
+    local day = net.ReadString()
+    local span = net.ReadFloat()
+    local time = daySpan + CurTime()
+
+    timer.Simple(0.1, function()
+        curDay = day
+        daySpan = span
+        dayTime = time
+    end)
 end)

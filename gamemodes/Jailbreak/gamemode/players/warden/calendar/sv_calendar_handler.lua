@@ -13,15 +13,11 @@ end)
 
 net.Receive("SendDay", function(ln, ply)
     local day = net.ReadString()
-
-    if ply:Team() == Team.PRISONERS then
-        JB:SetNextDay(ply, day)
-    else
-        JB:HandleDay(day)
-    end
+    JB:HandleDay(day)
 end)
 
 function JB:HandleDay(day)
+
     if day == "freeday" then
         JB:SetFreeday()
     elseif day == "warday" then
@@ -32,7 +28,7 @@ function JB:HandleDay(day)
         JB:WeepingAngels()
     elseif day == "purge day" then
         JB:PurgeDay()
-    else
+    elseif day ~= "" then
         JB:SetDay(day)
     end
 end
@@ -84,9 +80,10 @@ function JB:SetDay(day)
 end
 
 function JB:SetFreeday()
+    JB.nextDay = ""
     self:OpenCells()
 
-    if self.warden:Alive() then
+    if self.warden and self.warden:Alive() then
         self:RevokeWarden()
     end
 

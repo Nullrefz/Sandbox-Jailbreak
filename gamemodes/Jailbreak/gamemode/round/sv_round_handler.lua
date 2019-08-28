@@ -76,7 +76,7 @@ function JB:SetRoundActive()
     end)
 
     if not self.warden then
-        JB:OpenCells()
+        JB:SetFreeday()
     else
         timer.Simple(GetConVar("jb_celldoors_open"):GetInt() or 30, function()
             JB:OpenCells()
