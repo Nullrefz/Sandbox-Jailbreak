@@ -85,7 +85,11 @@ end
 
 function JB:SetFreeday()
     self:OpenCells()
-    self:RevokeWarden()
+
+    if self.warden:Alive() then
+        self:RevokeWarden()
+    end
+
     self:SetDayPhase("Freeday", self:GetTimeLeft())
 
     local notification = {

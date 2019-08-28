@@ -11,7 +11,11 @@ function JB:AddCalendarMenu()
 
             if v == "freeday" or v == "warday" or v == "hide & seek" or v == "weeping angels" or v == "purge day" then
                 slot.ACTION = function()
-                    JB:SendDay(v)
+                    if LocalPlayer():Team() == Team.GUARDS then
+                        JB:SendDay(v)
+                    else
+                        JB:SendLR(v)
+                    end
                 end
             else
                 slot.ACTION = function()

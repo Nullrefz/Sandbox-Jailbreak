@@ -3,6 +3,7 @@ util.AddNetworkString("OnWardenRequest")
 util.AddNetworkString("RequestPromotion")
 local pl = FindMetaTable("Player")
 JB.warden = nil
+
 function pl:IsWarden()
     if JB.warden == self then return true end
 
@@ -43,21 +44,11 @@ function JB:BroadcastWarden(ply)
     end
 end
 
-function JB:ValidateWarden()
-    local wardenValid = false
-
-    for k, v in pairs(player.GetAll()) do
-        if IsValid(v) and v == self.warden and v:Team() == Team.GUARDS and v:Alive() then
-            wardenValid = true
-            break
-        end
-    end
-
-    if not wardenValid then
+function JB:ValidateWarden(ply)
+    if not IsValid(ply) or not ply == self.warden or not ply:Alive() then
         self:RevokeWarden()
     end
 end
-
 
 function JB:ToggleWardenWeaponSwitch(active)
     hook.Add("PlayerSwitchWeapon", "WaypointSwitchWeapon", function(ply)
@@ -77,20 +68,20 @@ function JB:PromotePlayer(ply)
     end
 end
 
-hook.Add("PlayerDisconnected", "CheckWardenIsDisconnected", function()
-    JB:ValidateWarden()
+hook.Add("PlayerDisconnected", "CheckWardenIsDisconnected", function(ply)
+    JB:ValidateWarden(ply)
 end)
 
-hook.Add("PlayerChangedTeam", "CheckWardenTeamHasChange", function()
-    JB:ValidateWarden()
+hook.Add("PlayerChangedTeam", "CheckWardenTeamHasChange", function(ply)
+    JB:ValidateWarden(ply)
 end)
 
-hook.Add("PlayerDeath", "CheckWardenHasDied", function()
-    JB:ValidateWarden()
+hook.Add("PostPlayerDeath", "CheckWardenHasDied", function(ply)
+    JB:ValidateWarden(ply)
 end)
 
-hook.Add("PlayerSilentDeath", "CheckWardenHasDiedSilently", function()
-    JB:ValidateWarden()
+hook.Add("PlayerSilentDeath", "CheckWardenHasDiedSilently", function(ply)
+    JB:ValidateWarden(ply)
 end)
 
 net.Receive("OnWardenRequest", function(ln, ply)

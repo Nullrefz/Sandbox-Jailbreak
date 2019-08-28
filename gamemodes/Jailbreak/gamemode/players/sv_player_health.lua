@@ -33,9 +33,9 @@ end
 
 function ply:SendHealthStatus()
     net.Start("UpdateHealth")
-    net.WriteInt(self.shield, 32)
-    net.WriteInt(self.hp, 32)
-    net.WriteInt(self.maxShield, 32)
+    net.WriteInt(self.shield or 0, 32)
+    net.WriteInt(self.hp or 0, 32)
+    net.WriteInt(self.maxShield or 0, 32)
 
     if not self.spectators then
         net.Send(self)
@@ -108,14 +108,9 @@ end
 function ply:SetupHealth()
     if not self:Alive() then return end
 
-    if self:Team() == TEAM_GUARDS then
-        if self:IsWarden() then
-            self:GenerateHealth(GetConVar("jb_guards_regen_health"):GetInt(), GetConVar("jb_warden_max_regen"):GetInt())
-            self:SetArmor(GetConVar("jb_warden_max_armor"):GetInt())
-        else
-            self:GenerateHealth(GetConVar("jb_guards_regen_health"):GetInt(), GetConVar("jb_guards_max_regen"):GetInt())
-            self:SetArmor(GetConVar("jb_guards_max_armor"):GetInt())
-        end
+    if self:Team() == TEAM_GUARDS and self:IsWarden() then
+        self:GenerateHealth(GetConVar("jb_guards_regen_health"):GetInt(), GetConVar("jb_warden_max_regen"):GetInt())
+        self:SetArmor(GetConVar("jb_warden_max_armor"):GetInt())
     else
         self:GenerateHealth(GetConVar("jb_prisoners_regen_health"):GetInt(), GetConVar("jb_prisoners_max_regen"):GetInt())
     end
@@ -142,11 +137,39 @@ end)
 function JB:HandleWardenHealth(oldWarden, newWarden)
     if oldWarden then
         oldWarden:SetupHealth()
+        self:DebuffGuards()
     end
 
     if newWarden then
+        self:BuffGuards()
         newWarden:GenerateHealth(GetConVar("jb_guards_regen_health"):GetInt(), GetConVar("jb_warden_max_regen"):GetInt())
         newWarden:SetArmor(GetConVar("jb_warden_max_armor"):GetInt())
+    end
+end
+
+function JB:DebuffGuards()
+    if #team.GetPlayers(TEAM_GUARDS) <= 0 then return end
+
+    for k, v in pairs(team.GetPlayers(TEAM_GUARDS)) do
+        if v:IsValid() and v:Alive() then
+            v:GenerateHealth(GetConVar("jb_prisoners_regen_health"):GetInt(), GetConVar("jb_prisoners_max_regen"):GetInt())
+            v:SetArmor(0)
+        end
+    end
+end
+
+hook.Add("WardenRevoked", "DebuffGuards", function()
+    JB:DebuffGuards()
+end)
+
+function JB:BuffGuards()
+    if #team.GetPlayers(TEAM_GUARDS) <= 0 then return end
+
+    for k, v in pairs(team.GetPlayers(TEAM_GUARDS)) do
+        if v:IsValid() and v:Alive() then
+            v:GenerateHealth(GetConVar("jb_guards_regen_health"):GetInt(), GetConVar("jb_guards_max_regen"):GetInt())
+            v:SetArmor(GetConVar("jb_guards_max_armor"):GetInt())
+        end
     end
 end
 

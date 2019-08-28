@@ -91,6 +91,7 @@ function ChamferedBox(...)
     end
 
     surface.DrawPoly(rBox)
+    NoTexture()
 end
 
 function ChamferedBoxOutlined(x, y, width, height, radius, outline, color, outlineColor, material, seg)
@@ -183,6 +184,7 @@ function CapsuleBox(x, y, width, height, angle, rot, anchor, color, material)
 
     surface.SetDrawColor(color)
     surface.DrawPoly(circle)
+    NoTexture()
 end
 
 function DrawArc(x, y, radius1, radius2, rot, angle, color, material)
@@ -432,4 +434,5 @@ function SkweredChamferedBox(...)
     end
 
     surface.DrawPoly(rBox)
+    NoTexture()
 end

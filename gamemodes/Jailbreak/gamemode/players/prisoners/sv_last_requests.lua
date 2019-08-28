@@ -18,6 +18,15 @@ net.Receive("SendLR", function(ln, ply)
         JB:SetSniperBattle()
     elseif lastRequest == "custom" then
         JB:SetCustom()
+    elseif lastRequest ~= "" then
+        local notification = {
+            TEXT = "Next round is gonna be a " .. v,
+            TYPE = 2,
+            TIME = 5,
+            COLOR = Color(255, 175, 0, 200)
+        }
+        JB:SendNotification(notification)
+        --End the round
     end
 end)
 
@@ -66,13 +75,12 @@ function JB:InitiateLR(ply)
     local playersToHighlight = {ply}
     self:HighlightPlayer(playersToHighlight)
     self:SetLRPlayer(ply)
-    -- Give them access to the menu
 end
 
 function JB:EndLR()
     self.curLRDay = ""
     self:HighlightPlayer()
-    self:SetLRPlayer(ply)
+    self:SetLRPlayer()
     self:UpdateLR()
 end
 

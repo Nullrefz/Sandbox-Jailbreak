@@ -31,21 +31,6 @@ function JB:AddLRMenu()
     return self:RegisterMenu(slots, "lastrequest")
 end
 
-function JB:SendTicTacToe()
-    net.Start("SendTicTacToe")
-    net.SendToServer()
-end
-
-function JB:SendKnifeBattle()
-    net.Start("SendKnifeBattle")
-    net.SendToServer()
-end
-
-function JB:SendExclusiveFreeday()
-    net.Start("SendExclusiveFreeday")
-    net.SendToServer()
-end
-
 function JB:SendLR(lastRequest)
     net.Start("SendLR")
     net.WriteString(lastRequest)
