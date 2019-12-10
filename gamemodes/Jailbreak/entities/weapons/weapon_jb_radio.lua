@@ -7,7 +7,6 @@ if (CLIENT) then
     SWEP.SlotPos = 2
     SWEP.IconLetter = "R"
     SWEP.ViewModelFlip = false
-    killicon.AddFont("weapon_radio", "CSKillIcons", SWEP.IconLetter, Color(255, 80, 0, 255))
 end
 
 SWEP.Base = "weapon_jb_base"

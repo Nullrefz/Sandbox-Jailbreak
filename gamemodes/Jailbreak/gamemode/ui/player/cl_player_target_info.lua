@@ -2,6 +2,7 @@ function GM:HUDDrawTargetID()
 end
 
 local plyCount = 0
+local bar = Material("jailbreak/vgui/Bar.png", "smooth")
 
 surface.CreateFont("Jailbreak_Font_42", {
     font = "Optimus",
@@ -27,12 +28,7 @@ function JB:DrawTargetInfo(ply, trace)
     local pos = ply:GetPos() + Vector(0, 0, 80)
 
     hook.Add("PostDrawOpaqueRenderables", tostring("TargetInfoOf" .. ply:SteamID()), function()
-        if not IsValid(ply) then
-            --hook.Remove("PostDrawOpaqueRenderables", "TargetInfoOf" .. ply:SteamID())
-
-            return
-        end
-
+        if not IsValid(ply) then return end --hook.Remove("PostDrawOpaqueRenderables", "TargetInfoOf" .. ply:SteamID())
         health = Lerp(FrameTime() * 10, health, ply:Health() + ply:Armor())
 
         if LocalPlayer():GetEyeTrace().Entity == ply then
@@ -44,8 +40,8 @@ function JB:DrawTargetInfo(ply, trace)
         if not ply:Alive() then return end
         cam.Start3D2D(ply:GetPos() + Vector(0, 0, 80), Angle(0, -90, 90) + Angle(0, (LocalPlayer():GetEyeTrace().HitPos - LocalPlayer():GetEyeTrace().StartPos):Angle().y, 0), 0.1)
         draw.DrawText(ply:Name(), "Jailbreak_Font_46", 0, 0, Color(255, 255, 255, 220 * visibility), TEXT_ALIGN_CENTER)
-        DrawCenterBar(-100, 46, 200, 6, 2, (ply:GetMaxHealth() + ply:Armor()) / 10, health / (ply:GetMaxHealth() + ply:Armor()), Color(255, 255 * health / (ply:GetMaxHealth() + ply:Armor()), 255 * health / (ply:GetMaxHealth() + ply:Armor()), 220 * visibility), Material("jailbreak/vgui/Bar.png", "smooth"))
-        DrawCenterBar(-100, 46, 200, 6, 2, (ply:GetMaxHealth() + ply:Armor()) / 10, 1, Color(255, 255, 255, 50 * visibility), Material("jailbreak/vgui/Bar.png", "smooth"))
+        DrawCenterBar(-100, 46, 200, 6, 2, (ply:GetMaxHealth() + ply:Armor()) / 10, health / (ply:GetMaxHealth() + ply:Armor()), Color(255, 255 * health / (ply:GetMaxHealth() + ply:Armor()), 255 * health / (ply:GetMaxHealth() + ply:Armor()), 220 * visibility), bar)
+        DrawCenterBar(-100, 46, 200, 6, 2, (ply:GetMaxHealth() + ply:Armor()) / 10, 1, Color(255, 255, 255, 50 * visibility), bar)
         cam.End3D2D()
     end)
 end

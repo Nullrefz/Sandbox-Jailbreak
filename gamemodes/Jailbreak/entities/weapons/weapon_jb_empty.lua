@@ -7,7 +7,6 @@ if (CLIENT) then
     SWEP.SlotPos = 0
     SWEP.IconLetter = "L"
     SWEP.ViewModelFlip = false
-    killicon.AddFont("weapon_empty", "CSKillIcons", SWEP.IconLetter, Color(255, 80, 0, 255))
 end
 
 SWEP.Base = "weapon_jb_base"
@@ -29,7 +28,6 @@ SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "none"
-
 SWEP.HoldType = "normal"
 SWEP.ViewModelFlip = false
 SWEP.UseHands = true

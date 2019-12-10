@@ -20,14 +20,20 @@ function JB:OpenCells(ply, ent)
     end)
 
     if not ply then
-        for k, v in pairs(player.GetAll()) do
-            v:ChatPrint("The cell doors are now opened")
-        end
+        local notification = {
+            TEXT = "The cell doors are now opened"
+        }
+
+        self:SendNotification(notification)
     else
-        for k, v in pairs(player.GetAll()) do
-            v:ChatPrint(ply:Name() .. " opened the cell doors")
-        end
+        local notification = {
+            TEXT = ply:Name() .. " opened the cell doors"
+        }
+
+        self:SendNotification(notification)
     end
+
+    hook.Run("CellDoorsOpened")
 end
 
 function JB:ValidateDoorButton(ent)
@@ -70,3 +76,5 @@ function JB:RemoveCloseButton()
         end
     end
 end
+
+hook.Add("PostCleanupMap", "SetCellDoorsClosed", function() end)

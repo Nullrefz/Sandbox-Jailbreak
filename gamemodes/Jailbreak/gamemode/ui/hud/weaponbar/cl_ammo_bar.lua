@@ -1,6 +1,8 @@
 local AMMOBAR = {}
 local weapon
-
+local mats = {
+    BAR = Material("jailbreak/vgui/bar.png", "smooth")
+}
 surface.CreateFont("Jailbreak_Font_Ammo", {
     font = "Optimus",
     extended = false,
@@ -33,8 +35,8 @@ function AMMOBAR:Init()
 
         self.maxAmmo = Lerp(FrameTime() * 20, self.maxAmmo, weapon:GetMaxClip1())
         self.curAmmo = Lerp(FrameTime() * 20, self.curAmmo, targetPlayer:GetActiveWeapon():Clip1() / self.maxAmmo)
-        DrawBarInverse(5, 24, width - 5, height / 2, 5, self.maxAmmo, self.curAmmo, Color(255, 255, 255, 150))
-        DrawBarInverse(5, 24, width - 5, height / 2, 5, self.maxAmmo, 1, Color(255, 255, 255, 25))
+        DrawBarInverse(5, 24, width - 5, height / 2, 5, self.maxAmmo, self.curAmmo, Color(255, 255, 255, 150), mats.BAR)
+        DrawBarInverse(5, 24, width - 5, height / 2, 5, self.maxAmmo, 1, Color(255, 255, 255, 25), mats.BAR)
     end
 end
 
