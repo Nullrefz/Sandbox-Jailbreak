@@ -13,7 +13,8 @@ if SERVER then
         ply:StripWeapons()
         ply:GiveWeapon("weapon_empty")
         ply:GiveWeapon("weapon_fists")
-        ply:SetActiveWeapon("weapon_empty")
+        ply:SetActiveWeapon(ply:GetWeapon("weapon_empty"))
+        ply:SetActiveWeapon()
     end
 
     net.Receive("DropWeapon", function(ln, ply)

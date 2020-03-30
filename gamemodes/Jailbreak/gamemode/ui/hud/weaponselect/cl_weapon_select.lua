@@ -47,7 +47,7 @@ function WEAPONSELECT:SelectWeapon(category)
 
         if k == self.curIndex + 1 then
             if self.weapons[k + 1] and self.weapons[k + 1]:GetSlot() == category then
-                self.curIndex = k
+                self.curIndex = selectedSlot + 1
                 self:SortWeapons()
 
                 return
@@ -104,14 +104,14 @@ function DrawInfinitBar(x, y, width, height, skew, divisions, index, color, mat,
     -- local pivot = math.floor(index / divisions)
     curPos = Lerp(FrameTime() * 10, curPos, index * width)
     local dist = (index * width - curPos) / (index * width)
-    percentage = Lerp(FrameTime() * 5, percentage, showPercentage)
+    percentage =  Lerp(FrameTime() * 10, percentage, showPercentage)
 
     -- for j = -1, 1 do
     for i = 1, divisions do
         if not IsValid(weapons[i]) then return end
-        local offsetX = (i - 1) * width - skew + x - curPos + math.abs(index - i - 1 * dist) * skew / 3 + (1 - math.Clamp(percentage, 0, 1)) * skew * 2
-        local offsetY = math.abs(index - i - (4 * dist)) * height / 2.5 + (1 - math.Clamp(percentage, 0, 1)) * height + 2
-        draw.SkweredChamferedBox(offsetX - 2, y - offsetY + 2, width + skew * 2 - 1, height * 2, 2, skew, Color(0, 0, 0, 255))
+        local offsetX = (i - 1) * width - skew + (x - (divisions * width)/ 2)  + (1 - math.Clamp(percentage, 0, 1))
+        local offsetY = 0
+        draw.SkweredChamferedBox(offsetX - 2, y - offsetY + 2, width + skew * 2 - 1, height * 2, 2, skew, Color(0, 0, 0, 255 * percentage))
         draw.DrawSkewedRect(offsetX, y - offsetY, width + skew / 2, height, skew, Color(255, math.abs(index - i - (1 * dist)) * 255, math.abs(index - i - (1 * dist)) * 255, 225 * percentage), mat) -- - pivot * width * divisions + j * width * divisions,
         draw.DrawText(string.Replace(weapons[i]:GetClass(), "weapon_jb_", ""), "Jailbreak_Font_Ammo", offsetX + width / 2, 32 - offsetY, Color(255, 255, 255, 255 * percentage), TEXT_ALIGN_CENTER) -- - pivot * width * divisions + j * width * divisions + width / 2
         draw.DrawRect(offsetX + 24 / 2, -offsetY - 12, width - 24, width - 24, Color(255, 255, 255, 255 * percentage), weaponMat[i])

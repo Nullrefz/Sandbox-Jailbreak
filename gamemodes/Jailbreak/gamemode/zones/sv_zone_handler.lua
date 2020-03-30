@@ -1,5 +1,5 @@
 local ply = FindMetaTable("Player")
-util.AddNetworkString("SendKOSWarning")
+util.AddNetworkString("SendZone")
 
 function ply:AddInZone(zone, ID)
     if not self.containmentZones then
@@ -7,13 +7,20 @@ function ply:AddInZone(zone, ID)
     end
 
     self.containmentZones[ID] = zone
-    self:CheckWarns()
+    self:SendZone(self.containmentZones)
 end
 
 function ply:RemoveFromZone(zone, ID)
     if not self.containmentZones then return end
     self.containmentZones[ID] = nil
     self:CheckRestrictions(zone, ID)
+    self:SendZone(self.containmentZones)
+end
+
+function ply:SendZone(zone)
+    net.Start("SendZone")
+    net.WriteTable(zone)
+    net.Send(self)
 end
 
 function ply:ClearZones()
@@ -24,14 +31,17 @@ end
 
 function ply:CheckRestrictions(zone, ID)
     if not self.restrictedZones then return end
+
     for k, v in pairs(self.restrictedZones) do
         if k == zone then
             self:SetPos(self:GetSpawnPos())
+
             local notification = {
                 TEXT = v,
                 TARGET = self,
                 TYPE = 2
             }
+
             JB:SendNotification(notification)
         end
     end
@@ -47,14 +57,6 @@ end
 
 function ply:ClearRestrictions()
     self.restrictedZones = {}
-end
-
-function ply:WarnZone(zoneName, message)
-    -- TODO: Implement Warn Zone
-end
-
-function ply:CheckWarns()
-    -- TODO:Handle Warn Zone
 end
 
 hook.Add("PlayerDeath", "ResetZones", function(ply)

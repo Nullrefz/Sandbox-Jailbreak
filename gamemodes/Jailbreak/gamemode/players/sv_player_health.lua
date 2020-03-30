@@ -10,7 +10,6 @@ function ply:GenerateHealth(amount, cap)
     self.maxShield = math.Clamp(cap, 0, self:GetMaxHealth())
     self.shield = self.maxShield
     self.hp = self:GetMaxHealth() - self.maxShield
-
     hook.Add("Think", "RegenerateHealth", function()
         JB:RegenerateHealth()
     end)
