@@ -13,3 +13,5 @@ CreateConVar("jb_guards_max_armor", 20, FCVAR_ARCHIVE, "How many total armor poi
 CreateConVar("jb_warden_max_armor", 50, FCVAR_ARCHIVE, "How many total armor points should warden have")
 CreateConVar("jb_Prisoners_Mute_Time", 15, FCVAR_ARCHIVE, "How many seconds should prisoners be muted at the end of the round")
 CreateConVar("jb_celldoors_open", 30, FCVAR_ARCHIVE, "How many seconds before celldoors auto open")
+CreateConVar("jb_afk_threshold", 60, FCVAR_ARCHIVE, "How many seconds before player is AFK")
+CreateConVar("jb_afkFrozen_threshold", 1, FCVAR_ARCHIVE, "How many seconds before player is AFK Frozen")

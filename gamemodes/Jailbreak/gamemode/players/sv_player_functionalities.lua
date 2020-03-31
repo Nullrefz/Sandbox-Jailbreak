@@ -162,23 +162,3 @@ function JB:SetMicEnabled(enabled, chosenTeam)
         end
     end)
 end
-
-util.AddNetworkString("SendHighlights")
-
-function JB:HighlightPlayer(players, targets)
-    net.Start("SendHighlights")
-
-    if players then
-        net.WriteTable(players)
-    else
-        net.WriteTable({})
-    end
-
-    if targets then
-        for k, v in pairs(targets) do
-            net.Send(v)
-        end
-    else
-        net.Broadcast()
-    end
-end
