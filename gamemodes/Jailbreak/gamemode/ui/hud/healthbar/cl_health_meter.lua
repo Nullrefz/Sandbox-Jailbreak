@@ -28,10 +28,10 @@ function HEALTHMETER:Init()
         end
 
         width = width - 30
-        self.health = health / targetPlayer:GetMaxHealth()
-        self.shield = shield / targetPlayer:GetMaxHealth()
-        self.total = Lerp(FrameTime() , self.total, self.health + self.shield)
-        self.armor = Lerp(FrameTime() * 5, self.armor, targetPlayer:Alive() and targetPlayer:Armor() / 100 or 0)
+        self.health = Lerp(FrameTime() * 10, self.health, health / targetPlayer:GetMaxHealth())
+        self.shield = Lerp(FrameTime() * 10, self.shield, shield / targetPlayer:GetMaxHealth())
+        self.total = Lerp(FrameTime() * 10, self.total, self.health + self.shield)
+        self.armor = Lerp(FrameTime() * 10, self.armor, targetPlayer:Alive() and targetPlayer:Armor() / 100 or 0)
         self.armorWidth = self.armor / 2
         self.healthWidth = 1 - self.armor / 2
         self.shieldWidth = (1 - (targetPlayer:GetMaxHealth() - maxShield) / targetPlayer:GetMaxHealth()) * (1 - self.armor / 2)
@@ -50,7 +50,7 @@ function HEALTHMETER:Init()
         --DrawBar(10 + width * self.healthWidth * self.health, width * self.shieldWidth, height, 5, (1 - (targetPlayer:GetMaxHealth() - maxShield) / targetPlayer:GetMaxHealth()) * barIncrement, self.shield, Color(20, 175, 255, 255 * percent), mats.BAR)
         -- end
         if (self.armor > 0) then
-            DrawBar(10 + width * ((self.healthWidth * self.health) + self.shieldWidth * self.shield), width * self.armorWidth, height, 5, math.ceil(self.armorWidth * 2 * barIncrement), 1, Color(255, 200, 0, 255 * percent), mats.BAR)
+            DrawBar(10 + width * ((self.healthWidth * self.health) + self.healthWidth * self.shield), width * self.armorWidth, height, 5, math.ceil(self.armorWidth * 2 * barIncrement), 1, Color(255, 200, 0, 255 * percent), mats.BAR)
         end
     end
 end
