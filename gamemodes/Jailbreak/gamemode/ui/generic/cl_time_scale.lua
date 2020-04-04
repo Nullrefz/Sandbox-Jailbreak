@@ -21,7 +21,6 @@ surface.CreateFont("Jailbreak_Font_16", {
 function TIMESCALE:Init()
     self.panel = vgui.Create("Panel", self)
     self.minutes = 5
-
 end
 
 function TIMESCALE:Paint(width, height)
@@ -53,6 +52,15 @@ end
 
 function TIMESCALE:SetMinutes(minutes)
     self.minutes = minutes
+end
+
+function TIMESCALE:GetMinute(normalizedValue)
+    return SecondsToMinutes(math.floor(normalizedValue * 12 * self.minutes) * 5)
+end
+
+function TIMESCALE:GetPos(value, scale)
+    local normalizedValue = math.floor(value / scale * 12 * self.minutes)
+    return normalizedValue * scale / self.minutes / 12 + self.center
 end
 
 vgui.Register("JailbreakTimeScale", TIMESCALE)
