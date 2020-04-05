@@ -27,6 +27,12 @@ function LOGSLIST:Init()
     self.playHead = vgui.Create("Panel", self.timeScale)
     self.panel = vgui.Create("Panel", self)
     self.entries = vgui.Create("Panel", self)
+    local round = 0
+
+    net.Receive("OnNewRound", function()
+        round = net.ReadInt(32)
+    end)
+
     local panel = self
     local curPos = 0
 
@@ -52,7 +58,7 @@ function LOGSLIST:Init()
         draw.DrawRect(0, 0, width, height, Color(40, 40, 40))
         draw.DrawRect(0, 0, width, height * 0.06, Color(15, 15, 15))
         draw.DrawRect(width - width * 0.005, 0, width * 0.005, height, Color(15, 15, 15))
-        draw.DrawText("Round: " .. curPos, "Jailbreak_Font_32", width / 2, height / 6, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+        draw.DrawText("Round: " .. round, "Jailbreak_Font_32", width / 2, height / 6, Color(255, 255, 255), TEXT_ALIGN_CENTER)
     end
 
     --	self.panel:MoveToFront()
@@ -85,20 +91,32 @@ function LOGSLIST:LayoutEntries()
         for k, v in pairs(inspectors) do
             v:SetInfo(barHeight, ply, ind)
         end
-
-        LerpFloat(0, 1, 0.2, function(progress)
-            self:RepositionBars()
-        end, INTERPOLATION.SinLerp)
     end)
 end
 
+local totalPos = 0
+
 function LOGSLIST:RepositionBars()
+    local x, y = self:LocalCursorPos()
+    y = y - self.header:GetTall()
+    y = math.Clamp(y - 64, 0, 99999)
     local pos = 0
 
     for k, v in pairs(self.panels) do
-        v:SetPos(0, pos)
-        pos = pos + v:GetTall()
+        if totalPos > self:GetTall() - self.header:GetTall() then
+            v:SetPos(0, pos - ((y / (self:GetTall() - self.header:GetTall() - 64)) * (totalPos - (self:GetTall() - self.header:GetTall()))))
+        else
+            v:SetPos(0, pos)
+        end
+
+        pos = pos + v:GetTall() + 2
     end
+
+    totalPos = pos
+end
+
+function LOGSLIST:Think()
+    self:RepositionBars()
 end
 
 function LOGSLIST:PerformLayout(width, height)
