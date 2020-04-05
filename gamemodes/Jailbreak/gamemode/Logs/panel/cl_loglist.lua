@@ -26,7 +26,7 @@ function LOGSLIST:Init()
     self.timeScale = vgui.Create("JailbreakTimeScale", self.header)
     self.playHead = vgui.Create("Panel", self.timeScale)
     self.panel = vgui.Create("Panel", self)
-    self.entries = vgui.Create("DScrollPanel", self)
+    self.entries = vgui.Create("Panel", self)
     local panel = self
     local curPos = 0
 
@@ -55,16 +55,19 @@ function LOGSLIST:Init()
         draw.DrawText("Round: " .. curPos, "Jailbreak_Font_32", width / 2, height / 6, Color(255, 255, 255), TEXT_ALIGN_CENTER)
     end
 
+    --	self.panel:MoveToFront()
     for k, v in pairs(player.GetAll()) do
-        local entryLog = self.entries:Add("JailbreakEntryLog")
-        entryLog:Dock(TOP)
-        entryLog:SetTall(64)
-        entryLog:DockMargin(0, 1, 0, 1)
+        local entryLog = vgui.Create("JailbreakEntryLog", self.entries)
         entryLog:SetPlayer(v)
-    end
+       -- inspector = vgui.Create("JailbreakLogInspector", self.entries)
 
-    self.panel:MoveToFront()
-    self.entries:GetVBar():SetWide(0)
+        LerpFloat(0, 1, 1, function(progress)
+            entryLog:SetSize(w, 64)
+            entryLog:SetPos(0, (k - 1) * progress * 66 )
+            -- inspector:SetPos(0, k * 64 * 2 * progress)
+            -- inspector:SetSize(w, progress * 64)
+        end, INTERPOLATION.SinLerp)
+    end
 end
 
 function LOGSLIST:PerformLayout(width, height)
@@ -77,8 +80,8 @@ function LOGSLIST:PerformLayout(width, height)
     self.timeScale:Dock(FILL)
     self.timeScale:DockMargin(0, 2, 0, 0)
     self.timeScale:SetTall(toVRatio(32))
-	self.panel:SetSize(width, height)
-	self.playHead:SetSize(self.timeScale:GetWide(), 16)
+    self.panel:SetSize(width, height)
+    self.playHead:SetSize(self.timeScale:GetWide(), 16)
     self.entries:Dock(FILL)
     self.playerLog:Dock(RIGHT)
     self.playerLog:SetWide(0)
