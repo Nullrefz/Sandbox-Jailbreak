@@ -62,7 +62,6 @@ function LOGSWINDOW:PerformLayout(width, height)
     self.closeButton:SetWide(toVRatio(64))
     self.body:Dock(FILL)
     self.content:Dock(FILL)
-    -- self.content:DockMargin(0, toVRatio(2), 0, 0)
 end
 
 function LOGSWINDOW:Think()

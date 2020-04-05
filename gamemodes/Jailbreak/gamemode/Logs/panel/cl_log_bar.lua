@@ -36,9 +36,8 @@ function LOGBAR:LayoutBars(width, height)
     for i = 0, self.bars - 1 do
         local bar = vgui.Create("JailbreakLogIndex", self.barPool)
         local offset = (self.step * i + self.spacing / 2)
-        bar:SetPos(offset, height * 0.15)
+        bar:SetPos(offset, height * 0.1)
         bar:SetSize(self.wide, height * 0.8)
-        bar:MoveToFront()
         bar:SetInfo(self.player, i, self.ind)
     end
 

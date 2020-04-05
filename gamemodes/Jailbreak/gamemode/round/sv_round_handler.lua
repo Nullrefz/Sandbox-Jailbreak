@@ -136,6 +136,7 @@ end)
     Desc: Loop logic for round active
 -----------------------------------------------------------]]
 function JB:RoundActiveThink()
+    print(self:GetTimeElapsed())
     if self:GetTimeLeft() <= 0 or #self:GetAlivePlayersByTeam(TEAM_GUARDS) <= 0 or #self:GetAlivePlayersByTeam(TEAM_PRISONERS) <= 0 then
         self:SetRoundPhase(ROUND_ENDING)
 

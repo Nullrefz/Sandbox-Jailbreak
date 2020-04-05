@@ -9,6 +9,18 @@ function JB:OpenLogs(ply)
     net.Send(ply)
 end
 
-function JB:LogAction()
+local LogType = {"kill", "death"}
+local roundLog = {}
 
+function JB:RegisterLog(ply, type, event)
+    if self:GetActivePhase() ~= ROUND_ACTIVE then return end
+end
+
+util.AddNetworkString("SendLog")
+
+function JB:SendLog(ply)
+    if not ply then return end
+    net.Start("SendLog")
+    net.WriteTable(roundLog)
+    net.Send(ply)
 end

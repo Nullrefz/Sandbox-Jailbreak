@@ -86,6 +86,10 @@ function JB:GetTimeLeft()
     return self.round.roundEnd - CurTime()
 end
 
+function JB:GetTimeElapsed()
+    return self.round.roundTime - (self.round.roundEnd - CurTime())
+end
+
 --[[---------------------------------------------------------
 Name: jailbreak:AddPhase(phaseName, defaultPhaseTime, onBegin, onUpdate)
 Desc: Adds a phase to the round

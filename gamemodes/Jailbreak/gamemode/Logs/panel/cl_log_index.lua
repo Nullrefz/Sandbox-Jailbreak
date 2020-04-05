@@ -7,17 +7,17 @@ function LOGINDEX:Init()
     self.panel:SetText("")
     self.index = 0
     self.playerInd = 0
+
     LerpFloat(0, 1, 1, function(progress)
         if not alpha then return end
         alpha = progress
     end, INTERPOLATION.SinLerp)
 
     function self.panel:Paint(width, height)
-        draw.DrawRect(0, 0, width, height, Color(30, 30, 30, alpha * 255))
+        draw.DrawRect(0, 0, width, height, Color(25, 25, 25, 255))
 
         if self:IsHovered() then
-        draw.DrawRect(0, 0, width, height, Color(255, 255, 255, alpha * 30))
-
+            draw.DrawRect(0, 0, width, height, Color(255, 255, 255, 30))
         end
     end
 
