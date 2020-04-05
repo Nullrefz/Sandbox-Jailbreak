@@ -56,17 +56,48 @@ function LOGSLIST:Init()
     end
 
     --	self.panel:MoveToFront()
+    self:LayoutEntries()
+end
+
+function LOGSLIST:LayoutEntries()
+    local offset = 2
+    local count = 0
+    local barHeight = 64
+    self.panels = {}
+    local inspectors = {}
+
     for k, v in pairs(player.GetAll()) do
         local entryLog = vgui.Create("JailbreakEntryLog", self.entries)
-        entryLog:SetPlayer(v)
-       -- inspector = vgui.Create("JailbreakLogInspector", self.entries)
+        entryLog:SetSize(w, barHeight)
+        entryLog:SetInfo(v, k)
+        table.insert(self.panels, entryLog)
+        count = count + 1
+        entryLog:SetPos(0, (k - 1) * (barHeight + offset))
+        local inspector = vgui.Create("JailbreakLogInspector", self.entries)
+        inspector:SetSize(w, 0)
+        inspector:SetPos(0, (k - 1) * (barHeight + offset) + entryLog:GetTall())
+        inspector:SetInfo(barHeight, v, -1)
+        table.insert(self.panels, inspector)
+        table.insert(inspectors, inspector)
+    end
 
-        LerpFloat(0, 1, 1, function(progress)
-            entryLog:SetSize(w, 64)
-            entryLog:SetPos(0, (k - 1) * progress * 66 )
-            -- inspector:SetPos(0, k * 64 * 2 * progress)
-            -- inspector:SetSize(w, progress * 64)
+    hook.Add("LogClicked", "ToggleInspector", function(ply, ind, plyInd)
+        for k, v in pairs(inspectors) do
+            v:SetInfo(barHeight, ply, ind)
+        end
+
+        LerpFloat(0, 1, 0.2, function(progress)
+            self:RepositionBars()
         end, INTERPOLATION.SinLerp)
+    end)
+end
+
+function LOGSLIST:RepositionBars()
+    local pos = 0
+
+    for k, v in pairs(self.panels) do
+        v:SetPos(0, pos)
+        pos = pos + v:GetTall()
     end
 end
 

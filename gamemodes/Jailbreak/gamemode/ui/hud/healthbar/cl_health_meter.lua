@@ -61,7 +61,6 @@ net.Receive("UpdateHealth", function()
     shield = net.ReadInt(32)
     health = net.ReadInt(32)
     maxShield = net.ReadInt(32)
-    print(maxShield)
 end)
 
 function HEALTHMETER:RequestHealth()

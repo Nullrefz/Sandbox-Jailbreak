@@ -26,7 +26,7 @@ function ENTRYLOG:Init()
     self.playerText = "Player Name"
     local alpha = 0
     self.progress = 0
-
+    self.id = 0
     LerpFloat(0, 1, 1, function(progress)
         if not alpha then return end
         alpha = progress
@@ -51,12 +51,14 @@ function ENTRYLOG:PerformLayout(width, height)
     self.log:Dock(FILL)
 end
 
-function ENTRYLOG:SetPlayer(ply)
+function ENTRYLOG:SetInfo(ply, ind)
+    self.ind = ind
     self.player = ply
     self.playerImage:SetPlayer(self.player, 184)
     self.TeamColor = team.GetColor(self.player:Team())
     self.playerText = self.player:Name()
-    self.log:SetPlayer(self.player)
+    self.log:SetInfo(self.player, self.ind)
 end
+
 
 vgui.Register("JailbreakEntryLog", ENTRYLOG)

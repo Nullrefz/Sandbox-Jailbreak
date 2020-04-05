@@ -7,6 +7,7 @@ function LOGBAR:Init()
     self.barPool = vgui.Create("Panel", self)
     self.alpha = 0
     self.player = nil
+    self.ind = 0
 
     LerpFloat(0, 1, 1, function(progress)
         if not self.alpha then return end
@@ -38,14 +39,15 @@ function LOGBAR:LayoutBars(width, height)
         bar:SetPos(offset, height * 0.15)
         bar:SetSize(self.wide, height * 0.8)
         bar:MoveToFront()
-        bar:SetInfo(self.player, i)
+        bar:SetInfo(self.player, i, self.ind)
     end
 
     self.barPool:Dock(FILL)
 end
 
-function LOGBAR:SetPlayer(player)
+function LOGBAR:SetInfo(player, ind)
     self.player = player
+    self.ind = ind
 end
 
 vgui.Register("JailbreakLogBar", LOGBAR)

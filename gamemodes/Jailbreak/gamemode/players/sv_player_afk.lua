@@ -15,7 +15,6 @@ function pl:SetAFK(isAFK)
     }
 
     JB:SendNotification(notification)
-    print(#player.GetAll(), game.MaxPlayers() - 1)
     self:LimitAFK()
 end
 
