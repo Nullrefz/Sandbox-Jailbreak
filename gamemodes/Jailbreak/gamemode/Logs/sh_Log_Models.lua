@@ -1,49 +1,41 @@
-function JB:RegisterKillLog(victim, culprit)
+function JB:RegisterKillLog(victim, culprit, inflictor, type)
     killLog = {
-        Type = "Kill",
+        Type = type,
         Time = self:GetTimeElapsed(),
-        Victim = victim,
-        Culprit = culprit,
-        Day = day,
-        Location = location
+        Victim = victim:IsBot() and victim:Name() or victim:SteamID(),
+        Culprit = culprit:IsBot() and culprit:Name() or culprit:SteamID(),
+        Day = self.dayPhase,
+        Location = victim.containmentZones and victim.containmentZones[#victim.containmentZones] or "Unknown"
     }
 
-    return killLog
+    if killLog.Type == "Kill" then
+        self:RegisterLog(culprit, killLog)
+    elseif killLog.Type == "Death" then
+        self:RegisterLog(victim, killLog)
+    end
 end
 
-function JB:RegisterDeathLog(victim, culprit)
-    deathLog = {
-        Type = "Death",
-        Time = self:GetTimeElapsed(),
-        Victim = victim,
-        Culprit = culprit,
-        Day = day,
-        Location = location
-    }
+hook.Add("PlayerDeath", "RegisterDeathLog", function(victim, inflictor, attacker)
+    JB:RegisterKillLog(victim, inflictor, attacker, "Kill")
+    JB:RegisterKillLog(victim, inflictor, attacker, "Death")
+end)
 
-    return deathLog
-end
-
-function JB:RegisterWeaponDropLog(weapon, culprit)
+function JB:RegisterWeaponDropLog(weapon, culprit, type)
     dropLog = {
-        Type = "Drop",
+        Type = type,
         Time = self:GetTimeElapsed(),
-        Culprit = culprit,
-        Weapon = weapon,
-        Location = location
+        Culprit = culprit:IsBot() and culprit:Name() or culprit:SteamID(),
+        Weapon = weapon:GetClass(),
+        Location = culprit.containmentZones and culprit.containmentZones[#culprit.containmentZones] or "Unknown"
     }
 
-    return dropLog
+    self:RegisterLog(culprit, dropLog)
 end
 
-function JB:RegisterWeaponDropLog(weapon, culprit)
-    pickupLog = {
-        Type = "Pickup",
-        Time = self:GetTimeElapsed(),
-        Culprit = culprit,
-        Weapon = weapon,
-        Location = location
-    }
+hook.Add("PlayerDroppedWeapon", "RegisterDropWeaponLog", function(culprit, weapon)
+    JB:RegisterWeaponDropLog(weapon, culprit, "Drop")
+end)
 
-    return pickupLog
-end
+hook.Add("WeaponEquip", "RegisterDropWeaponLog", function(weapon, culprit)
+    JB:RegisterWeaponDropLog(weapon, culprit, "Pickup")
+end)
