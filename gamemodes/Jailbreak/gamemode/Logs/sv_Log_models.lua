@@ -20,6 +20,17 @@ hook.Add("PlayerDeath", "RegisterDeathLog", function(victim, inflictor, attacker
     JB:RegisterKillLog(victim, inflictor, attacker, "Death")
 end)
 
+function JB:SpawnLog(ply)
+    spawnLog = {
+        Type = "Spawn",
+        Time = self:GetTimeElapsed(),
+        pl = ply,
+        Location =  ply.containmentZones and ply.containmentZones[#ply.containmentZones] or "Unknown"
+
+    }
+    self:RegisterLog(ply, spawnLog)
+end
+
 function JB:RegisterWeaponDropLog(weapon, culprit, type)
     dropLog = {
         Type = type,

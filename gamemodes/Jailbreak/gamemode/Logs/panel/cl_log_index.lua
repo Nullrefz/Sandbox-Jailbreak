@@ -19,6 +19,8 @@ function LOGINDEX:Init()
         if self:IsHovered() then
             draw.DrawRect(0, 0, width, height, Color(255, 255, 255, 30))
         end
+
+        draw.DrawRect(0, 0, width, height * 0.7, Color(40, 40, 40, 50))
     end
 
     self.panel.DoClick = function()
@@ -30,10 +32,12 @@ function LOGINDEX:PerformLayout(width, height)
     self.panel:Dock(FILL)
 end
 
-function LOGINDEX:SetInfo(player, index, playerInd)
-    self.player = player
+function LOGINDEX:SetInfo(logs, index, playerInd)
+    self.logs = logs
     self.index = index
     self.playerInd = playerInd
+    print(index)
+    PrintTable(logs)
 end
 
 vgui.Register("JailbreakLogIndex", LOGINDEX)

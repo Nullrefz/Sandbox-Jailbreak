@@ -27,7 +27,7 @@ function TIMESCALE:Paint(width, height)
     draw.DrawRect(0, 0, width, height, Color(25, 25, 25))
     surface.SetDrawColor(255, 255, 255)
 
-    for i = 0, self.minutes - 1 do
+    for i = 0, self.minutes do
         local offset = (self.step * i)
         surface.DrawLine(offset + self.center, height * 0.5, offset + self.center, height)
 

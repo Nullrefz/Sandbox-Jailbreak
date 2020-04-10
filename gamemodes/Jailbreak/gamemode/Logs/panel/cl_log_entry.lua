@@ -27,8 +27,9 @@ function ENTRYLOG:Init()
     local alpha = 0
     self.progress = 0
     self.id = 0
+
     LerpFloat(0, 1, 1, function(progress)
-        if not alpha then return end
+        if not IsValid(self) or not alpha then return end
         alpha = progress
         self.progress = alpha
     end, INTERPOLATION.SinLerp)
@@ -51,14 +52,17 @@ function ENTRYLOG:PerformLayout(width, height)
     self.log:Dock(FILL)
 end
 
-function ENTRYLOG:SetInfo(ply, ind)
+function ENTRYLOG:SetInfo(steamID, plyTeam, name, logs, time, ind)
     self.ind = ind
-    self.player = ply
-    self.playerImage:SetPlayer(self.player, 184)
-    self.TeamColor = team.GetColor(self.player:Team())
-    self.playerText = self.player:Name()
-    self.log:SetInfo(self.player, self.ind)
-end
+    self.player = player.GetBySteamID(steamID)
 
+    if player.GetBySteamID(steamID) then
+        self.playerImage:SetPlayer(self.player, 184)
+    end
+
+    self.TeamColor = team.GetColor(plyTeam)
+    self.playerText = name
+    self.log:SetInfo(logs, time, self.ind)
+end
 
 vgui.Register("JailbreakEntryLog", ENTRYLOG)

@@ -1,12 +1,12 @@
 local LOGBAR = {}
 
 function LOGBAR:Init()
-    self.bars = 60
+    self.bars = 0
     self.wide = 8
     self.spacing = 8
     self.barPool = vgui.Create("Panel", self)
     self.alpha = 0
-    self.player = nil
+    self.loga = {}
     self.ind = 0
 
     LerpFloat(0, 1, 1, function(progress)
@@ -38,15 +38,28 @@ function LOGBAR:LayoutBars(width, height)
         local offset = (self.step * i + self.spacing / 2)
         bar:SetPos(offset, height * 0.1)
         bar:SetSize(self.wide, height * 0.8)
-        bar:SetInfo(self.player, i, self.ind)
+        bar:SetInfo(self:GetIndexLog(i + 1), i, self.ind)
     end
 
     self.barPool:Dock(FILL)
 end
 
-function LOGBAR:SetInfo(player, ind)
-    self.player = player
+function LOGBAR:GetIndexLog(index)
+    local logs = {}
+
+    for k, v in pairs(self.logs) do
+        if v.Time > ((index * 5) - 5) and v.Time < index * 5 then
+            table.insert(logs, v)
+        end
+    end
+
+    return logs
+end
+
+function LOGBAR:SetInfo(logs, time, ind)
+    self.logs = logs
     self.ind = ind
+    self.bars = math.ceil(time / 60 * 12)
 end
 
 vgui.Register("JailbreakLogBar", LOGBAR)

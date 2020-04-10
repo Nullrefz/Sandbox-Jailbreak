@@ -28,9 +28,15 @@ function LOGSLIST:Init()
     self.panel = vgui.Create("Panel", self)
     self.entries = vgui.Create("Panel", self)
     local round = 0
+    self.time = 300
+    self.logs = {}
 
-    net.Receive("OnNewRound", function()
+    net.Receive("SendLog", function()
         round = net.ReadInt(32)
+        self.time = net.ReadFloat()
+        self.logs = net.ReadTable()
+        self.timeScale:SetMinutes(self.time / 60)
+        self:LayoutEntries()
     end)
 
     local panel = self
@@ -60,9 +66,7 @@ function LOGSLIST:Init()
         draw.DrawRect(width - width * 0.005, 0, width * 0.005, height, Color(15, 15, 15))
         draw.DrawText("Round: " .. round, "Jailbreak_Font_32", width / 2, height / 6, Color(255, 255, 255), TEXT_ALIGN_CENTER)
     end
-
     --	self.panel:MoveToFront()
-    self:LayoutEntries()
 end
 
 function LOGSLIST:LayoutEntries()
@@ -72,17 +76,17 @@ function LOGSLIST:LayoutEntries()
     self.panels = {}
     local inspectors = {}
 
-    for k, v in pairs(player.GetAll()) do
+    for k, v in pairs(self.logs) do
         local entryLog = vgui.Create("JailbreakEntryLog", self.entries)
         entryLog:SetSize(w, barHeight)
-        entryLog:SetInfo(v, k)
+        entryLog:SetInfo(v.User, v.UserTeam, v.UserName, v.Logs, self.time, k)
         table.insert(self.panels, entryLog)
         count = count + 1
         entryLog:SetPos(0, (k - 1) * (barHeight + offset))
         local inspector = vgui.Create("JailbreakLogInspector", self.entries)
         inspector:SetSize(w, 0)
         inspector:SetPos(0, (k - 1) * (barHeight + offset) + entryLog:GetTall())
-        inspector:SetInfo(barHeight, v, -1)
+        inspector:SetInfo(barHeight, v.User, -1)
         table.insert(self.panels, inspector)
         table.insert(inspectors, inspector)
     end
@@ -97,6 +101,7 @@ end
 local totalPos = 0
 
 function LOGSLIST:RepositionBars()
+    if not self.panels then return end
     local x, y = self:LocalCursorPos()
     y = y - self.header:GetTall()
     y = math.Clamp(y - 64, 0, 99999)

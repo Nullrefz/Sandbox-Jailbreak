@@ -28,7 +28,8 @@ function LOGSWINDOW:Init()
             self:Remove()
         end
     end)
-
+    net.Start("LogRequest")
+    net.SendToServer()
     self:MakePopup()
     self.header = vgui.Create("Panel", self)
 
