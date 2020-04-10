@@ -16,6 +16,12 @@ function LOGINDEX:Init()
     function self.panel:Paint(width, height)
         draw.DrawRect(0, 0, width, height, Color(25, 25, 25, 255))
 
+        if #self:GetParent().logs > 0 then
+            for i = 1, #self:GetParent().logs do
+                draw.DrawRect(0, 0, width, height, JB:GetLogColor(self:GetParent().logs[i].Type))
+            end
+        end
+
         if self:IsHovered() then
             draw.DrawRect(0, 0, width, height, Color(255, 255, 255, 30))
         end
