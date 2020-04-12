@@ -91,9 +91,9 @@ function LOGSLIST:LayoutEntries()
         entryLog:SetInfo(v.User, v.UserTeam, v.UserName, v.Logs, self.time, k, inspector)
     end
 
-    hook.Add("LogClicked", "ToggleInspector", function(ind, plyInd)
+    hook.Add("LogClicked", "ToggleInspector", function(ind, plyInd, logs)
         for k, v in pairs(inspectors) do
-            v:SetInfo(barHeight, ind, plyInd)
+            v:SetInfo(barHeight, ind, plyInd, logs)
         end
     end)
 end

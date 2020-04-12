@@ -30,7 +30,7 @@ function LOGINDEX:Init()
     end
 
     self.panel.DoClick = function()
-        hook.Run("LogClicked", self.index, self.playerInd)
+        hook.Run("LogClicked", self.index, self.playerInd, self.logs)
     end
 end
 
