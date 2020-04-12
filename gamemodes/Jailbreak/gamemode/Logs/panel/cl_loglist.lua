@@ -79,21 +79,21 @@ function LOGSLIST:LayoutEntries()
     for k, v in pairs(self.logs) do
         local entryLog = vgui.Create("JailbreakEntryLog", self.entries)
         entryLog:SetSize(w, barHeight)
-        entryLog:SetInfo(v.User, v.UserTeam, v.UserName, v.Logs, self.time, k)
         table.insert(self.panels, entryLog)
         count = count + 1
         entryLog:SetPos(0, (k - 1) * (barHeight + offset))
         local inspector = vgui.Create("JailbreakLogInspector", self.entries)
         inspector:SetSize(w, 0)
         inspector:SetPos(0, (k - 1) * (barHeight + offset) + entryLog:GetTall())
-        inspector:SetInfo(barHeight, v.User, -1)
+        inspector:SetInfo(barHeight, -1)
         table.insert(self.panels, inspector)
         table.insert(inspectors, inspector)
+        entryLog:SetInfo(v.User, v.UserTeam, v.UserName, v.Logs, self.time, k, inspector)
     end
 
-    hook.Add("LogClicked", "ToggleInspector", function(ply, ind, plyInd)
+    hook.Add("LogClicked", "ToggleInspector", function(ind, plyInd)
         for k, v in pairs(inspectors) do
-            v:SetInfo(barHeight, ply, ind)
+            v:SetInfo(barHeight, ind, plyInd)
         end
     end)
 end

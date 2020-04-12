@@ -52,7 +52,7 @@ function ENTRYLOG:PerformLayout(width, height)
     self.log:Dock(FILL)
 end
 
-function ENTRYLOG:SetInfo(steamID, plyTeam, name, logs, time, ind)
+function ENTRYLOG:SetInfo(steamID, plyTeam, name, logs, time, ind, inspector)
     self.ind = ind
     self.player = player.GetBySteamID(steamID)
 
@@ -62,7 +62,7 @@ function ENTRYLOG:SetInfo(steamID, plyTeam, name, logs, time, ind)
 
     self.TeamColor = team.GetColor(plyTeam)
     self.playerText = name
-    self.log:SetInfo(logs, time, self.ind)
+    self.log:SetInfo(logs, time, self.ind, insepctor)
 end
 
 vgui.Register("JailbreakEntryLog", ENTRYLOG)

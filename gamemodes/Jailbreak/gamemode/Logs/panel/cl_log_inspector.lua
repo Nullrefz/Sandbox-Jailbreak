@@ -16,19 +16,19 @@ function LOGINSPECTOR:SetActive(enabled)
     self.active = enabled
 end
 
-function LOGINSPECTOR:SetInfo(barHeight, ply, ind)
+function LOGINSPECTOR:SetInfo(barHeight, ind, plyInd)
     self.barHeight = barHeight
 
-    if self.player == ply and self.index == ind then
+    if self.plyInd == plyInd and self.index == ind then
         self:SetActive(not self.active)
-    elseif self.player ~= ply then
+    elseif self.plyInd ~= plyInd then
         self:SetActive(false)
     else
         self:SetActive(true)
     end
 
-    if not self.player then
-        self.player = ply
+    if not self.plyInd then
+        self.plyInd = plyInd
     end
     self.index = ind
 end

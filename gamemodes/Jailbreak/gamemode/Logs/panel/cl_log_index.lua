@@ -30,7 +30,7 @@ function LOGINDEX:Init()
     end
 
     self.panel.DoClick = function()
-        hook.Run("LogClicked", self.player, self.index, self.playerInd)
+        hook.Run("LogClicked", self.index, self.playerInd)
     end
 end
 
@@ -38,12 +38,11 @@ function LOGINDEX:PerformLayout(width, height)
     self.panel:Dock(FILL)
 end
 
-function LOGINDEX:SetInfo(logs, index, playerInd)
+function LOGINDEX:SetInfo(logs, index, playerInd, inspector)
     self.logs = logs
     self.index = index
     self.playerInd = playerInd
-    print(index)
-    PrintTable(logs)
+    self.inspector = inspector
 end
 
 vgui.Register("JailbreakLogIndex", LOGINDEX)

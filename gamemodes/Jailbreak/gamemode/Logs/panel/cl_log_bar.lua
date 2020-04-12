@@ -38,7 +38,7 @@ function LOGBAR:LayoutBars(width, height)
         local offset = (self.step * i + self.spacing / 2)
         bar:SetPos(offset, height * 0.1)
         bar:SetSize(self.wide, height * 0.8)
-        bar:SetInfo(self:GetIndexLog(i + 1), i, self.ind)
+        bar:SetInfo(self:GetIndexLog(i + 1), i, self.ind, self.inspector)
     end
 
     self.barPool:Dock(FILL)
@@ -56,10 +56,11 @@ function LOGBAR:GetIndexLog(index)
     return logs
 end
 
-function LOGBAR:SetInfo(logs, time, ind)
+function LOGBAR:SetInfo(logs, time, ind, inspector)
     self.logs = logs
     self.ind = ind
     self.bars = math.ceil(time / 60 * 12)
+    self.inspector = inspector
 end
 
 vgui.Register("JailbreakLogBar", LOGBAR)
