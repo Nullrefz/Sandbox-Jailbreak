@@ -18,7 +18,7 @@ function LOGINDEX:Init()
 
         if #self:GetParent().logs > 0 then
             for i = 1, #self:GetParent().logs do
-                draw.DrawRect(0, 0, width, height, JB:GetLogColor(self:GetParent().logs[i].Type))
+                draw.DrawRect((i - 1) * width, 0, width *  #self:GetParent().logs, height, JB:GetLogColor(self:GetParent().logs[i].Type))
             end
         end
 
