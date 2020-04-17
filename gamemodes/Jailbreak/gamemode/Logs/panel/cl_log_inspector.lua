@@ -4,6 +4,7 @@ function LOGINSPECTOR:Init()
     self.active = false
     self.barHeight = 0
     self.timeHeight = 16
+    self.minutes = 1
 end
 
 function LOGINSPECTOR:SetActive(enabled)
@@ -17,8 +18,9 @@ function LOGINSPECTOR:SetActive(enabled)
     self.active = enabled
 end
 
-function LOGINSPECTOR:SetInfo(barHeight, ind, plyInd, logs)
+function LOGINSPECTOR:SetInfo(barHeight, ind, plyInd, logs, minutes)
     self.logs = logs
+    self.minutes = minutes
     self.barHeight = barHeight
     self:LayoutBoxes()
 
@@ -28,7 +30,7 @@ function LOGINSPECTOR:SetInfo(barHeight, ind, plyInd, logs)
 
     if self.plyInd == plyInd and self.index == ind then
         self:SetActive(not self.active)
-    elseif self.plyInd ~= plyInd then
+    elseif self.plyInd ~= plyInd and self.active then
         self:SetActive(false)
     else
         self:SetActive(true)
@@ -39,6 +41,13 @@ function LOGINSPECTOR:SetInfo(barHeight, ind, plyInd, logs)
     end
 
     self.index = ind
+    self:LayoutBoxes()
+end
+
+function LOGINSPECTOR:SetInit(barheight, ind)
+    self.index = ind
+    self.barHeight = barHeight
+    --self.plyInd = -1
 end
 
 local boxes = {}
@@ -51,7 +60,7 @@ function LOGINSPECTOR:LayoutBoxes()
     local boxHeight = 64
 
     for k, v in pairs(self.logs) do
-        local pos = ((v.Time - self.index * 5) / 5) * self:GetWide()
+        local pos = ((v.Time - self.index * self.minutes) / self.minutes) * self:GetWide()
         local offset = 0
 
         if #boxes > 0 then
@@ -78,21 +87,25 @@ function LOGINSPECTOR:LayoutBoxes()
 end
 
 function LOGINSPECTOR:Paint(width, height)
+    if not self.minutes then
+        self.minutes = 1
+    end
+
     draw.DrawRect(0, 0, width, height, Color(30, 30, 30, 255))
     draw.DrawRect(0, 0, width, height, Color(30, 30, 30, 255))
     draw.DrawRect(0, 0, width, 2, Color(255, 255, 255, 20))
     draw.DrawRect(0, height - 2, width, 2, Color(255, 255, 255, 20))
     local posY = self.timeHeight
 
-    for i = 1, 5 do
-        self:DrawArrow((i - 1) * width / 5 - 10, posY, width / 5 + 5, posY, 10, Color(200, 200, 200, 255 / 7 * i))
+    for i = 1, self.minutes do
+        self:DrawArrow((i - 1) * width / self.minutes - 10, posY, width / self.minutes + self.minutes, posY, 10, Color(200, 200, 200, 255 / 7 * i))
     end
 
     self:DrawRoundTimeline(0, height / 2 - 4 * 2 - self.timeHeight, width, 4)
     self:DrawPlayerTimeline(0, posY, width, height)
 
-    for i = 1, 5 do
-        draw.DrawText(SecondsToMinutes(self.index * 5 + i - 1), "Jailbreak_Font_14", (i - 1) * width / 5 + 8, posY, Color(0, 0, 0), TEXT_ALIGN_LEFT)
+    for i = 1, self.minutes do
+        draw.DrawText(SecondsToMinutes(self.index * self.minutes + i - 1), "Jailbreak_Font_14", (i - 1) * width / self.minutes + 8, posY, Color(0, 0, 0), TEXT_ALIGN_LEFT)
     end
 end
 

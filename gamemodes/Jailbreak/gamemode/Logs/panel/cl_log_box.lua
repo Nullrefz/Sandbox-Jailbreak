@@ -1,9 +1,5 @@
 LOGBOX = {}
 
-local mats = {
-    PICKUP = Material("jailbreak/vgui/icons/pickup.png", smooth)
-}
-
 function LOGBOX:Init()
 end
 

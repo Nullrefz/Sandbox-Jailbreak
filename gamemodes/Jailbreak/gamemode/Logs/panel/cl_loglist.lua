@@ -35,7 +35,6 @@ function LOGSLIST:Init()
         round = net.ReadInt(32)
         self.time = net.ReadFloat()
         self.logs = net.ReadTable()
-        self.timeScale:SetMinutes(self.time / 60)
         self:LayoutEntries()
     end)
 
@@ -75,7 +74,6 @@ function LOGSLIST:LayoutEntries()
     local barHeight = 64
     self.panels = {}
     local inspectors = {}
-
     for k, v in pairs(self.logs) do
         local entryLog = vgui.Create("JailbreakEntryLog", self.entries)
         entryLog:SetSize(w, barHeight)
@@ -85,15 +83,16 @@ function LOGSLIST:LayoutEntries()
         local inspector = vgui.Create("JailbreakLogInspector", self.entries)
         inspector:SetSize(w, 0)
         inspector:SetPos(0, (k - 1) * (barHeight + offset) + entryLog:GetTall())
-        inspector:SetInfo(barHeight, -1)
+        --inspector:SetInfo(barHeight, -1)
         table.insert(self.panels, inspector)
         table.insert(inspectors, inspector)
         entryLog:SetInfo(v.User, v.UserTeam, v.UserName, v.Logs, self.time, k, inspector)
     end
 
-    hook.Add("LogClicked", "ToggleInspector", function(ind, plyInd, logs)
+    self.timeScale:SetTime(self.time)
+    hook.Add("LogClicked", "ToggleInspector", function(ind, plyInd, logs, minutes)
         for k, v in pairs(inspectors) do
-            v:SetInfo(barHeight, ind, plyInd, logs)
+            v:SetInfo(barHeight, ind, plyInd, logs, minutes)
         end
     end)
 end
