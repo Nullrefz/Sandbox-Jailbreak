@@ -24,12 +24,22 @@ function ENTRYLOG:Init()
     self.log = vgui.Create("JailbreakLogBar", self)
     self.TeamColor = Color(255, 255, 255)
     self.playerText = "Player Name"
+    local alpha = 0
+    self.progress = 0
+    self.id = 0
+
+    LerpFloat(0, 1, 1, function(progress)
+        if not IsValid(self) or not alpha then return end
+        alpha = progress
+        self.progress = alpha
+    end, INTERPOLATION.SinLerp)
+
     local panel = self
 
     function self.playerName:Paint(width, height)
         draw.DrawRect(0, 0, width, height, Color(30, 30, 30, 255))
-        draw.DrawText(panel.playerText, "Jailbreak_Font_32", width - 8, height / 4, Color(255, 255, 255), TEXT_ALIGN_RIGHT)
-        draw.DrawRect(0, 0, 4, height, panel.TeamColor)
+        draw.DrawText(panel.playerText, "Jailbreak_Font_32", width - 8, height / 4, Color(255, 255, 255, 255 * alpha), TEXT_ALIGN_RIGHT)
+        draw.DrawRect(0, 0, 4 * alpha, height, panel.TeamColor)
     end
 end
 
@@ -42,12 +52,17 @@ function ENTRYLOG:PerformLayout(width, height)
     self.log:Dock(FILL)
 end
 
+function ENTRYLOG:SetInfo(steamID, plyTeam, name, logs, time, ind, inspector)
+    self.ind = ind
+    self.player = player.GetBySteamID(steamID)
 
-function ENTRYLOG:SetPlayer(ply)
-    self.player = ply
-    self.playerImage:SetPlayer(self.player, 184)
-    self.TeamColor = team.GetColor(self.player:Team())
-    self.playerText = self.player:Name()
+    if player.GetBySteamID(steamID) then
+        self.playerImage:SetPlayer(self.player, 184)
+    end
+
+    self.TeamColor = team.GetColor(plyTeam)
+    self.playerText = name
+    self.log:SetInfo(logs, time, self.ind, insepctor)
 end
 
 vgui.Register("JailbreakEntryLog", ENTRYLOG)

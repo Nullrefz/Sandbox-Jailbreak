@@ -28,14 +28,15 @@ function LOGSWINDOW:Init()
             self:Remove()
         end
     end)
-
+    net.Start("LogRequest")
+    net.SendToServer()
     self:MakePopup()
     self.header = vgui.Create("Panel", self)
 
     function self.header:Paint(width, height)
         draw.DrawRect(0, 0, width, height, Color(25, 25, 25))
         draw.DrawRect(0, height - height * 0.05, width, height * 0.05, Color(0, 150, 255))
-        draw.DrawText("Logs (coming soon)", "Jailbreak_Font_70", width / 2 - 74 / 2, -toVRatio(4), Color(255, 255, 255), TEXT_ALIGN_CENTER)
+        draw.DrawText("Logs", "Jailbreak_Font_70", width / 2 - 74 / 2, -toVRatio(4), Color(255, 255, 255), TEXT_ALIGN_CENTER)
     end
 
     self.closeButton = vgui.Create("DImageButton", self.header)
@@ -62,7 +63,6 @@ function LOGSWINDOW:PerformLayout(width, height)
     self.closeButton:SetWide(toVRatio(64))
     self.body:Dock(FILL)
     self.content:Dock(FILL)
-    -- self.content:DockMargin(0, toVRatio(2), 0, 0)
 end
 
 function LOGSWINDOW:Think()

@@ -7,6 +7,8 @@ INTERPOLATION = {
     Exponential = 6
 }
 
+local lerpCount = 0
+
 local function GetInterpolationValue(t, interpolation)
     if interpolation == INTERPOLATION.SinLerp then
         return math.sin(t * math.pi * 0.5)
@@ -25,7 +27,8 @@ end
 
 function LerpFloat(pointA, pointB, time, callback, typeOfInterpolation, onComplete)
     local endTime = CurTime() + time
-    local ID = tostring(CurTime() + math.random(1, 9999))
+    lerpCount = lerpCount + 1
+    local ID = tostring(CurTime() + math.random(1, 9999) + lerpCount)
 
     hook.Add("Think", "DoALerp" .. ID, function()
         local percentage = math.Clamp(1 - (endTime - CurTime()) / time, 0, 1)
@@ -39,6 +42,7 @@ function LerpFloat(pointA, pointB, time, callback, typeOfInterpolation, onComple
                 onComplete()
             end
 
+            lerpCount = lerpCount - 1
             hook.Remove("Think", "DoALerp" .. ID)
         end
     end)
