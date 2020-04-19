@@ -46,7 +46,8 @@ hook.Add("PlayerInitialSpawn", "CreateTimer", function(ply)
     end
 end)
 
-hook.Add("KeyPress", "ResetTimer", function(ply, key)
+hook.Add("PlayerButtonDown", "ResetTimer", function(ply, key)
+    ply.afkTimer = 0
     if ply.isAFK then
         ply:SetAFK(false)
     end
@@ -61,13 +62,6 @@ hook.Add("SetupMove", "HandleAFK", function(ply, mv, cmd)
         ply:SetAFK(true)
     end
 
-    if ply.pos ~= ply:GetPos() then
-        ply.afkTimer = 0
-
-        if ply.isAFK then
-            ply:SetAFK(false)
-        end
-    end
 
     if ply.mouse ~= cmd:GetMouseX() + cmd:GetMouseY() then
         ply.afkTimer = 0
@@ -76,7 +70,5 @@ hook.Add("SetupMove", "HandleAFK", function(ply, mv, cmd)
             ply:SetAFK(false)
         end
     end
-
-    ply.pos = ply:GetPos()
     ply.mouse = cmd:GetMouseX() + cmd:GetMouseY()
 end)
