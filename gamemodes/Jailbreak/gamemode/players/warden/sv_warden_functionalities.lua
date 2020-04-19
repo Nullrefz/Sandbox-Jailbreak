@@ -44,8 +44,8 @@ function JB:BroadcastWarden(ply)
     end
 end
 
-function JB:ValidateWarden(ply)
-    if not IsValid(ply) or not ply == self.warden or not ply:Alive() then
+function JB:ValidateWarden()
+    if not IsValid(self.warden) or not self.warden:Alive() then
         self:RevokeWarden()
     end
 end
@@ -69,19 +69,19 @@ function JB:PromotePlayer(ply)
 end
 
 hook.Add("PlayerDisconnected", "CheckWardenIsDisconnected", function(ply)
-    JB:ValidateWarden(ply)
+    JB:ValidateWarden()
 end)
 
 hook.Add("PlayerChangedTeam", "CheckWardenTeamHasChange", function(ply)
-    JB:ValidateWarden(ply)
+    JB:ValidateWarden()
 end)
 
 hook.Add("PostPlayerDeath", "CheckWardenHasDied", function(ply)
-    JB:ValidateWarden(ply)
+    JB:ValidateWarden()
 end)
 
 hook.Add("PlayerSilentDeath", "CheckWardenHasDiedSilently", function(ply)
-    JB:ValidateWarden(ply)
+    JB:ValidateWarden()
 end)
 
 net.Receive("OnWardenRequest", function(ln, ply)

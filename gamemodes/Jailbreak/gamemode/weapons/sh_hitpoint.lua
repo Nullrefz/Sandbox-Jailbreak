@@ -17,7 +17,9 @@ if CLIENT then
         outline = false
     })
 
-    function JB:DrawHitPoint(dmg, trace)
+    local dmg = 0
+
+    function JB:DrawHitPoint(trace)
         if not LocalPlayer():Alive() then return end
         local curTime = CurTime()
 
@@ -32,11 +34,22 @@ if CLIENT then
         end)
     end
 
+    net.Receive("PlayerGotHurt", function()
+        dmg = net.ReadInt(64)
+    end)
 
-    -- JB:DrawHitPoint(dmg, trace)
     hook.Add("PlayerTraceAttack", "ShowHitPoint", function(ply, dmgInfo, trace)
         local tr = dmgInfo:GetAttacker():GetEyeTrace()
+        JB:DrawHitPoint(tr)
+    end)
+end
 
-        JB:DrawHitPoint(dmgInfo:GetDamage(), tr)
+if SERVER then
+    util.AddNetworkString("PlayerGotHurt")
+
+    hook.Add("PlayerHurt", "ShowHitPoint", function(victim, attacker, remaining, dmg)
+        net.Start("PlayerGotHurt")
+        net.WriteInt(dmg, 64)
+        net.Broadcast()
     end)
 end
