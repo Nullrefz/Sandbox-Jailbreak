@@ -41,6 +41,7 @@ reregisterWeapon("weapon_flashbang", "weapon_jb_knife")
 reregisterWeapon("weapon_radio", "weapon_jb_radio")
 reregisterWeapon("weapon_fists", "weapon_jb_hands")
 reregisterWeapon("weapon_empty", "weapon_jb_empty")
+reregisterWeapon("weapon_tool", "gmod_tool")
 
 hook.Add("JB_Initialize", "JB.Initialize.ReplaceCSSWeapons", function()
     for k, v in pairs(reregister) do

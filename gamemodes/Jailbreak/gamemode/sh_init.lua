@@ -3,6 +3,7 @@ GM.Author = "Nullrefz"
 GM.Email = "davidmoussa@outlook.com"
 GM.Website = "N/A"
 JB = {}
+DeriveGamemode( "sandbox" )
 
 PING = {
     ["BEST"] = 0,
