@@ -17,6 +17,16 @@ if SERVER then
         ply:SetActiveWeapon()
     end
 
+    hook.Add("PlayerSetWarden", "GiveTool", function(oldWarden, newWarden)
+        if IsValid(oldWarden) then
+            oldWarden:StripWeapon("weapon_crowbar")
+        end
+
+        if IsValid(newWarden) then
+            newWarden:GiveWeapon("weapon_tool")
+        end
+    end)
+
     net.Receive("DropWeapon", function(ln, ply)
         if not IsValid(ply) or not ply:GetActiveWeapon():IsValid() then return end
 
