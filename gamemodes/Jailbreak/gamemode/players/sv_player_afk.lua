@@ -54,6 +54,7 @@ hook.Add("PlayerButtonDown", "ResetTimer", function(ply, key)
 end)
 
 hook.Add("SetupMove", "HandleAFK", function(ply, mv, cmd)
+    if not ply.afkTimer then ply.afkTimer = 0 end
     if ply:Alive() then
         ply.afkTimer = ply.afkTimer + FrameTime()
     end
