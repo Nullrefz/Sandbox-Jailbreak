@@ -1,7 +1,7 @@
 local hide = {
     CHudAmmo = true,
     CHudBattery = true,
-    CHudWeaponSelection = true,
+    -- CHudWeaponSelection = true,
     -- CHudChat = true,
     -- CHudCrosshair = true,
     CHudDamageIndicator = true,

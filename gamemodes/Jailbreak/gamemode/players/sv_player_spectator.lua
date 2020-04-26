@@ -141,4 +141,5 @@ end)
 
 hook.Add("PlayerSpawn", "AddSpectatorTable", function(ply)
     ply.spectators = {}
+    ply:UpdateHud(ply)
 end)

@@ -43,7 +43,7 @@ function WARDENBAR:Init()
     self.wardenIcon = vgui.Create("CircularAvatar", self.background)
     self.wardenIcon:Player(warden)
     self.background:SetImage("jailbreak/vgui/DeepBlue_Icon_Slot.png")
-    self.wardenInfo = vgui.Create("DPanel", self)
+    self.wardenInfo = vgui.Create("Panel", self)
     self.warden = warden
     percent = 0
     net.Start("OnWardenRequest")
@@ -68,12 +68,13 @@ function WARDENBAR:Init()
             percent = Lerp(FrameTime() * 5, percent, 0)
         end
 
-        draw.DrawText("Warden", "Jailbreak_Font_WardenTitle", toHRatio(10), height / 2 - toVRatio(30) / 2 - toVRatio(18) / 2, Color(255, 255, 255, 150 * percent), TEXT_ALIGN_LEFT)
+        local offset = 42
+        draw.DrawText("Warden", "Jailbreak_Font_WardenTitle", toHRatio(10), height - toVRatio(offset) - toVRatio(18), Color(255, 255, 255, 150 * percent), TEXT_ALIGN_LEFT)
 
         if warden then
-            draw.DrawText(warden:Name(), "Jailbreak_Font_WardenName", toHRatio(5), height / 2 - toVRatio(30) / 2, Color(255, 255, 255, 200 * percent), TEXT_ALIGN_LEFT)
+            draw.DrawText(warden:Name(), "Jailbreak_Font_WardenName", 0, height - toVRatio(offset), Color(255, 255, 255, 200 * percent), TEXT_ALIGN_LEFT)
         else
-            draw.DrawText("None", "Jailbreak_Font_WardenName", toHRatio(5), height / 2 - toVRatio(30) / 2, Color(255, 255, 255, 50 * percent), TEXT_ALIGN_LEFT)
+            draw.DrawText("None", "Jailbreak_Font_WardenName", 0, height - toVRatio(offset), Color(255, 255, 255, 50 * percent), TEXT_ALIGN_LEFT)
         end
     end
 end
