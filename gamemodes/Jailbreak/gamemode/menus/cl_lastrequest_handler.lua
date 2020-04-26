@@ -1,4 +1,4 @@
-lastRequestMenu = {"TicTacToe", "knifeBattle", "calendar", "sniper battle", "custom"}
+lastRequestMenu = {"challenge", "calendar", "exclusive freeday", "custom"}
 inLRMenu = false
 lrPlayer = nil
 
@@ -13,6 +13,12 @@ function JB:AddLRMenu()
         if v == "calendar" or v == "challenge" then
             slot.ACTION = function()
                 JB:OpenMenu(v)
+            end
+
+            slot.COLOR = Color(255, 255, 255)
+        elseif v == "exclusive freeday" then
+            slot.ACTION = function()
+                JB:OpenPlayerList()
             end
 
             slot.COLOR = Color(255, 255, 255)

@@ -3,9 +3,17 @@ util.AddNetworkString("SetLRPlayer")
 util.AddNetworkString("SetLR")
 util.AddNetworkString("SendLR")
 util.AddNetworkString("RequestLR")
+util.AddNetworkString("GiveFreeday")
 JB.curLRDay = ""
 
 net.Receive("SendLR", function(ln, ply)
+    local lrNotification = {
+        TEXT = "Last request given",
+        TYPE = 2,
+        TIME = 7,
+        COLOR = Color(255, 175, 0, 200)
+    }
+
     local lastRequest = net.ReadString()
 
     if lastRequest == "tic tac toe" then
@@ -22,17 +30,36 @@ net.Receive("SendLR", function(ln, ply)
         local notification = {
             TEXT = "Next round is gonna be " .. lastRequest,
             TYPE = 2,
-            TIME = 5,
-            COLOR = Color(255, 175, 0, 200)
+            TIME = 10,
+            COLOR = Color(255, 0, 0, 200)
         }
 
+        JB:SendNotification(lrNotification)
         JB:SendNotification(notification)
-        JB:SetRoundEnding()
         JB.nextDay = lastRequest
     end
 end)
 
+net.Receive("GiveFreeday", function(ln, ply)
+    local players = net.ReadTable()
+    JB:SetExclusiveFreeday(players)
+end)
+
 --End the round
+function JB:SetExclusiveFreeday(players)
+    for k, v in pairs(players) do
+        local notification = {
+            TEXT = "Next round " .. v:Name() .. " will receive a freeday",
+            TYPE = 2,
+            TIME = 5,
+            COLOR = Color(255, 175, 0, 200)
+        }
+        self.nextDay = lastRequest
+        self:UpdateLR()
+        self:SendNotification(notification)
+    end
+end
+
 function JB:SetTicTacToe()
     -- TP players to tic tac toe
 end
@@ -59,7 +86,7 @@ end
 
 function JB:UpdateLR(ply)
     net.Start("SetLR")
-    net.WriteString(self.curLRDay)
+    net.WriteString(self.nextDay)
 
     if ply then
         net.Send(ply)
