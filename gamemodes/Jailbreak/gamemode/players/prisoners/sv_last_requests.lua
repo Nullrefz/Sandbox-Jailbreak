@@ -20,12 +20,16 @@ net.Receive("SendLR", function(ln, ply)
         JB:SetTicTacToe()
     elseif lastRequest == "knife battle" then
         JB:SetKnifeBattle()
+    elseif lastRequest == "sniper battle" then
+        JB:SetSniperBattle()
     elseif lastRequest == "calendar" then
+        JB:OpenMenu(lastRequest)
+    elseif lastRequest == "challenge" then
         JB:OpenMenu(lastRequest)
     elseif lastRequest == "sniper battle" then
         JB:SetSniperBattle()
     elseif lastRequest == "custom" then
-        JB:SetCustom()
+        JB:SetCustom(lastRequest)
     elseif lastRequest ~= "" then
         local notification = {
             TEXT = "Next round is gonna be " .. lastRequest,
@@ -34,10 +38,11 @@ net.Receive("SendLR", function(ln, ply)
             COLOR = Color(255, 0, 0, 200)
         }
 
-        JB:SendNotification(lrNotification)
         JB:SendNotification(notification)
         JB.nextDay = lastRequest
     end
+
+    JB:SendNotification(lrNotification)
 end)
 
 net.Receive("GiveFreeday", function(ln, ply)
@@ -54,6 +59,7 @@ function JB:SetExclusiveFreeday(players)
             TIME = 5,
             COLOR = Color(255, 175, 0, 200)
         }
+
         self.nextDay = lastRequest
         self:UpdateLR()
         self:SendNotification(notification)
@@ -64,12 +70,86 @@ function JB:SetTicTacToe()
     -- TP players to tic tac toe
 end
 
+local challengeMode = false
+
 function JB:SetKnifeBattle()
-    -- TP players to knife battle
+    challengeMode = true
+    self:SetBattle("knife")
 end
 
 function JB:SetSniperBattle()
-    -- TP players to sniper battle
+    challengeMode = true
+    self:SetBattle("awp")
+end
+
+function JB:SetBattle(weapon)
+    local pl, guard = self:GetBattlePlayers()
+    if not IsValid(guard) or IsValid(pl) or not IsAlive(guard) or not IsAlive(pl) then return end
+    pl:StripWeapons()
+    pl:GiveWeapon("weapon_" .. weapon)
+    guard:StripWeapons()
+    guard:GiveWeapon("weapon_" .. weapon)
+
+    local notification = {
+        TEXT = guard:Name() .. " VS " .. pl:Name() .. " in " .. weapon .. " battle",
+        TYPE = 1,
+        TIME = 10,
+        COLOR = Color(0, 150, 255, 200)
+    }
+
+    JB:SendNotification(notification)
+
+    hook.Add("PlayerDeath", "SelectBattlePlayer", function()
+        hook.Remove("PlayerDeath", "SelectBattlePlayer")
+
+        if challengeMode then
+            JB:SetBattle(weapon)
+        end
+    end)
+end
+
+hook.Add("jb_round_ending", "StopChallenge", function()
+    challengeMode = false
+    JB:HighlightPlayers({}, "battle")
+end)
+
+function JB:GetBattlePlayers()
+    local guards = self:GetAlivePlayersByTeam(TEAM_GUARDS)
+
+    if #guards == 0 then
+        challengeMode = false
+
+        return
+    end
+
+    local guard = guards[1]
+    local pl = self:GetAlivePlayersByTeam(TEAM_PRISONERS)[1]
+
+    if #guards > 1 and guard.IsWarden() then
+        guard = guard[2]
+    end
+
+    for k, v in pairs(guards) do
+        if v ~= guard then
+            v:StripWeapons()
+            guard:GiveWeapon("weapon_empty")
+        end
+    end
+
+    local players = {
+        {
+            Player = pl,
+            Color = team.GetColor(pl:Team())
+        },
+        {
+            Player = guard,
+            Color = team.GetColor(guard:Team())
+        }
+    }
+
+    self:HighlightPlayers(players, "battle")
+
+    return pl, guard
 end
 
 function JB:SetCustom()
