@@ -8,7 +8,6 @@ JB.curLRDay = ""
 
 net.Receive("SendLR", function(ln, ply)
     local lastRequest = net.ReadString()
-
     JB:ParseLR(lastRequest, ply)
 end)
 
@@ -19,7 +18,6 @@ function JB:ParseLR(lastRequest, ply)
         TIME = 7,
         COLOR = Color(255, 175, 0, 200)
     }
-
 
     if lastRequest == "tic tac toe" then
         self:SetTicTacToe()
@@ -59,7 +57,6 @@ end)
 
 --End the round
 function JB:SetExclusiveFreeday(ply, players)
-
     if #players == #team.GetPlayers(TEAM_PRISONERS) then
         self:ParseLR("freeday")
     else
@@ -104,7 +101,7 @@ end
 
 function JB:SetBattle(weapon)
     local pl, guard = self:GetBattlePlayers()
-    if not IsValid(guard) or IsValid(pl) or not IsAlive(guard) or not IsAlive(pl) then return end
+    if not IsValid(guard) or not IsValid(pl) or not guard:Alive() or not pl:Alive() then return end
     pl:StripWeapons()
     pl:GiveWeapon("weapon_" .. weapon)
     guard:StripWeapons()
@@ -120,6 +117,29 @@ function JB:SetBattle(weapon)
     JB:SendNotification(notification)
 
     hook.Add("PlayerDeath", "SelectBattlePlayer", function()
+        if not IsValid(pl) or not IsValid(guard) then return end
+        if pl:Alive() and guard:Alive() then return end
+
+        if pl:Alive() and not guard:Alive() then
+            local winNotify = {
+                TEXT = pl:Name() .. " wins!",
+                TYPE = 1,
+                TIME = 5,
+                COLOR = Color(0, 255, 150, 200)
+            }
+
+            JB:SendNotification(winNotify)
+        elseif not pl:Alive() and guard:Alive() then
+            winNotify = {
+                TEXT = guard:Name() .. " wins!",
+                TYPE = 1,
+                TIME = 5,
+                COLOR = Color(0, 255, 150, 200)
+            }
+
+            JB:SendNotification(winNotify)
+        end
+
         hook.Remove("PlayerDeath", "SelectBattlePlayer")
 
         if challengeMode then
