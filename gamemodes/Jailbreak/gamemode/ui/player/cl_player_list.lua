@@ -129,3 +129,7 @@ end
 function JB:ClosePlayerList()
     JB.playerList:Hide()
 end
+
+net.Receive("OpenExclusive", function()
+    JB:OpenPlayerList()
+end)

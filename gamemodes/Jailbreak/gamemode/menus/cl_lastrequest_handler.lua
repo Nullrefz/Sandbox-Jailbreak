@@ -16,12 +16,6 @@ function JB:AddLRMenu()
             end
 
             slot.COLOR = Color(255, 255, 255)
-        elseif v == "exclusive freeday" then
-            slot.ACTION = function()
-                JB:OpenPlayerList()
-            end
-
-            slot.COLOR = Color(255, 255, 255)
         else
             slot.ACTION = function()
                 JB:SendLR(v)

@@ -7,6 +7,12 @@ util.AddNetworkString("GiveFreeday")
 JB.curLRDay = ""
 
 net.Receive("SendLR", function(ln, ply)
+    local lastRequest = net.ReadString()
+
+    JB:ParseLR(lastRequest, ply)
+end)
+
+function JB:ParseLR(lastRequest, ply)
     local lrNotification = {
         TEXT = "Last request given",
         TYPE = 2,
@@ -14,23 +20,24 @@ net.Receive("SendLR", function(ln, ply)
         COLOR = Color(255, 175, 0, 200)
     }
 
-    local lastRequest = net.ReadString()
 
     if lastRequest == "tic tac toe" then
-        JB:SetTicTacToe()
-        JB:SendNotification(lrNotification)
+        self:SetTicTacToe()
+        self:SendNotification(lrNotification)
     elseif lastRequest == "knife battle" then
-        JB:SetKnifeBattle()
-        JB:SendNotification(lrNotification)
+        self:SetKnifeBattle()
+        self:SendNotification(lrNotification)
     elseif lastRequest == "sniper battle" then
-        JB:SetSniperBattle()
-        JB:SendNotification(lrNotification)
+        self:SetSniperBattle()
+        self:SendNotification(lrNotification)
     elseif lastRequest == "calendar" then
-        JB:OpenMenu(lastRequest)
+        self:OpenMenu(lastRequest)
     elseif lastRequest == "challenge" then
-        JB:OpenMenu(lastRequest)
+        self:OpenMenu(lastRequest)
     elseif lastRequest == "custom" then
-        JB:SetCustom(ply)
+        self:SetCustom(ply)
+    elseif lastRequest == "exclusive freeday" then
+        self:SetExclusive(ply)
     elseif lastRequest ~= "" then
         local notification = {
             TEXT = "Next round is gonna be " .. lastRequest,
@@ -39,31 +46,44 @@ net.Receive("SendLR", function(ln, ply)
             COLOR = Color(255, 0, 0, 200)
         }
 
-        JB:SendNotification(lrNotification)
-        JB:SendNotification(notification)
-        JB.nextDay = lastRequest
+        self:SendNotification(lrNotification)
+        self:SendNotification(notification)
+        self.nextDay = lastRequest
     end
-end)
+end
 
 net.Receive("GiveFreeday", function(ln, ply)
     local players = net.ReadTable()
-    JB:SetExclusiveFreeday(players)
+    JB:SetExclusiveFreeday(ply, players)
 end)
 
 --End the round
-function JB:SetExclusiveFreeday(players)
-    for k, v in pairs(players) do
-        local notification = {
-            TEXT = "Next round " .. v:Name() .. " will receive a freeday",
-            TYPE = 2,
-            TIME = 5,
-            COLOR = Color(255, 175, 0, 200)
-        }
+function JB:SetExclusiveFreeday(ply, players)
 
-        self.nextDay = lastRequest
-        self:UpdateLR()
-        self:SendNotification(notification)
+    if #players == #team.GetPlayers(TEAM_PRISONERS) then
+        self:ParseLR("freeday")
+    else
+        for k, v in pairs(players) do
+            local notification = {
+                TEXT = "Next round " .. v:Name() .. " will receive a freeday",
+                TYPE = 2,
+                TIME = 5,
+                COLOR = Color(255, 175, 0, 200)
+            }
+
+            self.nextDay = "exclusive freeday"
+            self:SendNotification(notification)
+        end
     end
+
+    self:UpdateLR()
+end
+
+util.AddNetworkString("OpenExclusive")
+
+function JB:SetExclusive(ply)
+    net.Start("OpenExclusive")
+    net.Send(ply)
 end
 
 function JB:SetTicTacToe()
@@ -169,7 +189,7 @@ net.Receive("SendCustomRequest", function(ln, ply)
         TIME = 10,
         COLOR = Color(255, 175, 0, 200)
     }
-    
+
     local lrNotification = {
         TEXT = "Next Round: " .. customLR,
         TYPE = 2,
