@@ -113,21 +113,19 @@ vgui.Register("PlayerList", PLAYERLIST)
 JB.playerList = {}
 
 function JB.playerList:Show()
-    self.scoreboardPanel = vgui.Create("PlayerList")
-    self.scoreboardPanel:SetSize(w, h)
+    self.list = vgui.Create("PlayerList")
+    self.list:SetSize(w, h)
 
     JB.playerList.Hide = function()
-        self.scoreboardPanel:Remove()
-        self.scoreboardPanel:Clear()
+        self.list:Remove()
+        self.list:Clear()
     end
 end
 
 function JB:OpenPlayerList()
     JB.playerList:Show()
-    RestoreCursorPosition()
 end
 
-function GM:ClosePlayerList()
+function JB:ClosePlayerList()
     JB.playerList:Hide()
-    RememberCursorPosition()
 end

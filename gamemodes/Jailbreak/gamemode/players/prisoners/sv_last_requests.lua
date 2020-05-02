@@ -18,18 +18,19 @@ net.Receive("SendLR", function(ln, ply)
 
     if lastRequest == "tic tac toe" then
         JB:SetTicTacToe()
+        JB:SendNotification(lrNotification)
     elseif lastRequest == "knife battle" then
         JB:SetKnifeBattle()
+        JB:SendNotification(lrNotification)
     elseif lastRequest == "sniper battle" then
         JB:SetSniperBattle()
+        JB:SendNotification(lrNotification)
     elseif lastRequest == "calendar" then
         JB:OpenMenu(lastRequest)
     elseif lastRequest == "challenge" then
         JB:OpenMenu(lastRequest)
-    elseif lastRequest == "sniper battle" then
-        JB:SetSniperBattle()
     elseif lastRequest == "custom" then
-        JB:SetCustom(lastRequest)
+        JB:SetCustom(ply)
     elseif lastRequest ~= "" then
         local notification = {
             TEXT = "Next round is gonna be " .. lastRequest,
@@ -38,11 +39,10 @@ net.Receive("SendLR", function(ln, ply)
             COLOR = Color(255, 0, 0, 200)
         }
 
+        JB:SendNotification(lrNotification)
         JB:SendNotification(notification)
         JB.nextDay = lastRequest
     end
-
-    JB:SendNotification(lrNotification)
 end)
 
 net.Receive("GiveFreeday", function(ln, ply)
@@ -152,9 +152,35 @@ function JB:GetBattlePlayers()
     return pl, guard
 end
 
-function JB:SetCustom()
-    -- Open Message Text
+util.AddNetworkString("OpenCustomRequest")
+util.AddNetworkString("SendCustomRequest")
+
+function JB:SetCustom(ply)
+    net.Start("OpenCustomRequest")
+    net.Send(ply)
 end
+
+net.Receive("SendCustomRequest", function(ln, ply)
+    local customLR = net.ReadString()
+
+    local notification = {
+        TEXT = "Custom LR Set",
+        TYPE = 2,
+        TIME = 10,
+        COLOR = Color(255, 175, 0, 200)
+    }
+    
+    local lrNotification = {
+        TEXT = "Next Round: " .. customLR,
+        TYPE = 2,
+        TIME = 15,
+        COLOR = Color(255, 0, 0, 200)
+    }
+
+    JB:SendNotification(notification)
+    JB:SendNotification(lrNotification)
+    JB.nextDay = customLR
+end)
 
 function JB:ConsumeLR()
     if self.nextDay ~= "" then
