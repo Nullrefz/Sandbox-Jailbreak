@@ -4,6 +4,10 @@ local mats = {
     ICON = Material("jailbreak/vgui/icon.png", "smooth")
 }
 
+function SPECTATORCARD:Init()
+    self.color = Color(255, 220, 70)
+end
+
 function SPECTATORCARD:PerformLayout(width, height)
     -- Background
     self.background:SetSize(69, 69)
@@ -25,9 +29,11 @@ function SPECTATORCARD:DrawSkin()
     self.background = vgui.Create("DImage", self)
     self.spectatorIcon = vgui.Create("CircularAvatar", self.background)
     self.spectatorIcon:Player(self.ply)
-    self.background:SetImageColor(Color(255, 220, 70))
+    self.background:SetImageColor(self.color)
     self.background:SetImage("jailbreak/vgui/Grey_Icon_small.png")
-
 end
 
+function SPECTATORCARD:SetColor(color)
+    self.color = color
+end
 vgui.Register("SpectatorCard", SPECTATORCARD)

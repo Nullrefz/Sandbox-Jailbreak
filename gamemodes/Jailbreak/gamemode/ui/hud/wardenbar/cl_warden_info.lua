@@ -68,7 +68,7 @@ function WARDENBAR:Init()
             percent = Lerp(FrameTime() * 5, percent, 0)
         end
 
-        local offset = 42
+        local offset = 48
         draw.DrawText("Warden", "Jailbreak_Font_WardenTitle", toHRatio(10), height - toVRatio(offset) - toVRatio(18), Color(255, 255, 255, 150 * percent), TEXT_ALIGN_LEFT)
 
         if warden then
@@ -80,6 +80,12 @@ function WARDENBAR:Init()
 end
 
 function WARDENBAR:PerformLayout(width, height)
+    if warden then
+        self:SetWide(28 * #string.ToTable(warden:Name()))
+    else
+        self:SetWide(0)
+    end
+
     self.background:SetSize(height, height)
     local iconSizePadding = 32
 

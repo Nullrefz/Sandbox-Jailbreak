@@ -1,4 +1,4 @@
-lastRequestMenu = {"TicTacToe", "knifeBattle", "calendar", "sniper battle", "custom"}
+lastRequestMenu = {"challenge", "calendar", "exclusive freeday", "custom"}
 inLRMenu = false
 lrPlayer = nil
 
@@ -17,8 +17,11 @@ function JB:AddLRMenu()
 
             slot.COLOR = Color(255, 255, 255)
         else
-            slot.ACTION = function() end --JB:SendLR(v)
-            slot.COLOR = Color(150, 150, 150, 150)
+            slot.ACTION = function()
+                JB:SendLR(v)
+            end
+
+            slot.COLOR = Color(255, 255, 255)
         end
 
         table.insert(slots, slot)

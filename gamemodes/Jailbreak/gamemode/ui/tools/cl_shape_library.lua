@@ -367,8 +367,8 @@ function DrawSkewedRect(x, y, width, height, skew, color, material)
         color = Color(0, 0, 0, 100)
     end
 
-    surface.DrawPoly(coord)
     NoTexture()
+    surface.DrawPoly(coord)
 end
 
 local function MakeSkewedCircle(tbl, x, y, radius, seg, angle, shift, skew)
