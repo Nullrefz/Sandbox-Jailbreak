@@ -17,6 +17,7 @@ function JAILBREAKWARDENVOTE:Init()
     end
 
     function self.panel:Paint(width, height)
+        draw.DrawRect(0, 0, width, height, Color(0, 0, 0, 100))
     end
 
     function self.header:Paint(width, height)
@@ -89,8 +90,18 @@ function JB.WardenVote:Show()
     self.VotePanel:SetSize(w, h)
     self.VotePanel:SetPos(0, 0)
 
+    hook.Add("Think", "ShowHideVoter", function()
+        if not IsValid(self.VotePanel) then return end
+
+        if not input.IsKeyDown(KEY_V) and self.VotePanel:IsVisible() then
+            self.VotePanel:Hide()
+        elseif not self.VotePanel:IsVisible() and input.IsKeyDown(KEY_V) then
+            self.VotePanel:Show()
+        end
+    end)
+
     JB.WardenVote.Hide = function()
-        if not IsValid(self) then return end
+        if not IsValid(self.VotePanel) then return end
         self.VotePanel:Clear()
         self.VotePanel:Remove()
     end
@@ -108,15 +119,4 @@ end)
 
 net.Receive("BreakWardenVote", function()
     JB.WardenVote:Hide()
-end)
-
-hook.Add("Think", "ShowHideVoter", function()
-    if not IsValid(JB.WardenVote) then return end
-    print(input.IsKeyDown(KEY_V))
-
-    if input.IsKeyDown(KEY_V) then
-        JB.WardenVote:Hide()
-    else
-        JB.WardenVote:Show()
-    end
 end)
