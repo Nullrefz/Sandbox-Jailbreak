@@ -40,11 +40,11 @@ function VOTEBAR:Init()
         render.SetStencilReferenceValue(1)
 
         if (#team.GetPlayers(TEAM_GUARDS) > 0) then
-            DrawBar(0, width * 0.6, height, 3, #team.GetPlayers(TEAM_GUARDS), self.guardProgress, Color(0, 225, 255, 255), mats.Bar)
+            DrawBar(0, width * JB.PrisonerWardenPercentage, height, 3, #team.GetPlayers(TEAM_GUARDS), self.guardProgress, Color(0, 225, 255, 255), mats.Bar)
         end
 
         if (#team.GetPlayers(TEAM_PRISONERS) > 0) then
-            DrawBar(self.guardProgress * width * 0.6, width * 0.4, height, 3, #team.GetPlayers(TEAM_PRISONERS), self.prisonnerProgress, Color(255, 150, 50, 255), mats.Bar)
+            DrawBar(self.guardProgress * width * JB.PrisonerWardenPercentage, width * (1 - JB.PrisonerWardenPercentage), height, 3, #team.GetPlayers(TEAM_PRISONERS), self.prisonnerProgress, Color(255, 150, 50, 255), mats.Bar)
         end
 
         render.SetStencilEnable(false)
