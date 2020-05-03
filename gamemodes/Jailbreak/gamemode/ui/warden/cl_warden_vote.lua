@@ -109,3 +109,14 @@ end)
 net.Receive("BreakWardenVote", function()
     JB.WardenVote:Hide()
 end)
+
+hook.Add("Think", "ShowHideVoter", function()
+    if not IsValid(JB.WardenVote) then return end
+    print(input.IsKeyDown(KEY_V))
+
+    if input.IsKeyDown(KEY_V) then
+        JB.WardenVote:Hide()
+    else
+        JB.WardenVote:Show()
+    end
+end)
