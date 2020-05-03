@@ -94,7 +94,9 @@ function JAILBREAKWARDENCARD:DrawSkin()
     end
 
     function self:SetVoteValue(guards, prisoners)
-        self.voteBar:SetVotePercentage(guards / math.Clamp(#team.GetPlayers(TEAM_GUARDS), 1, #team.GetPlayers(TEAM_GUARDS)), prisoners / math.Clamp(#team.GetPlayers(TEAM_PRISONERS), 1, #team.GetPlayers(TEAM_PRISONERS)))
+        local guardPercentage = guards / math.Clamp(#team.GetPlayers(TEAM_GUARDS), 1, #team.GetPlayers(TEAM_GUARDS))
+        local prisonerPercentage = prisoners / math.Clamp(#team.GetPlayers(TEAM_PRISONERS), 1, #team.GetPlayers(TEAM_PRISONERS))
+        self.voteBar:SetVotePercentage(guardPercentage, prisonerPercentage)
     end
 
     self:Layout(self:GetWide(), self:GetTall())

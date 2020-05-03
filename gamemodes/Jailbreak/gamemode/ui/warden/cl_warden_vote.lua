@@ -14,19 +14,18 @@ function JAILBREAKWARDENVOTE:Init()
 
     self.slots = {}
 
-    for i = 1, #entries do
+    for k, v in pairs(entries) do
         local card = vgui.Create("JailbreakWardenCard")
         card:SetSize(self.panel:GetColWide(), self.panel:GetRowHeight())
-        card:Player(player.GetBySteamID(entries[i].NOMINEE))
-        card:SetVoteValue(entries[i].GUARDVOTE, entries[i].PRISONERVOTE)
+        card:Player(player.GetBySteamID(v.NOMINEE))
+        card:SetVoteValue(v.GUARDVOTE, v.PRISONERVOTE)
         self.panel:AddItem(card)
         table.insert(self.slots, card)
     end
 
     function self:UpdateResult()
         for k, v in pairs(self.slots) do
-            if v:Player():SteamID() ~=
-             entries[k].NOMINEE then
+            if v:Player():SteamID() ~= entries[k].NOMINEE then
                 print("Some PLayers Are Not in the Vote DO SOMETHIN!")
             end
 
@@ -37,12 +36,14 @@ function JAILBREAKWARDENVOTE:Init()
     net.Receive("UpdateWardenVoteResults", function()
         entries = net.ReadTable()
 
-        if not JB.WardenVote:Hide() then
-            JB.WardenVote:Show()
+        if IsValid(self) then
+            self:UpdateResult()
         end
-
-        self:UpdateResult()
     end)
+end
+
+function JAILBREAKWARDENVOTE:PerformLayout(width, height) 
+
 end
 
 vgui.Register("JailbreakWardenVote", JAILBREAKWARDENVOTE)
@@ -67,4 +68,6 @@ net.Receive("InitiateWardenVote", function()
     end
 end)
 
-net.Receive("BreakWardenVote", function() end)
+net.Receive("BreakWardenVote", function()
+    JB.WardenVote:Hide()
+end)

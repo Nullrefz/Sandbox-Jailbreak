@@ -13,15 +13,7 @@ end
 
 function JB:InitiateVote()
     self.voteActive = true
-    constituents = {}
-
-    for k, v in pairs(team.GetPlayers(TEAM_PRISONERS)) do
-        table.insert(constituents, v)
-    end
-
-    for k, v in pairs(team.GetPlayers(TEAM_GUARDS)) do
-        table.insert(constituents, v)
-    end
+    constituents = player.GetAll()
 
     if self.warden then
         self:RevokeWarden()
@@ -46,13 +38,22 @@ function JB:InitiateVote()
     net.Broadcast()
 
     timer.Simple(GetConVar("jb_warden_vote_duration"):GetInt(), function()
-        self:ConcludeVote()
+        if voteActive then
+            self:ConcludeVote()
+        end
     end)
 end
 
 function JB:ConcludeVote()
     self:BreakVote()
-    -- TODO: Count Total and Set Warden
+    print("concluding Votes")
+
+    for k, v in pairs(nominees) do
+        print(v:Name(), v.guardVoteCount, v.prisonerVoteCount)
+    end
+
+    constituents = {}
+    nominees = {}
 end
 
 function JB:CountVotes()
@@ -72,11 +73,10 @@ function JB:CountVotes()
 end
 
 function JB:SendUpdatedValues(result)
-    net.Start("UpdateWardenVoteResults")
-    net.WriteTable(result)
-
     for k, v in pairs(player.GetAll()) do
-        if not table.HasValue(constituents, v) then
+        if table.HasValue(constituents, v) then
+            net.Start("UpdateWardenVoteResults")
+            net.WriteTable(result)
             net.Send(v)
         end
     end
@@ -119,10 +119,10 @@ function JB:CastVote(voter, candidate)
     if not table.HasValue(constituents, voter) then return end
 
     --table.RemoveByValue(constituents, voter)
-    if voter:Team(TEAM_PRISONERS) then
+    if voter:Team() == TEAM_PRISONERS then
         candidate.prisonerVoteCount = candidate.prisonerVoteCount + 1
-    elseif voter:Team(TEAM_GUARDS) then
-        candidate.guardVoteCount = canditate.guardVoteCount + 1
+    elseif voter:Team() == TEAM_GUARDS then
+        candidate.guardVoteCount = candidate.guardVoteCount + 1
     end
 
     self:CountVotes()
@@ -141,15 +141,17 @@ net.Receive("DenominateGuard", function(ln, ply)
 end)
 
 concommand.Add("jb_startvote", function(ply, cmd, args)
-    JB:Nominate(player.GetAll()[1])
-    JB:Nominate(player.GetAll()[1])
-    JB:Nominate(player.GetAll()[1])
-    JB:Nominate(player.GetAll()[1])
+    for k, v in pairs(team.GetPlayers(TEAM_GUARDS)) do
+        if not v:IsBot() then
+            JB:Nominate(v)
+        end
+    end
+
     JB:InitiateVote()
 end)
 
 concommand.Add("jb_stopvote", function(ply, cmd, args)
-    JB:BreakVote()
+    JB:ConcludeVote()
 end)
 
 hook.Run("PlayerInitSpawn", "StartVote", function()

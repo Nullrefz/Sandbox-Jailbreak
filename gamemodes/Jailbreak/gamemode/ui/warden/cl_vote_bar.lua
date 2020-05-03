@@ -4,10 +4,9 @@ local mats = {
     BAR = Material("jailbreak/vgui/Bar.png", "smooth")
 }
 
-local guardPercentage = 0
-local prisonersPercentage = 0
 
 function VOTEBAR:Init()
+
     self.panel = vgui.Create("DPanel", self)
 
     function self.panel:Paint(width, height)
@@ -17,10 +16,12 @@ function VOTEBAR:Init()
     self.container = vgui.Create("DPanel", self.panel)
     self.container.guardProgress = 0
     self.container.prisonnerProgress = 0
+    self.container.guardPercentage = 0
+    self.container.prisonersPercentage = 0
 
     function self.container:Paint(width, height)
-        self.guardProgress = Lerp(FrameTime() * 5, self.guardProgress, guardPercentage)
-        self.prisonnerProgress = Lerp(FrameTime() * 5, self.prisonnerProgress, prisonersPercentage)
+        self.guardProgress = Lerp(FrameTime() * 5, self.guardProgress, self.guardPercentage)
+        self.prisonnerProgress = Lerp(FrameTime() * 5, self.prisonnerProgress, self.prisonersPercentage)
         draw.ChamferedBox(width / 2, height / 2, width, height, 2, Color(26, 30, 33))
         render.ClearStencil()
         render.SetStencilEnable(true)
@@ -52,8 +53,8 @@ function VOTEBAR:Init()
 end
 
 function VOTEBAR:SetVotePercentage(guards, prisoners)
-     guardPercentage = guards
-     prisonersPercentage = prisoners
+     self.container.guardPercentage = guards
+     self.container.prisonersPercentage = prisoners
 end
 
 function VOTEBAR:PerformLayout(width, height)
