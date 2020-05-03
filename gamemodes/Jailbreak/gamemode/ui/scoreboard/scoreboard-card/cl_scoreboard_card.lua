@@ -57,8 +57,18 @@ function SCOREBOARDCARD:PerformLayout(width, height)
     self.playerHealthContainer:SetTall(toVRatio(32))
     self.playerHealth:SetSize(toHRatio(156), toVRatio(32))
     -- Utilies
-    self.muteButton:SetPos(toHRatio(5), toVRatio(0))
+
+    local wid = 5
+    self.muteButton:SetPos(toHRatio(wid), toVRatio(0))
     self.muteButton:SetSize(self.playerUtilContainer:GetTall(), self.playerUtilContainer:GetTall())
+    wid = wid + self.muteButton:GetWide() + 2
+
+    if IsValid(self.nominateButton) then
+        self.nominateButton:SetSize(self.playerUtilContainer:GetTall() - 12, self.playerUtilContainer:GetTall() - 12)
+        self.nominateButton:SetPos(toHRatio(wid), (self.playerUtilContainer:GetTall() - self.nominateButton:GetTall() - 2) / 2)
+        wid = wid + self.nominateButton:GetWide()
+    end
+
     self.pingPanel:SetSize(self.playerUtilContainer:GetTall() * 2, self.playerUtilContainer:GetTall())
     self.pingPanel:AlignRight()
     self.playerUtilContainer:SetSize(toHRatio(140), toVRatio(35))
@@ -152,6 +162,24 @@ function SCOREBOARDCARD:DrawSkin()
 
     self.muteButton = vgui.Create("MuteButton", self.playerUtilContainer)
     self.muteButton:Player(self.ply)
+
+    if self.ply:Team() == TEAM_GUARDS then
+        self.nominateButton = vgui.Create("DImageButton", self.playerUtilContainer)
+        self.nominateButton:SetImage("materials/jailbreak/vgui/icons/thumbsup.png")
+        self.nominateButton.pressed = false
+
+        self.nominateButton.DoClick = function()
+            self.nominateButton.pressed = not self.nominateButton.pressed
+            self.nominateButton:SetColor(self.nominateButton.pressed and Color(0, 150, 255) or Color(255, 255, 255))
+
+            if self.nominateButton.pressed then
+                JB:Denominate(self.ply)
+            else
+                JB:Nominate(self.ply)
+            end
+        end
+    end
+
     self.pingPanel = vgui.Create("PingPanel", self.playerUtilContainer)
     self.pingPanel:Dock(RIGHT)
     self.pingPanel:Player(self.ply)

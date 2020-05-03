@@ -9,7 +9,8 @@ end
 
 function WEAPONBAR:Think()
     -- ik i hate doing this
-    if targetPlayer:Alive() and targetPlayer:GetActiveWeapon():IsValid() and weapon ~= targetPlayer:GetActiveWeapon():GetClass() then
+
+    if targetPlayer:Alive() and IsValid(targetPlayer:GetActiveWeapon()) and weapon ~= targetPlayer:GetActiveWeapon():GetClass() then
         weapon = targetPlayer:GetActiveWeapon():GetClass()
         self:AddWeapon(weapon)
         self.ammoBar:SetWeapon(targetPlayer:GetActiveWeapon())
@@ -51,12 +52,6 @@ function WEAPONBAR:PerformLayout(width, height)
 end
 
 function WEAPONBAR:PAINT(width, height)
- 
-
-
-
-
-
 end
 
 vgui.Register("JailbreakWeaponBar", WEAPONBAR)

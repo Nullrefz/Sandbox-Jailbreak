@@ -94,29 +94,42 @@ function JAILBREAKWARDENCARD:DrawSkin()
     end
 
     function self:SetVoteValue(guards, prisoners)
-        self.voteBar:SetVotePercentage(guards / math.Clamp(#team.GetPlayers(TEAM_GUARDS), 1, #team.GetPlayers(TEAM_GUARDS)), prisoners / math.Clamp(#team.GetPlayers(TEAM_PRISONERS), 1, #team.GetPlayers(TEAM_PRISONERS)))
+        local guardPercentage = guards / math.Clamp(#team.GetPlayers(TEAM_GUARDS), 1, #team.GetPlayers(TEAM_GUARDS))
+        local prisonerPercentage = prisoners / math.Clamp(#team.GetPlayers(TEAM_PRISONERS), 1, #team.GetPlayers(TEAM_PRISONERS))
+        self.voteBar:SetVotePercentage(guardPercentage, prisonerPercentage)
     end
 
     self:Layout(self:GetWide(), self:GetTall())
 end
 
+function JAILBREAKWARDENCARD:PerformLayout(width, height)
+    self:Layout(width, height)
+end
+
 function JAILBREAKWARDENCARD:Layout(width, height)
-    self.panel:SetSize(width, width)
-    self.panel:Center()
-    self.icon:Dock(TOP)
+    local heightPos = 0
+    local padding = 4
     local iconSize = 142
-    self.icon:DockMargin((width / 2) - (toHRatio(iconSize) / 2), 0, (width / 2) - (toHRatio(iconSize) / 2), 0)
-    self.icon:SetTall(toVRatio(iconSize))
+    self.icon:SetPos((width - iconSize) / 2, heightPos)
+    self.icon:SetSize(toVRatio(iconSize), toVRatio(iconSize))
+    heightPos = heightPos + iconSize + padding
     local iconOutline = 21
     self.playerIcon:Dock(FILL)
     self.playerIcon:DockMargin(iconOutline, iconOutline, iconOutline, iconOutline)
-    self.playerName:Dock(TOP)
-    self.playerName:SetTall(toVRatio(32))
-    self.voteBar:Dock(TOP)
-    self.voteButton:Dock(TOP)
+    self.playerName:SetSize(width, toVRatio(32))
+    self.playerName:SetPos(0, heightPos)
+    heightPos = heightPos + self.playerName:GetTall()+ padding
+    self.voteBar:SetPos((width - self.voteBar:GetWide()) / 2, heightPos)
+    self.voteBar:SetWide(width - 8)
+    heightPos = heightPos + self.voteBar:GetTall()+ padding * 2
     self.voteButton:SetTall(toVRatio(46))
+    self.voteButton:SetPos((width - self.voteButton:GetWide()) / 2, heightPos)
+    heightPos = heightPos + self.voteButton:GetTall()+ padding
     local buttonWide = 128
-    self.voteButton:DockMargin((width / 2) - (toHRatio(buttonWide) / 2), toVRatio(20), (width / 2) - (toHRatio(buttonWide) / 2), 0)
+    self.voteButton:SetWide(buttonWide)
+    self.panel:SetSize(width, heightPos)
+    self.panel:Center()
+
 end
 
 function JAILBREAKWARDENCARD:Player(pl)

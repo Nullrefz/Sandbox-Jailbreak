@@ -38,12 +38,17 @@ vgui.Register("JailbreakScoreboard", SCOREBOARD)
 JB.scoreboard = {}
 
 function JB.scoreboard:Show()
+    if IsValid(self.scoreboardPanel) then
+        self.scoreboardPanel:Show()
+
+        return
+    end
+
     self.scoreboardPanel = vgui.Create("JailbreakScoreboard")
     self.scoreboardPanel:SetSize(w, h)
 
     JB.scoreboard.Hide = function()
-        self.scoreboardPanel:Remove()
-        self.scoreboardPanel:Clear()
+        self.scoreboardPanel:Hide()
     end
 end
 
