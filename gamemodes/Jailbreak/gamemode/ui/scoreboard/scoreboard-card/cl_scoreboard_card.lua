@@ -54,11 +54,20 @@ function SCOREBOARDCARD:PerformLayout(width, height)
     self.playerName:SetSize(toHRatio(100), toVRatio(72))
     self.playerName:SetPos(width / 4.5, self.playerIconContainer:GetTall() + toVRatio(4))
     -- Health
-    self.playerHealthContainer:SetTall(toVRatio(32))
+    self.playerHealthContainer:SetSize(toHRatio(156), toVRatio(32))
     self.playerHealth:SetSize(toHRatio(156), toVRatio(32))
     -- Utilies
-    self.muteButton:SetPos(toHRatio(5), toVRatio(0))
+    local wid = 5
+    self.muteButton:SetPos(toHRatio(wid), toVRatio(0))
     self.muteButton:SetSize(self.playerUtilContainer:GetTall(), self.playerUtilContainer:GetTall())
+    wid = wid + self.muteButton:GetWide() + 2
+
+    if IsValid(self.nominateButton) then
+        self.nominateButton:SetSize(self.playerUtilContainer:GetTall() - 12, self.playerUtilContainer:GetTall() - 12)
+        self.nominateButton:SetPos(toHRatio(wid), (self.playerUtilContainer:GetTall() - self.nominateButton:GetTall() - 2) / 2)
+        wid = wid + self.nominateButton:GetWide()
+    end
+
     self.pingPanel:SetSize(self.playerUtilContainer:GetTall() * 2, self.playerUtilContainer:GetTall())
     self.pingPanel:AlignRight()
     self.playerUtilContainer:SetSize(toHRatio(140), toVRatio(35))
@@ -126,7 +135,7 @@ function SCOREBOARDCARD:DrawSkin()
     self.playerHealthContainer:Dock(TOP)
 
     function self.playerHealthContainer:Paint(width, height)
-        draw.DrawSkewedRect(0, 0, width, height, toHRatio(0), Color(255, 255, 255, 1))
+        -- draw.DrawSkewedRect(0, 0, width, height, toHRatio(0), Color(255, 255, 255, 1))
     end
 
     self.playerHealth = vgui.Create("DPanel", self.playerHealthContainer)
@@ -152,12 +161,30 @@ function SCOREBOARDCARD:DrawSkin()
 
     self.muteButton = vgui.Create("MuteButton", self.playerUtilContainer)
     self.muteButton:Player(self.ply)
+
+    if self.ply:Team() == TEAM_GUARDS then
+        self.nominateButton = vgui.Create("DImageButton", self.playerUtilContainer)
+        self.nominateButton:SetImage("materials/jailbreak/vgui/icons/thumbsup.png")
+        self.nominateButton.pressed = false
+
+        self.nominateButton.DoClick = function()
+            self.nominateButton.pressed = not self.nominateButton.pressed
+            self.nominateButton:SetColor(self.nominateButton.pressed and Color(0, 150, 255) or Color(255, 255, 255))
+
+            if self.nominateButton.pressed then
+                JB:Denominate(self.ply)
+            else
+                JB:Nominate(self.ply)
+            end
+        end
+    end
+
     self.pingPanel = vgui.Create("PingPanel", self.playerUtilContainer)
     self.pingPanel:Dock(RIGHT)
     self.pingPanel:Player(self.ply)
 
     function self:Paint(width, height)
-        if not self.ply then return end
+        if not IsValid(self.ply) then return end
         --draw.DrawSkewedRect(0, 0, width, height, toHRatio(60), team.GetColor(self.ply:Team()))
         draw.SkweredChamferedBox(0, height / 2, width, height, 2, toHRatio(58) / 2, team.GetColor(user:Team()))
 

@@ -1,32 +1,56 @@
 local JAILBREAKWARDENVOTE = {}
 local entries = {}
+local time = 0
+JB.PrisonerWardenPercentage = 0.4
 
 function JAILBREAKWARDENVOTE:Init()
+    self.background = vgui.Create("Panel", self)
+    self.header = vgui.Create("Panel", self)
+    self.footer = vgui.Create("Panel", self)
+    self.footer.time = CurTime() + time
     self.panel = vgui.Create("DGrid", self)
-    self.panel:MakePopup()
-    self.panel:Dock(FILL)
     self.panel:SetCols(#entries)
-    self.panel:SetColWide(w / self.panel:GetCols())
-    self.panel:SetRowHeight(h / (math.ceil(#entries / self.panel:GetCols())))
+    self.panel:MakePopup()
 
-    function self.panel:Paint()
+    function self.background:Paint(width, height)
+        draw.DrawRect(0, 0, width, height, Color(0, 0, 0, 200))
+    end
+
+    function self.panel:Paint(width, height)
+        draw.DrawRect(0, 0, width, height, Color(0, 0, 0, 100))
+    end
+
+    function self.header:Paint(width, height)
+        draw.DrawRect(0, 0, width, height, Color(0, 0, 0, 220))
+        draw.DrawText("Warden Vote", "Jailbreak_Font_72", 72, height - 72, Color(255, 255, 255), TEXT_ALIGN_LEFT)
+        draw.DrawRect(0, height - 1, width, 1, Color(255, 255, 255))
+    end
+
+    function self.footer:Paint(width, height)
+        draw.DrawRect(0, 0, width, height, Color(0, 0, 0, 220))
+        draw.DrawText(string.FormattedTime(self.time - CurTime(), "%02i:%02i"), "Jailbreak_Font_72", width / 2 - 72 / 2, 1, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+        draw.DrawRect(0, 0, width, 1, Color(255, 255, 255))
+    end
+
+    function self:Think()
+        if self.footer.time - CurTime() <= 0 then
+            self:Remove()
+        end
     end
 
     self.slots = {}
 
-    for i = 1, #entries do
+    for k, v in pairs(entries) do
         local card = vgui.Create("JailbreakWardenCard")
-        card:SetSize(self.panel:GetColWide(), self.panel:GetRowHeight())
-        card:Player(player.GetBySteamID(entries[i].NOMINEE))
-        card:SetVoteValue(entries[i].GUARDVOTE, entries[i].PRISONERVOTE)
+        card:Player(player.GetBySteamID(v.NOMINEE))
+        card:SetVoteValue(v.GUARDVOTE, v.PRISONERVOTE)
         self.panel:AddItem(card)
         table.insert(self.slots, card)
     end
 
     function self:UpdateResult()
         for k, v in pairs(self.slots) do
-            if v:Player():SteamID() ~=
-             entries[k].NOMINEE then
+            if v:Player():SteamID() ~= entries[k].NOMINEE then
                 print("Some PLayers Are Not in the Vote DO SOMETHIN!")
             end
 
@@ -37,12 +61,25 @@ function JAILBREAKWARDENVOTE:Init()
     net.Receive("UpdateWardenVoteResults", function()
         entries = net.ReadTable()
 
-        if not JB.WardenVote:Hide() then
-            JB.WardenVote:Show()
+        if IsValid(self) then
+            self:UpdateResult()
         end
-
-        self:UpdateResult()
     end)
+end
+
+function JAILBREAKWARDENVOTE:PerformLayout(width, height)
+    self.header:Dock(TOP)
+    self.header:SetTall(height * 0.15)
+    self.footer:Dock(BOTTOM)
+    self.footer:SetTall(toVRatio(72))
+    self.background:SetSize(width, height)
+    self.panel:Dock(FILL)
+    self.panel:SetColWide(self.panel:GetWide() / self.panel:GetCols())
+    self.panel:SetRowHeight(self.panel:GetTall() / (math.ceil(#entries / self.panel:GetCols())))
+
+    for k, v in pairs(self.panel:GetItems()) do
+        v:SetSize(self.panel:GetColWide(), self.panel:GetRowHeight())
+    end
 end
 
 vgui.Register("JailbreakWardenVote", JAILBREAKWARDENVOTE)
@@ -53,7 +90,18 @@ function JB.WardenVote:Show()
     self.VotePanel:SetSize(w, h)
     self.VotePanel:SetPos(0, 0)
 
+    hook.Add("Think", "ShowHideVoter", function()
+        if not IsValid(self.VotePanel) then return end
+
+        if not input.IsKeyDown(KEY_V) and self.VotePanel:IsVisible() then
+            self.VotePanel:Hide()
+        elseif not self.VotePanel:IsVisible() and input.IsKeyDown(KEY_V) then
+            self.VotePanel:Show()
+        end
+    end)
+
     JB.WardenVote.Hide = function()
+        if not IsValid(self.VotePanel) then return end
         self.VotePanel:Clear()
         self.VotePanel:Remove()
     end
@@ -61,10 +109,14 @@ end
 
 net.Receive("InitiateWardenVote", function()
     entries = net.ReadTable()
+    time = net.ReadInt(32)
+    JB.PrisonerWardenPercentage = net.ReadFloat()
 
     if (#entries > 0) then
         JB.WardenVote:Show()
     end
 end)
 
-net.Receive("BreakWardenVote", function() end)
+net.Receive("BreakWardenVote", function()
+    JB.WardenVote:Hide()
+end)

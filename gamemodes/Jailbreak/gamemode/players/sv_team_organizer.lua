@@ -1,5 +1,6 @@
 util.AddNetworkString("ChangeTeam")
 util.AddNetworkString("GuardCount")
+util.AddNetworkString("PlayerChangedTeam")
 local pl = FindMetaTable("Player")
 
 hook.Add("PlayerInitialSpawn", "FirstPlayerSpawn", function(ply)
@@ -43,6 +44,12 @@ hook.Add("PlayerDisconnected", "GetGuardsOnPlayerDisconnect", function()
     JB:GetGuardBalance()
 end)
 
+
+hook.Add("PlayerInitialSpawn", "GetGuardsOnPlayerConnect", function()
+    JB:GetGuardBalance()
+end)
+
+
 concommand.Add("jb_jointeam", function(ply, cmd, args)
     local selectedTeam = tonumber(args[1])
     JB:ValidateTeamChange(ply, selectedTeam)
@@ -78,4 +85,9 @@ end
 
 net.Receive("ChangeTeam", function(ln, ply)
     JB:ValidateTeamChange(ply, net.ReadInt(32))
+end)
+
+hook.Add("PlayerChangedTeam", "SendPlayerTeamChange", function() 
+    net.Start("PlayerChangedTeam")
+    net.Broadcast()
 end)

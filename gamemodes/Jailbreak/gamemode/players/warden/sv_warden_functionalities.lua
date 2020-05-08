@@ -10,6 +10,12 @@ function pl:IsWarden()
     return false
 end
 
+function JB:SetVotedWarden(warden)
+    if IsValid(warden) and warden:Team() == TEAM_GUARDS then
+        self:SetWarden(warden)
+    end
+end
+
 function JB:SetWarden(guard)
     local oldWarden = self.warden
     self.warden = guard

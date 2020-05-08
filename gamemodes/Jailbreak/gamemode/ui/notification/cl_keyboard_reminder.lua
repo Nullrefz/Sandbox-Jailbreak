@@ -104,6 +104,25 @@ hook.Add("InitPostEntity", "ShowWardenJoin", function()
     end)
 end)
 
+hook.Add("InitPostEntity", "ShowWardenJoin", function()
+    local buttonNotif = vgui.Create("ButtonNotify")
+    buttonNotif:SetSize(512, 128)
+    buttonNotif:Center()
+    buttonNotif:SetPos(w / 2 - 256, h / 2 + 128)
+    buttonNotif:Hide()
+
+    hook.Add("Think", "DrawVoteReminder", function()
+        if not IsValid(JB.WardenVote.VotePanel) or roundPhase ~= "Ending" and buttonNotif:IsVisible() then
+            buttonNotif:Hide()
+        elseif IsValid(JB.WardenVote.VotePanel) and not JB.WardenVote.VotePanel:IsVisible() and roundPhase == "Ending" and not buttonNotif:IsVisible() then
+            key = "V"
+            message = "Hold V to vote for the next warden"
+            buttonNotif:Show()
+        elseif IsValid(JB.WardenVote.VotePanel) and JB.WardenVote.VotePanel:IsVisible() and buttonNotif:IsVisible() then
+            buttonNotif:Hide()
+        end
+    end)
+end)
 
 hook.Add("InitPostEntity", "HandleLR", function()
     local button = vgui.Create("ButtonNotify")

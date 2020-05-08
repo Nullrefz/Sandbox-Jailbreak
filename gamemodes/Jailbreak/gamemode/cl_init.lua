@@ -11,8 +11,13 @@ net.Receive('OnWardenSet', function()
     warden = player.GetBySteamID(net.ReadString())
 end)
 
+function JB:CountGuards()
+    
+    return allowedGuardCount
+end
+
 net.Receive("GuardCount", function()
-    allowedGuardCount = #team.GetPlayers(Team.GUARDS) + net.ReadInt(32)
+    allowedGuardCount = #team.GetPlayers(TEAM_GUARDS) + net.ReadInt(32)
 end)
 
 hook.Add("SpawnMenuOpen", "SpawnMenuWhitelist", function()

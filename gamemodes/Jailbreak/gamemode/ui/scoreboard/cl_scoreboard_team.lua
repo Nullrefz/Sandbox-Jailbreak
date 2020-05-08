@@ -59,16 +59,6 @@ function SCOREBOARDGROUP:Init()
     self.panelWidth = 0
 end
 
-function SCOREBOARDGROUP:PerformLayout(width, height)
-    -- To be continued
-    -- self.panel:SetTall(toVRatio(90))
-    -- self.header:SetTall(toVRatio(90))
-    -- self.panel:InvalidateLayout(true)
-    -- self.panel:SizeToChildren(false, true)
-    -- self.header:InvalidateLayout(true)
-    -- self.header:SizeToChildren(false, true)
-end
-
 function SCOREBOARDGROUP:Think()
     if not self.group then return end
 
@@ -122,8 +112,8 @@ end
 function SCOREBOARDGROUP:PositionCards()
     local padding = toHRatio(55)
     self.panelWidth = 0
-
     table.sort(self.playerCards, function(a, b) return a:Player():Health() > b:Player():Health() end)
+
     -- self.container:SetWide(toHRatio(200 + 55) * #team.GetPlayers(self.group))
     -- self.container:SetTall(math.floor(#self.playerCards / 13 + 1) * toVRatio(235))
     for k, v in pairs(self.playerCards) do
@@ -131,7 +121,13 @@ function SCOREBOARDGROUP:PositionCards()
         --v:SetParent(nil)
         local wide = (v:GetWide() - padding)
         -- v:SetPos(wide * ((k % 13) - 1) + math.floor(k / 13) * wide, math.floor(k / 13) * v:GetTall() + math.floor(k / 13) * 5 )
-        v:SetPos(wide * (k - 1), 0)
+        local x, y = v:GetPos()
+
+        LerpFloat(x, wide * (k - 1), 0.2, function(progress)
+            if not IsValid(v) then return end
+            v:SetPos(progress, 0)
+        end, INTERPOLATION.SinLerp)
+
         self.panelWidth = self.panelWidth + wide
     end
 end
@@ -158,22 +154,68 @@ function SCOREBOARDGROUP:ValidatePlayers()
         end
     end
 
+    self:Layout(self:GetWide(), self:GetTall())
     self:PositionCards()
 end
 
-function SCOREBOARDGROUP:DrawSkin()
-    self.panel = vgui.Create("Panel", self)
+function SCOREBOARDGROUP:PerformLayout(width, height)
+    if not self.drawn then return end
+    self:Layout(width, height)
+end
+
+function SCOREBOARDGROUP:Layout(width, height)
     self.panel:Dock(TOP)
     self.panel:DockMargin(0, 70, 0, 0)
-    -- Header
-    self.header = vgui.Create("DPanel", self.panel)
     self.header:Dock(TOP)
     self.header:DockMargin(toHRatio(61), 0, toHRatio(61), 0)
+    self.header:InvalidateLayout(true)
+    self.header:SizeToChildren(false, true)
+    self.titleText:SetWide(toHRatio(500))
+    self.titleText:SetTall(toVRatio(48))
+    self.titleDash:SetTall(toVRatio(2))
+    self.titleDash:Dock(BOTTOM)
+    -- Auto Size
+    self.content:InvalidateLayout(true)
+    self.content:SizeToChildren(false, true)
+    self.container:InvalidateLayout(true)
+    self.container:SizeToChildren(false, true)
+    self.panel:InvalidateLayout(true)
+    self.panel:SizeToChildren(false, true)
+    self.joinButton:SetWide(toHRatio(95))
+    self.joinButton:Dock(RIGHT)
+    self.joinButton:DockMargin(-toHRatio(88), toVRatio(10), 0, toVRatio(5))
+    self.teamCount:SetSize(toHRatio(180), toVRatio(42))
+    self.teamCount:SetPos(w - self.joinButton:GetWide() - self:GetWide() * 4, 0)
+    self.teamCount:AlignRight(toHRatio(50))
 
-    function self.header:Paint(width, height)
-        --   draw.DrawRect(0, 0, width, height, Color(0, 0, 0, 0))
+    if self.group == TEAM_PRISONERS then
+        self.titleText:SetText("Prisoners")
+        self.teamCount.text = #team.GetPlayers(self.group) .. "/" .. game.MaxPlayers()
+    elseif self.group == TEAM_GUARDS then
+        self.titleText:SetText("Guards")
+        self.teamCount.text = #team.GetPlayers(self.group) .. "/" .. JB:CountGuards()
+    elseif self.group == TEAM_SPECTATORS then
+        self.titleText:SetText("Spectators")
     end
 
+    self.content:Dock(TOP)
+    self.content:DockMargin(0, toVRatio(4), 0, 0)
+
+    if self.group ~= Team.SPECTATORS then
+        self.container:SetWide(toHRatio(200 + 55) * #team.GetPlayers(self.group))
+        self.container:SetTall(toVRatio(245))
+    else
+        self.container:SetWide(toHRatio(128) * #team.GetPlayers(1002))
+        self.container:SetTall(toVRatio(128))
+        self.content:DockMargin(64, toVRatio(4), 0, 0)
+    end
+end
+
+function SCOREBOARDGROUP:DrawSkin()
+    self.drawn = true
+    self.panel = vgui.Create("Panel", self)
+    -- Header
+    self.header = vgui.Create("Panel", self.panel)
     self.titleText = vgui.Create("DLabel", self.header)
 
     if self.group ~= Team.SPECTATORS then
@@ -187,70 +229,38 @@ function SCOREBOARDGROUP:DrawSkin()
     if self.group ~= Team.SPECTATORS then
         self.joinButton = vgui.Create("JoinButton", self.header)
         self.joinButton:SetTeam(self.group)
-        self.joinButton:SetWide(toHRatio(100))
-        self.joinButton:Dock(RIGHT)
-        self.joinButton:DockMargin(-toHRatio(88), toVRatio(10), 0, toVRatio(5))
-        self.teamCount = vgui.Create("DLabel", self.header)
-        self.teamCount:SetFont("Jailbreak_Font_ScoreboardPlayerCount")
-        self.teamCount:SetColor(Color(255, 255, 255, 255))
-        self.teamCount:AlignRight()
-        self.teamCount:SetWide(toHRatio(120))
-        self.teamCount:SetPos(w - self.joinButton:GetWide() - self:GetWide() * 4, 0)
-        self.teamCount:SetAutoStretchVertical(true)
+        self.teamCount = vgui.Create("Panel", self.header)
+        self.teamCount.text = ""
+
+        function self.teamCount:Paint(width, height)
+            draw.DrawText(self.text, "Jailbreak_Font_ScoreboardPlayerCount", width / 2, 0, Color(255, 255, 255, 255), TEXT_ALIGN_RIGHT)
+        end
     end
 
-    if self.group == TEAM_PRISONERS then
-        self.titleText:SetText("Prisoners")
-        self.teamCount:SetText(#team.GetPlayers(self.group) .. "/" .. game.MaxPlayers())
-    elseif self.group == TEAM_GUARDS then
-        self.titleText:SetText("Guards")
-        self.teamCount:SetText(#team.GetPlayers(self.group) .. "/" .. allowedGuardCount)
-    elseif self.group == TEAM_SPECTATORS then
-        self.titleText:SetText("Spectators")
-    end
-
-    self.titleDash = vgui.Create("DPanel", self.header)
-    self.titleText:SetWide(toHRatio(500))
-    self.titleText:SetTall(toVRatio(48))
-    self.titleDash:SetTall(toVRatio(2))
-    self.titleDash:Dock(BOTTOM)
+    self.titleDash = vgui.Create("Panel", self.header)
 
     function self.titleDash:Paint(width, height)
         draw.DrawSkewedRect(0, 0, width, height, toHRatio(8), Color(83, 83, 83, 255))
         draw.DrawSkewedRect(0, 0, width, height, toHRatio(1), Color(255, 255, 255, 255))
     end
 
-    self.header:InvalidateLayout(true)
-    self.header:SizeToChildren(false, true)
     -- Content
     self.content = vgui.Create("Panel", self.panel)
-    self.content:Dock(TOP)
-    self.content:DockMargin(0, toVRatio(4), 0, 0)
     self.container = vgui.Create("Panel", self.content)
-    local group = self.group == Team.SPECTATORS and 1002 or self.group
 
     for k, v in pairs(team.GetPlayers(group)) do
         self:CreatePlayer(v)
     end
 
-    if self.group ~= Team.SPECTATORS then
-        self.container:SetWide(toHRatio(200 + 55) * #team.GetPlayers(self.group))
-        self.container:SetTall(toVRatio(235))
-        self:PositionCards()
-    else
-        self.container:SetWide(toHRatio(128) * #team.GetPlayers(1002))
-        self.container:SetTall(toVRatio(128))
+    net.Receive("PlayerJoined", function()
+        self:ValidatePlayers()
+    end)
 
-        self.content:DockMargin(64, toVRatio(4), 0, 0)
-    end
+    net.Receive("PlayerChangedTeam", function()
+        self:ValidatePlayers()
+    end)
 
-    -- Auto Size
-    self.content:InvalidateLayout(true)
-    self.content:SizeToChildren(false, true)
-    self.container:InvalidateLayout(true)
-    self.container:SizeToChildren(false, true)
-    self.panel:InvalidateLayout(true)
-    self.panel:SizeToChildren(false, true)
+    self:Layout(self:GetWide(), self:GetTall())
 end
 
 vgui.Register("ScoreboardGroup", SCOREBOARDGROUP)

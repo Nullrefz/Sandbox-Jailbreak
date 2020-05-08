@@ -51,12 +51,6 @@ SWEP.CanDrop = false
 function SWEP:PrimaryAttack()
     self:SendWeaponAnim(ACT_VM_HOLSTER)
     self:EmitSound(self.Primary.Sound)
-
-    timer.Simple(0.8, function()
-        if IsValid(self) then
-            self:Remove()
-        end
-    end)
 end
 
 function SWEP:Reload()

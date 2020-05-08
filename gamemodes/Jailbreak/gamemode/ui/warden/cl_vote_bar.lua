@@ -4,10 +4,9 @@ local mats = {
     BAR = Material("jailbreak/vgui/Bar.png", "smooth")
 }
 
-local guardPercentage = 0
-local prisonersPercentage = 0
 
 function VOTEBAR:Init()
+
     self.panel = vgui.Create("DPanel", self)
 
     function self.panel:Paint(width, height)
@@ -17,10 +16,12 @@ function VOTEBAR:Init()
     self.container = vgui.Create("DPanel", self.panel)
     self.container.guardProgress = 0
     self.container.prisonnerProgress = 0
+    self.container.guardPercentage = 0
+    self.container.prisonersPercentage = 0
 
     function self.container:Paint(width, height)
-        self.guardProgress = Lerp(FrameTime() * 5, self.guardProgress, guardPercentage)
-        self.prisonnerProgress = Lerp(FrameTime() * 5, self.prisonnerProgress, prisonersPercentage)
+        self.guardProgress = Lerp(FrameTime() * 5, self.guardProgress, self.guardPercentage)
+        self.prisonnerProgress = Lerp(FrameTime() * 5, self.prisonnerProgress, self.prisonersPercentage)
         draw.ChamferedBox(width / 2, height / 2, width, height, 2, Color(26, 30, 33))
         render.ClearStencil()
         render.SetStencilEnable(true)
@@ -39,11 +40,11 @@ function VOTEBAR:Init()
         render.SetStencilReferenceValue(1)
 
         if (#team.GetPlayers(TEAM_GUARDS) > 0) then
-            DrawBar(0, width * 0.6, height, 3, #team.GetPlayers(TEAM_GUARDS), self.guardProgress, Color(0, 225, 255, 255), mats.Bar)
+            DrawBar(0, width * JB.PrisonerWardenPercentage, height, 3, #team.GetPlayers(TEAM_GUARDS), self.guardProgress, Color(0, 225, 255, 255), mats.Bar)
         end
 
         if (#team.GetPlayers(TEAM_PRISONERS) > 0) then
-            DrawBar(self.guardProgress * width * 0.6, width * 0.4, height, 3, #team.GetPlayers(TEAM_PRISONERS), self.prisonnerProgress, Color(255, 150, 50, 255), mats.Bar)
+            DrawBar(self.guardProgress * width * JB.PrisonerWardenPercentage, width * (1 - JB.PrisonerWardenPercentage), height, 3, #team.GetPlayers(TEAM_PRISONERS), self.prisonnerProgress, Color(255, 150, 50, 255), mats.Bar)
         end
 
         render.SetStencilEnable(false)
@@ -52,8 +53,8 @@ function VOTEBAR:Init()
 end
 
 function VOTEBAR:SetVotePercentage(guards, prisoners)
-     guardPercentage = guards
-     prisonersPercentage = prisoners
+     self.container.guardPercentage = guards
+     self.container.prisonersPercentage = prisoners
 end
 
 function VOTEBAR:PerformLayout(width, height)

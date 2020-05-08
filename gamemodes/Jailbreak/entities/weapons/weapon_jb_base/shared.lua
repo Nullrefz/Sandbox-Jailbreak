@@ -62,7 +62,6 @@ end
 function SWEP:SetCurFOV(fov)
     self.CurFOV = fov
 
-    --print(self.CurFOV, self.TargetFOV)
     LerpFloat(self.CurFOV, self.TargetFOV, 0.5, function(val)
         self.CurFOV = val
     end, INTERPOLATION.SmoothStep)
@@ -71,7 +70,7 @@ end
 function SWEP:Holster(newWeapon)
     if not IsFirstTimePredicted() then return false end
 
-    if newWeapon:IsValid() then
+    if newWeapon:IsValid() and newWeapon.SetCurFov then
         newWeapon:SetCurFOV(self.CurFOV)
     end
 
@@ -224,6 +223,7 @@ function SWEP:DrawHUD()
     scale = scale * (2 - math.Clamp((CurTime() - LastShootTime) * 5, 0.0, 1.0))
     if not IsValid(LocalPlayer()) then return end
     local trace = LocalPlayer():GetEyeTrace()
+
     if trace.Entity:IsValid() and trace.Entity:GetClass() == "player" then
         local bone = trace.HitBox
 
