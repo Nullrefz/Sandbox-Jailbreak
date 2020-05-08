@@ -15,7 +15,6 @@ if SERVER then
 
     function JB:InitiateVote()
         nominees = self:GetNominee()
-        print(#nominees)
         if #nominees == 0 then return end
         self.voteActive = true
         constituents = player.GetAll()
@@ -43,13 +42,14 @@ if SERVER then
         net.WriteInt(GetConVar("jb_round_ending"):GetInt(), 32)
         net.WriteFloat(GetConVar("jb_warden_prisoners_vote_percentage"):GetFloat() / 100)
         net.Broadcast()
-
-        timer.Simple(GetConVar("jb_round_ending"):GetInt(), function()
-            if self.voteActive then
-                self:ConcludeVote()
-            end
-        end)
+        timer.Simple(GetConVar("jb_round_ending"):GetInt(), function() end)
     end
+
+    hook.Add("jb_round_preparing", "SetVotedWarden", function()
+        if JB.voteActive then
+            JB:ConcludeVote()
+        end
+    end)
 
     hook.Add("jb_round_ending", "StartWardenVote", function()
         for k, v in pairs(team.GetPlayers(TEAM_GUARDS)) do
@@ -74,6 +74,7 @@ if SERVER then
 
         table.sort(score, function(a, b) return a.Score > b.Score end)
         constituents = {}
+        self:SetVotedWarden(score[1].pl)
     end
 
     function JB:CountVotes()
@@ -152,7 +153,6 @@ if SERVER then
 
         if not table.HasValue(voteTree.ind, nominee) then
             table.insert(voteTree.ind, nominee)
-            print("nominated " .. nominee:Name())
         end
 
         if ply:Team() ~= TEAM_GUARDS or table.HasValue(nominees, ply) then return end
@@ -166,7 +166,6 @@ if SERVER then
 
         if table.HasValue(voteTree.ind, nominee) then
             table.RemoveByValue(voteTree.ind, nominee)
-            print("denominated " .. nominee:Name())
         end
     end
 
@@ -174,7 +173,6 @@ if SERVER then
         local nominated = {}
 
         for k, v in pairs(voteTree) do
-            PrintTable(v)
             for k2, v2 in pairs(v) do
                 if not table.HasValue(nominated, v2) and IsValid(v2) and v2:Team() == TEAM_GUARDS then
                     table.insert(nominated, v2)

@@ -54,10 +54,8 @@ end
 
 function GM:ScoreboardShow()
     JB.scoreboard:Show()
-    RestoreCursorPosition()
 end
 
 function GM:ScoreboardHide()
     JB.scoreboard:Hide()
-    RememberCursorPosition()
 end

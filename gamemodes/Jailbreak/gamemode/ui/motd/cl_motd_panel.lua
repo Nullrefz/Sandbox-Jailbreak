@@ -1,5 +1,6 @@
 local MOTDPANEL = {}
-local mats = {Material("jailbreak/vgui/images/prisoner_card.png", "smooth"), Material("jailbreak/vgui/images/guards_card.png", "smooth"), Material("jailbreak/vgui/images/steam_card.png", "smooth"), Material("jailbreak/vgui/images/discord_card.png", "smooth"), Material("jailbreak/vgui/images/patreon_card.png", "smooth")}
+local mats = {Material("jailbreak/vgui/images/prisoner_card.png", "smooth"), Material("jailbreak/vgui/images/guards_card.png", "smooth"), Material("jailbreak/vgui/images/steam_card.png", "smooth"), Material("jailbreak/vgui/images/discord_card.png", "smooth")}
+--, Material("jailbreak/vgui/images/patreon_card.png", "smooth")}
 
 function MOTDPANEL:Init()
     self.panel = vgui.Create("DButton", self)

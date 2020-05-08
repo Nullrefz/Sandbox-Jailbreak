@@ -54,10 +54,9 @@ function SCOREBOARDCARD:PerformLayout(width, height)
     self.playerName:SetSize(toHRatio(100), toVRatio(72))
     self.playerName:SetPos(width / 4.5, self.playerIconContainer:GetTall() + toVRatio(4))
     -- Health
-    self.playerHealthContainer:SetTall(toVRatio(32))
+    self.playerHealthContainer:SetSize(toHRatio(156), toVRatio(32))
     self.playerHealth:SetSize(toHRatio(156), toVRatio(32))
     -- Utilies
-
     local wid = 5
     self.muteButton:SetPos(toHRatio(wid), toVRatio(0))
     self.muteButton:SetSize(self.playerUtilContainer:GetTall(), self.playerUtilContainer:GetTall())
@@ -136,7 +135,7 @@ function SCOREBOARDCARD:DrawSkin()
     self.playerHealthContainer:Dock(TOP)
 
     function self.playerHealthContainer:Paint(width, height)
-        draw.DrawSkewedRect(0, 0, width, height, toHRatio(0), Color(255, 255, 255, 1))
+        -- draw.DrawSkewedRect(0, 0, width, height, toHRatio(0), Color(255, 255, 255, 1))
     end
 
     self.playerHealth = vgui.Create("DPanel", self.playerHealthContainer)
@@ -185,7 +184,7 @@ function SCOREBOARDCARD:DrawSkin()
     self.pingPanel:Player(self.ply)
 
     function self:Paint(width, height)
-        if not self.ply then return end
+        if not IsValid(self.ply) then return end
         --draw.DrawSkewedRect(0, 0, width, height, toHRatio(60), team.GetColor(self.ply:Team()))
         draw.SkweredChamferedBox(0, height / 2, width, height, 2, toHRatio(58) / 2, team.GetColor(user:Team()))
 

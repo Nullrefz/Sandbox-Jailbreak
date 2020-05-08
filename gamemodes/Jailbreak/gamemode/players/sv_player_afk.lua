@@ -1,7 +1,14 @@
 local pl = FindMetaTable("Player")
+local afkList = {}
 
 function pl:SetAFK(isAFK)
     self.isAFK = isAFK
+
+    if not table.HasValue(afkList, self) and isAFK then
+        table.insert(afkList, self)
+    elseif table.HasValue(afkList, self) and not isAFK then
+        table.RemoveByValue(afkList, self)
+    end
 
     if not isAFK then
         self.afkTimer = 0
@@ -15,6 +22,16 @@ function pl:SetAFK(isAFK)
     }
 
     JB:SendNotification(notification)
+    local afkHighlight = {}
+
+    for k, v in pairs(afkList) do
+        table.insert(afkHighlight, {
+            Player = v,
+            Color = Color(255,0,0)
+        })
+    end
+
+    JB:HighlightPlayers(afkHighlight, "afk")
     self:LimitAFK()
 end
 
@@ -48,13 +65,17 @@ end)
 
 hook.Add("PlayerButtonDown", "ResetTimer", function(ply, key)
     ply.afkTimer = 0
+
     if ply.isAFK then
         ply:SetAFK(false)
     end
 end)
 
 hook.Add("SetupMove", "HandleAFK", function(ply, mv, cmd)
-    if not ply.afkTimer then ply.afkTimer = 0 end
+    if not ply.afkTimer then
+        ply.afkTimer = 0
+    end
+
     if ply:Alive() then
         ply.afkTimer = ply.afkTimer + FrameTime()
     end
@@ -63,7 +84,6 @@ hook.Add("SetupMove", "HandleAFK", function(ply, mv, cmd)
         ply:SetAFK(true)
     end
 
-
     if ply.mouse ~= cmd:GetMouseX() + cmd:GetMouseY() then
         ply.afkTimer = 0
 
@@ -71,5 +91,6 @@ hook.Add("SetupMove", "HandleAFK", function(ply, mv, cmd)
             ply:SetAFK(false)
         end
     end
+
     ply.mouse = cmd:GetMouseX() + cmd:GetMouseY()
 end)

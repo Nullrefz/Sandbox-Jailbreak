@@ -178,7 +178,6 @@ end
 --     LerpFloat(50, self.ViewModelFOV, 3, function(val)
 --         fov = val
 --     end, INTERPOLATION.SmoothStep, function()
---         print(fov)
 --         complete = true
 --         newWeapon:Deploy()
 --     end)
