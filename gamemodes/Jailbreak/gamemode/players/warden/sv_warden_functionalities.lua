@@ -39,7 +39,7 @@ end
 function JB:BroadcastWarden(ply)
     net.Start("OnWardenSet")
 
-    if self.warden then
+    if IsValid(self.warden) then
         net.WriteString(self.warden:SteamID())
     end
 

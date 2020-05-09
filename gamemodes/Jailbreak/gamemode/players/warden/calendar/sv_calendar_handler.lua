@@ -57,7 +57,7 @@ hook.Add("jb_round_ending", "setup waiting", function()
 end)
 
 hook.Add("WardenRevoked", "WardenKilled", function()
-    if JB.warden and not JB.warden:Alive() and JB:GetActivePhase() == ROUND_ACTIVE and (JB.dayPhase ~= "Freeday" or JB.dayPhase ~= "Purge Day") then
+    if IsValid(JB.warden) and not JB.warden:Alive() and JB:GetActivePhase() == ROUND_ACTIVE and (JB.dayPhase ~= "Freeday" or JB.dayPhase ~= "Purge Day") then
         JB:SetFreeday()
     end
 end)

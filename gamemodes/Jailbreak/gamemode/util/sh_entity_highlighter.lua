@@ -35,7 +35,7 @@ if CLIENT then
 
     hook.Add("PreDrawHalos", "HighlightPlayers", function()
         for k, v in pairs(entList) do
-            if v:Alive() then
+            if IsValid(v) and v:Alive() then
                 halo.Add({v}, team.GetColor(v:Team()), 1, 1, 2, true, true)
             end
         end
