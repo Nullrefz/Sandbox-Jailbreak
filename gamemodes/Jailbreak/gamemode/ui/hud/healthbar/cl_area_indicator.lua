@@ -92,7 +92,7 @@ function AREAINDICATOR:Paint(width, height)
     end
 
     draw.SkweredChamferedBox(0, 0, width, height + toVRatio(8), 0, 5, Color(255, 100, 0, 0 * percent))
-    draw.DrawText(self.zone, "Jailbreak_Font_Area", toHRatio(0), -toVRatio(2),self.danger and Color(255, 0, 0, 200 * percent) or  Color(255, 255, 255, 200 * percent), TEXT_ALIGN_LEFT)
+    draw.DrawText(self.zone and self.zone or "", "Jailbreak_Font_Area", toHRatio(0), -toVRatio(2),self.danger and Color(255, 0, 0, 200 * percent) or  Color(255, 255, 255, 200 * percent), TEXT_ALIGN_LEFT)
 end
 
 vgui.Register("AreaIndicator", AREAINDICATOR)
