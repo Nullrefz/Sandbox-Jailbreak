@@ -34,7 +34,7 @@ if CLIENT then
         end
 
         function self.header:Paint(width, height)
-            draw.DrawText("You are playing on" .. " " .. GetHostName(), "Jailbreak_Font_70", width / 2, height - 70, Color(255, 255, 255, 255 * alpha), TEXT_ALIGN_CENTER)
+            draw.DrawText("You are playing on" .. " " .. GetHostName(), "Jailbreak_Font_42", width / 2, height - 70, Color(255, 255, 255, 255 * alpha), TEXT_ALIGN_CENTER)
         end
     end
 
