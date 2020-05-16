@@ -81,7 +81,11 @@ hook.Add("PlayerDeath", "SendPlayerDied", function(ply, item, killer)
     net.Broadcast()
 end)
 
-hook.Add("PlayerInitialSpawn", "SendPlayerJoined", function() 
+hook.Add("PlayerInitialSpawn", "SendPlayerJoined", function()
     net.Start("PlayerJoined")
     net.Broadcast()
+end)
+
+hook.Add("PlayerInitialSpawn", "DisableDeathNotice", function(ply)
+    ply:ConCommand("hud_deathnotice_time 0")
 end)

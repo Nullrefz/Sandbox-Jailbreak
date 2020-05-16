@@ -26,6 +26,7 @@ local mats = {
 }
 
 local padding = 0.65
+
 function PINGPANEL:PerformLayout(width, height)
     self.pingBar:SetSize(height, height)
     self.pingBar:AlignRight()
@@ -52,7 +53,7 @@ function PINGPANEL:DrawSkin()
     end
 
     function self:Paint(width, height)
-        if not self.ply then return end
+        if IsValid(self.ply) then return end
         self.ping = self.ply:Ping()
         draw.DrawText(self.ping, "Jailbreak_Font_Ping", width / 2 - toHRatio(6) + toHRatio(15), height / 4 + toVRatio(-1), self.pingBar.pingColor, TEXT_ALIGN_RIGHT)
 

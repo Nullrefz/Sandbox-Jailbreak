@@ -142,7 +142,7 @@ function SCOREBOARDCARD:DrawSkin()
     local user = self.ply
 
     function self.playerHealth:Paint(width, height)
-        if not user then return end
+        if not IsValid(user) then return end
         draw.DrawSkewedRect(toHRatio(12), 0, width - toHRatio(12), height, toHRatio(8), Color(83, 83, 83, 255))
         draw.DrawSkewedRect(toHRatio(12), 0, ((user:Health() + user:Armor()) / (user:GetMaxHealth() + user:Armor())) * (width - toHRatio(12)), height, toHRatio(8), Color(255, 255, 255, 255))
 

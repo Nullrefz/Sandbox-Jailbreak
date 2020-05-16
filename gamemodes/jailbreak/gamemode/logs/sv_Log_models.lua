@@ -2,8 +2,8 @@ function JB:RegisterKillLog(victim, culprit, inflictor, type)
     killLog = {
         Type = type,
         Time = self:GetTimeElapsed(),
-        Victim = victim:IsBot() and victim:Name() or victim:SteamID(),
-        Culprit = culprit:IsBot() and culprit:Name() or culprit:SteamID(),
+        Victim = not victim:IsPlayer() and victim:GetClass() or victim:SteamID(),
+        Culprit = not culprit:IsPlayer() and culprit:GetClass() or culprit:SteamID(),
         Day = self.dayPhase,
         Location = victim.containmentZones and victim.containmentZones[#victim.containmentZones] or "Unknown"
     }
@@ -25,9 +25,9 @@ function JB:SpawnLog(ply)
         Type = "Spawn",
         Time = self:GetTimeElapsed(),
         pl = ply,
-        Location =  ply.containmentZones and ply.containmentZones[#ply.containmentZones] or "Unknown"
-
+        Location = ply.containmentZones and ply.containmentZones[#ply.containmentZones] or "Unknown"
     }
+
     self:RegisterLog(ply, spawnLog)
 end
 
@@ -35,7 +35,7 @@ function JB:RegisterWeaponDropLog(weapon, culprit, type)
     dropLog = {
         Type = type,
         Time = self:GetTimeElapsed(),
-        Culprit = culprit:IsBot() and culprit:Name() or culprit:SteamID(),
+        Culprit = not culprit:IsPlayer() and culprit:GetClass() or culprit:SteamID(),
         Weapon = weapon:GetClass(),
         Location = culprit.containmentZones and culprit.containmentZones[#culprit.containmentZones] or "Unknown"
     }

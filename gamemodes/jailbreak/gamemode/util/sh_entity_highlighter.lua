@@ -42,7 +42,7 @@ if CLIENT then
 
         for k, v in pairs(highlightPlayers) do
             for i, j in pairs(v) do
-                if j.Player:Alive() then
+                if IsValid(j.Player) and j.Player:Alive() then
                     halo.Add({j.Player}, j.Color,  1, 1, 2, true, true)
                 end
             end
