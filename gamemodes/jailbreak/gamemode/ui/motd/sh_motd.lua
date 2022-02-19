@@ -25,7 +25,7 @@ if CLIENT then
         self.footer = vgui.Create("Panel", self)
         self.list = vgui.Create("DIconLayout", self.body)
         self.list:SetSpaceX(16)
-        self.cardCount = 4
+        self.cardCount = 2
 
         for i = 1, self.cardCount do
             local card = self.list:Add("MOTDPanel")

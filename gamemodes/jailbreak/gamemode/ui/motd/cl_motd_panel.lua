@@ -29,7 +29,7 @@ end
 
 function MOTDPANEL:SetInfo(index)
     self.info = index
-    self.texts = {"Join Prisoner", "Join Guards", "Steam Group", "Discord Server", "Patreon"}
+    self.texts = {"Join Prisoners", "Join Guards", "Steam Group", "Discord Server", "Patreon"}
 
     self.panel.DoClick = function()
         if index == 1 then
