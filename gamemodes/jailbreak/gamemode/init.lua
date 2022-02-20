@@ -1,6 +1,6 @@
 CreateConVar("jb_max_guards", 5, FCVAR_ARCHIVE, "Max guard limit")
 CreateConVar("jb_guards_ratio", 3, FCVAR_ARCHIVE, "Number of prisoner per guard")
-CreateConVar("jb_min_players", 1, FCVAR_ARCHIVE, "Number of players required to start the game")
+CreateConVar("jb_min_players", 2, FCVAR_ARCHIVE, "Number of players required to start the game")
 CreateConVar("jb_max_rounds", 10, FCVAR_ARCHIVE, "Number of played rounds need to change the map")
 CreateConVar("jb_warden_vote_duration", 20, FCVAR_ARCHIVE, "Time given for everyone to vote for a warden")
 CreateConVar("jb_warden_prisoners_vote_percentage", 80, FCVAR_ARCHIVE, "Percentage of vote participation for the prisoners")
@@ -15,6 +15,8 @@ CreateConVar("jb_Prisoners_Mute_Time", 15, FCVAR_ARCHIVE, "How many seconds shou
 CreateConVar("jb_celldoors_open", 30, FCVAR_ARCHIVE, "How many seconds before celldoors auto open")
 CreateConVar("jb_afk_threshold", 60, FCVAR_ARCHIVE, "How many seconds before player is AFK")
 CreateConVar("jb_afkFrozen_threshold", 1, FCVAR_ARCHIVE, "How many seconds before player is AFK Frozen")
+CreateConVar("jb_walkspeed", 300, FCVAR_ARCHIVE, "Walk speed of the Player")
+CreateConVar("jb_runspeed", 450, FCVAR_ARCHIVE, "Run speed of the Player")
 
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("sh_init.lua")

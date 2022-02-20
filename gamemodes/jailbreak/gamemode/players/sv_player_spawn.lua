@@ -57,6 +57,8 @@ function ply:Setup()
     self:SetPos(self:GetSpawnPos())
     self:SetupHealth()
     self.health = self:Health()
+    self:SetWalkSpeed(GetConVar("jb_walkspeed"):GetInt())
+    self:SetRunSpeed(GetConVar("jb_runspeed"):GetInt())
     self:SendSpawned()
 end
 
@@ -87,8 +89,12 @@ hook.Add("PlayerInitialSpawn", "DisableDeathNotice", function(ply)
     ply:ConCommand("hud_deathnotice_time 0")
 end)
 
-function GM:PlayerSetModel( ply )
+function GM:PlayerSetModel(ply)
     ply:ApplyModel()
     local col = team.GetColor(ply:Team())
     ply:SetPlayerColor(Vector(col.r / 255, col.g / 255, col.b / 255))
+end
+
+function GM:FinishMove(ply, mv)
+
 end
