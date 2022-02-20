@@ -4,10 +4,10 @@ if CLIENT then
     local menuActive = false
 
     hook.Add("Think", "OpensWardenMenu", function()
-        if (LocalPlayer() == warden and input.IsKeyDown(KEY_F) and not menuActive) then
+        if (LocalPlayer() == warden and input.IsKeyDown(KEY_G) and not menuActive) then
             menuActive = true
             JB:OpenMenu("wardenMenu")
-        elseif (((LocalPlayer() == warden and not input.IsKeyDown(KEY_F)) or not LocalPlayer():Alive()) and menuActive) then
+        elseif (((LocalPlayer() == warden and not input.IsKeyDown(KEY_G)) or not LocalPlayer():Alive()) and menuActive) then
             JB:CloseMenu()
             menuActive = false
         end
@@ -33,8 +33,7 @@ if CLIENT then
                 end
             else
                 slot.COLOR = Color(255, 255, 255)
-                slot.RELEASEACTION = function()
-                end
+                slot.RELEASEACTION = function() end
             end
 
             slot.ACTION = function()

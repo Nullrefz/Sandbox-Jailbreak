@@ -46,10 +46,10 @@ hook.Add("JB_Initialize", "AddLRMenu", function()
 end)
 
 hook.Add("Think", "OpensTheLRMenu", function()
-    if (LocalPlayer() == lrPlayer and input.IsKeyDown(KEY_F) and not inLRMenu) then
+    if (LocalPlayer() == lrPlayer and input.IsKeyDown(KEY_V) and not inLRMenu) then
         inLRMenu = true
         JB:OpenMenu("lastrequest")
-    elseif (((LocalPlayer() == lrPlayer and not input.IsKeyDown(KEY_F)) or not LocalPlayer():Alive()) and inLRMenu) then
+    elseif (((LocalPlayer() == lrPlayer and not input.IsKeyDown(KEY_V)) or not LocalPlayer():Alive()) and inLRMenu) then
         JB:CloseMenu()
         inLRMenu = false
     end

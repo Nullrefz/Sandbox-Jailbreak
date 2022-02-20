@@ -10,11 +10,8 @@ if SERVER then
         JB:SetWaypoint(net.ReadString())
     end)
 
-    function JB:SetWaypoint(type)
-        self.warden:GiveWeapon("weapon_radio")
-        self.warden:SelectWeapon("weapon_jb_radio")
-        self:ToggleWardenWeaponSwitch(false)
 
+    function JB:SetWaypoint(type)
         if type == "cancelWaypoint" then
             net.Start("CancelWaypoint")
         else
@@ -39,6 +36,7 @@ if CLIENT then
     local enabled = false
     local currentWaypoint
     local prog = 1
+
     hook.Add("PostDrawOpaqueRenderables", "drawWaypoint", function()
         if enabled then
             if not waypointPlaced then
@@ -53,10 +51,14 @@ if CLIENT then
         JB:DrawPoint()
     end
 
+    local waypointType = ""
+
     function JB:SendWaypoint(waypoint)
         net.Start("SendWardenWaypoint")
+        if waypoint == waypointType then waypoint = "CancelWaypoint" end
         net.WriteString(waypoint)
         net.SendToServer()
+        waypointType = waypoint
     end
 
     function JB:ClearWaypoints()
@@ -69,23 +71,20 @@ if CLIENT then
     end)
 
     local trace
-    local pointColor = Color(255, 255, 255, 150)
+    local pointColor = Color(255, 255, 50, 150)
 
     function JB:PlaceWaypoint()
         if warden and LocalPlayer() == warden then
             pointColor = Color(255, 190, 0, 150)
             trace = LocalPlayer():GetEyeTrace()
-
-            if input.IsMouseDown(MOUSE_LEFT) then
-                pointColor = Color(255, 255, 255, 150)
-                net.Start("SetWaypoint")
-                net.WriteTable(trace)
-                net.SendToServer()
-            end
-
+            pointColor = Color(255, 255, 255, 150)
+            net.Start("SetWaypoint")
+            net.WriteTable(trace)
+            net.SendToServer()
             self:HandleWaypoint()
         end
     end
+
     function JB:HandleWaypoint(tr)
         if currentWaypoint == "waypoint" then
             self:DrawWaypoint(tr or trace, prog, waypointPlaced)
@@ -119,14 +118,17 @@ if CLIENT then
 
     net.Receive("PlaceWaypoint", function()
         currentWaypoint = net.ReadString()
-
         enabled = true
         waypointPlaced = false
     end)
 
     net.Receive("UpdateWaypoint", function()
         waypointPlaced = true
-        LerpFloat(0, 1, 1, function(progress) prog = progress end, INTERPOLATION.SinLerp)
+
+        LerpFloat(0, 1, 1, function(progress)
+            prog = progress
+        end, INTERPOLATION.SinLerp)
+
         trace = net.ReadTable()
     end)
 end
