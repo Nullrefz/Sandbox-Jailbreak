@@ -35,7 +35,9 @@ function JB:LoadZones()
         ent:SetType(v.TYPE)
 
         timer.Simple(FrameTime() * 10, function()
-            ent:RemoveHandles()
+            if ent.RemoveHandles then
+                ent:RemoveHandles()
+            end
         end)
     end
 end
