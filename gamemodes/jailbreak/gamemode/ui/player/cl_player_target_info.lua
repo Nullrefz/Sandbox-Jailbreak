@@ -25,10 +25,8 @@ surface.CreateFont("Jailbreak_Font_42", {
 function JB:DrawTargetInfo(ply, trace)
     local health = ply:Health() + ply:Armor()
     local visibility = 1
-    local pos = ply:GetPos() + Vector(0, 0, 80)
-
-    hook.Add("PostDrawOpaqueRenderables", tostring("TargetInfoOf" .. ply:SteamID()), function()
-        if not IsValid(ply) then return end --hook.Remove("PostDrawOpaqueRenderables", "TargetInfoOf" .. ply:SteamID())
+    hook.Add("PostDrawOpaqueRenderables", tostring("TargetInfoOf" .. ply:UserID()), function()
+        if not IsValid(ply) then return end
         health = Lerp(FrameTime() * 10, health, ply:Health() + ply:Armor())
 
         if LocalPlayer():GetEyeTrace().Entity == ply then
@@ -40,8 +38,12 @@ function JB:DrawTargetInfo(ply, trace)
         if not ply:Alive() then return end
         cam.Start3D2D(ply:GetPos() + Vector(0, 0, 80), Angle(0, -90, 90) + Angle(0, (LocalPlayer():GetEyeTrace().HitPos - LocalPlayer():GetEyeTrace().StartPos):Angle().y, 0), 0.1)
         draw.DrawText(ply:Name(), "Jailbreak_Font_46", 0, 0, Color(255, 255, 255, 220 * visibility), TEXT_ALIGN_CENTER)
-        DrawCenterBar(-100, 46, 200, 6, 2, (ply:GetMaxHealth() + ply:Armor()) / 10, health / (ply:GetMaxHealth() + ply:Armor()), Color(255, 255 * health / (ply:GetMaxHealth() + ply:Armor()), 255 * health / (ply:GetMaxHealth() + ply:Armor()), 220 * visibility), bar)
-        DrawCenterBar(-100, 46, 200, 6, 2, (ply:GetMaxHealth() + ply:Armor()) / 10, 1, Color(255, 255, 255, 50 * visibility), bar)
+        DrawCenterBar(-100, 46, 200, 6, 2, (ply:GetMaxHealth() + ply:Armor()) / 10, health / (ply:GetMaxHealth() + ply:Armor()), Color(
+            health > 20 and team.GetColor(ply:Team()).r or 255,
+            health > 20 and team.GetColor(ply:Team()).g or 0,
+            health > 20 and team.GetColor(ply:Team()).b or 0, 255 * visibility), 
+            bar)
+        DrawCenterBar(-100, 46, 200, 6, 2, (ply:GetMaxHealth() + ply:Armor()) / 10, 1, Color(255, 255, 255, 25  * visibility), bar)
         cam.End3D2D()
     end)
 end
