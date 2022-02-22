@@ -12,7 +12,6 @@ net.Receive('OnWardenSet', function()
 end)
 
 function JB:CountGuards()
-    
     return allowedGuardCount
 end
 
@@ -21,7 +20,7 @@ net.Receive("GuardCount", function()
 end)
 
 hook.Add("SpawnMenuOpen", "SpawnMenuWhitelist", function()
-    if LocalPlayer() ~= warden then return false end
+    if LocalPlayer() ~= warden and roundPhase ~= "Waiting" then return false end
 end)
 
 hook.Add("PlayerButtonDown", "DropWeapon", function(ply, button)

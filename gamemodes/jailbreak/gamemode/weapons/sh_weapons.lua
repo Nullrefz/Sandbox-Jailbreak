@@ -15,6 +15,11 @@ if SERVER then
         ply:GiveWeapon("weapon_fists")
         ply:SetActiveWeapon(ply:GetWeapon("weapon_empty"))
         ply:SetActiveWeapon()
+
+        if JB.round.activePhase == ROUND_WAITING then
+            ply:GiveWeapon("weapon_tool")
+            ply:SetActiveWeapon(ply:GetWeapon("weapon_tool"))
+        end
     end
 
     hook.Add("PlayerSetWarden", "GiveTool", function(oldWarden, newWarden)
@@ -27,6 +32,29 @@ if SERVER then
         end
     end)
 
+    -- Putting things in a function didn't work so had to hardcode 
+
+    function GM:PlayerSpawnProp(ply, model)
+        return ply:IsWarden() or JB.round.activePhase == ROUND_WAITING and ply:Alive()
+    end
+
+    function GM:PlayerSpawnNPC(ply, model)
+        return ply:IsWarden() or JB.round.activePhase == ROUND_WAITING and ply:Alive()
+    end
+
+    function GM:PlayerSpawnVehicle(ply, model)
+        return ply:IsWarden() or JB.round.activePhase == ROUND_WAITING and ply:Alive()
+    end
+
+    function GM:PlayerSpawnSENT(ply, model)
+        return ply:IsWarden() or JB.round.activePhase == ROUND_WAITING and ply:Alive()
+    end
+
+    function GM:PlayerSpawnSWEP(ply, model)
+        return ply:IsWarden() or JB.round.activePhase == ROUND_WAITING and ply:Alive()
+    end
+
+    -- sorry
     net.Receive("DropWeapon", function(ln, ply)
         if not IsValid(ply) or not ply:GetActiveWeapon():IsValid() then return end
 

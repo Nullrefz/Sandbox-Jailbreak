@@ -11,7 +11,7 @@ function JB:SetRoundWaiting()
     self:SetMicEnabled(true, Team.PRISONERS)
     self:SetFriendlyFire(true)
 
-    timer.Create("IntervalCleanup", 5, 0, function()
+    timer.Create("IntervalCleanup", 300, 0, function()
         for k, v in pairs(player.GetAll()) do
             if not v:Alive() then
                 JB:ResetMap(true)
