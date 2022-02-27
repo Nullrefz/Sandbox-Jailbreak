@@ -28,12 +28,7 @@ if (CLIENT) then
     SWEP.Slot = 0
     SWEP.SlotPos = 1
     SWEP.IconLetter = "H"
-
-
-
-
 end
-
 
 local SwingSound = Sound("WeaponFrag.Throw")
 local HitSound = Sound("Flesh.ImpactHard")
@@ -159,8 +154,12 @@ end
 function SWEP:Deploy()
     local speed = GetConVarNumber("sv_defaultdeployspeed")
     local vm = self.Owner:GetViewModel()
-    vm:SendViewModelMatchingSequence(vm:LookupSequence("fists_draw"))
-    vm:SetPlaybackRate(speed)
+
+    if (vm) then
+        vm:SendViewModelMatchingSequence(vm:LookupSequence("fists_draw"))
+        vm:SetPlaybackRate(speed)
+    end
+
     self:SetNextPrimaryFire(CurTime() + vm:SequenceDuration() / speed)
     self:SetNextSecondaryFire(CurTime() + vm:SequenceDuration() / speed)
     self:UpdateNextIdle()
@@ -174,17 +173,14 @@ end
 
 -- function SWEP:Holster(newWeapon)
 --     local complete = false
-
 --     LerpFloat(50, self.ViewModelFOV, 3, function(val)
 --         fov = val
 --     end, INTERPOLATION.SmoothStep, function()
 --         complete = true
 --         newWeapon:Deploy()
 --     end)
-
 --     return true
 -- end
-
 function SWEP:Think()
     local vm = self.Owner:GetViewModel()
     local curtime = CurTime()
