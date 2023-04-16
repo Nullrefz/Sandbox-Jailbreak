@@ -59,7 +59,6 @@ function LOGBAR:GetIndexLog(index)
 end
 
 function LOGBAR:GetPlayerAlive(index)
-    print(self.lifespanIndex)
     if (self.lifespanIndex == -1 or index <= self.lifespanIndex) then
         return true
     end
@@ -74,7 +73,6 @@ function LOGBAR:SetInfo(logs, time, lifespan, ind, inspector)
     self.bars = math.ceil(time / 60 * self.splits)
     self.inspector = inspector
     self.lifespanIndex = lifespan == -1 and -1 or math.ceil(lifespan / 60 * self.splits)
-    print(self.lifespanIndex)
 end
 
 vgui.Register("JailbreakLogBar", LOGBAR)
