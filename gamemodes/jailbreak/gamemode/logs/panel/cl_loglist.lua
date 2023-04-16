@@ -86,7 +86,7 @@ function LOGSLIST:LayoutEntries()
         --inspector:SetInfo(barHeight, -1)
         table.insert(self.panels, inspector)
         table.insert(inspectors, inspector)
-        entryLog:SetInfo(v.User, v.UserTeam, v.UserName, v.Logs, self.time, k, inspector)
+        entryLog:SetInfo(v.User, v.UserTeam, v.UserName, v.UserLifeSpan, v.Logs, self.time, k, inspector)
     end
 
     self.timeScale:SetTime(self.time)

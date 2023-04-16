@@ -120,7 +120,6 @@ function LOGINSPECTOR:DrawPlayerTimeline(x, y, width, height)
     for k, v in pairs(boxes) do
         if IsValid(v) then
             local posX, posY = v:GetPos()
-
             if boxes[k + 1] and boxes[k + 1].log.Type == v.log.Type then
                 arrowWidth = arrowWidth + boxes[k + 1]:GetPos() - posX
             else

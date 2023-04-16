@@ -10,7 +10,9 @@ function LOGBAR:Init()
     self.ind = 0
 
     LerpFloat(0, 1, 1, function(progress)
-        if not self.alpha then return end
+        if not self.alpha then
+            return
+        end
         self.alpha = progress
     end, INTERPOLATION.SinLerp)
 end
@@ -38,7 +40,7 @@ function LOGBAR:LayoutBars(width, height)
         local offset = (self.step * i + self.spacing / 2)
         bar:SetPos(offset, height * 0.1)
         bar:SetSize(self.wide, height * 0.8)
-        bar:SetInfo(self:GetIndexLog(i + 1), i, self.ind, self.inspector, self.minutes)
+        bar:SetInfo(self:GetIndexLog(i + 1), i, self.ind, self.inspector, self.minutes, self:GetPlayerAlive(i + 1))
     end
 
     self.barPool:Dock(FILL)
@@ -56,13 +58,23 @@ function LOGBAR:GetIndexLog(index)
     return logs
 end
 
-function LOGBAR:SetInfo(logs, time, ind, inspector)
+function LOGBAR:GetPlayerAlive(index)
+    print(self.lifespanIndex)
+    if (self.lifespanIndex == -1 or index <= self.lifespanIndex) then
+        return true
+    end
+    return false
+end
+
+function LOGBAR:SetInfo(logs, time, lifespan, ind, inspector)
     self.logs = logs
     self.ind = ind
     self.minutes = math.ceil(time / 60)
     self.splits = 60 / self.minutes
     self.bars = math.ceil(time / 60 * self.splits)
     self.inspector = inspector
+    self.lifespanIndex = lifespan == -1 and -1 or math.ceil(lifespan / 60 * self.splits)
+    print(self.lifespanIndex)
 end
 
 vgui.Register("JailbreakLogBar", LOGBAR)
