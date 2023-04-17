@@ -43,14 +43,19 @@ function LOGSLIST:Init()
 
     function self.playHead:Paint(width, height)
         curPos = math.Clamp(self:LocalCursorPos(), 0, self:LocalCursorPos())
-        if (curPos < 0 or curPos > self:GetWide()) then return end
+        if (curPos < 0 or curPos > self:GetWide()) then
+            return
+        end
         curPos = self:GetParent():GetPos(curPos, self:GetWide())
         draw.DrawSkewedRect(curPos - 13, 0, 32, height, 4, Color(255, 255, 255))
-        draw.DrawText(self:GetParent():GetMinute(curPos / self:GetWide()), "Jailbreak_Font_14", curPos, 0, Color(0, 0, 0), TEXT_ALIGN_CENTER)
+        draw.DrawText(self:GetParent():GetMinute(curPos / self:GetWide()), "Jailbreak_Font_14", curPos, 0,
+            Color(0, 0, 0), TEXT_ALIGN_CENTER)
     end
 
     function self.panel:Paint(width, height)
-        if (curPos < 0 or curPos > panel.playHead:GetWide()) then return end
+        if (curPos < 0 or curPos > panel.playHead:GetWide()) then
+            return
+        end
         surface.SetDrawColor(255, 255, 255)
         surface.DrawLine(curPos + width / 7, 18, curPos + width / 7, panel:GetTall())
     end
@@ -63,7 +68,8 @@ function LOGSLIST:Init()
         draw.DrawRect(0, 0, width, height, Color(40, 40, 40))
         draw.DrawRect(0, 0, width, height * 0.06, Color(15, 15, 15))
         draw.DrawRect(width - width * 0.005, 0, width * 0.005, height, Color(15, 15, 15))
-        draw.DrawText("Round: " .. round, "Jailbreak_Font_32", width / 2, height / 6, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+        draw.DrawText("Round: " .. round, "Jailbreak_Font_32", width / 2, height / 6, Color(255, 255, 255),
+            TEXT_ALIGN_CENTER)
     end
     --	self.panel:MoveToFront()
 end
@@ -81,18 +87,19 @@ function LOGSLIST:LayoutEntries()
         count = count + 1
         entryLog:SetPos(0, (k - 1) * (barHeight + offset))
         local inspector = vgui.Create("JailbreakLogInspector", self.entries)
+        inspector.plyInd = k
         inspector:SetSize(w, 0)
         inspector:SetPos(0, (k - 1) * (barHeight + offset) + entryLog:GetTall())
-        --inspector:SetInfo(barHeight, -1)
+        -- inspector:SetInfo(barHeight, -1)
         table.insert(self.panels, inspector)
         table.insert(inspectors, inspector)
-        entryLog:SetInfo(v.User, v.UserTeam, v.UserName, v.Logs, self.time, k, inspector)
+        entryLog:SetInfo(v.User, v.UserTeam, v.UserName, v.UserLifeSpan, v.Logs, self.time, k, inspector)
     end
 
     self.timeScale:SetTime(self.time)
     hook.Add("LogClicked", "ToggleInspector", function(ind, plyInd, logs, minutes)
         for k, v in pairs(inspectors) do
-            v:SetInfo(barHeight, ind, plyInd, logs, minutes)
+                v:SetInfo(barHeight, ind, plyInd, logs, minutes)
         end
     end)
 end
@@ -100,7 +107,9 @@ end
 local totalPos = 0
 
 function LOGSLIST:RepositionBars()
-    if not self.panels then return end
+    if not self.panels then
+        return
+    end
     local x, y = self:LocalCursorPos()
     y = y - self.header:GetTall()
     y = math.Clamp(y - 64, 0, 99999)
@@ -108,7 +117,9 @@ function LOGSLIST:RepositionBars()
 
     for k, v in pairs(self.panels) do
         if totalPos > self:GetTall() - self.header:GetTall() then
-            v:SetPos(0, pos - ((y / (self:GetTall() - self.header:GetTall() - 64)) * (totalPos - (self:GetTall() - self.header:GetTall()))))
+            v:SetPos(0, pos -
+                ((y / (self:GetTall() - self.header:GetTall() - 64)) *
+                    (totalPos - (self:GetTall() - self.header:GetTall()))))
         else
             v:SetPos(0, pos)
         end

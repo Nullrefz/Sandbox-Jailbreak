@@ -2,16 +2,16 @@ function JB:RegisterKillLog(victim, culprit, inflictor, type)
     killLog = {
         Type = type,
         Time = self:GetTimeElapsed(),
-        Victim = not victim:IsPlayer() and victim:GetClass() or victim:SteamID(),
-        Culprit = not culprit:IsPlayer() and culprit:GetClass() or culprit:SteamID(),
+        Victim = self:GetUser(victim),
+        Culprit = self:GetUser(culprit),
         Day = self.dayPhase,
         Location = victim.containmentZones and victim.containmentZones[#victim.containmentZones] or "Unknown"
     }
 
     if killLog.Type == "Kill" then
-        self:RegisterLog(culprit, killLog)
+        self:RegisterLog(killLog.Culprit, killLog)
     elseif killLog.Type == "Death" then
-        self:RegisterLog(victim, killLog)
+        self:RegisterLog(killLog.Victim, killLog)
     end
 end
 
@@ -28,7 +28,7 @@ function JB:SpawnLog(ply)
         Location = ply.containmentZones and ply.containmentZones[#ply.containmentZones] or "Unknown"
     }
 
-    self:RegisterLog(ply, spawnLog)
+    self:RegisterLog(self:GetUser(ply), spawnLog)
 end
 
 function JB:RegisterWeaponDropLog(weapon, culprit, type)
@@ -40,7 +40,11 @@ function JB:RegisterWeaponDropLog(weapon, culprit, type)
         Location = culprit.containmentZones and culprit.containmentZones[#culprit.containmentZones] or "Unknown"
     }
 
-    self:RegisterLog(culprit, dropLog)
+    self:RegisterLog(self:GetUser(culprit), dropLog)
+end
+
+function JB:GetUser(ply)
+    return ply:IsBot() and ply:Name() or ply:SteamID()
 end
 
 hook.Add("PlayerDroppedWeapon", "RegisterDropWeaponLog", function(culprit, weapon)

@@ -15,26 +15,17 @@ local session = 0
 local roundNumber = 0
 local dir = ""
 
-function JB:RegisterLog(ply, entry)
+function JB:RegisterLog(instigator, entry)
     if self:GetActivePhase() ~= ROUND_ACTIVE then return end
-
     for k, v in pairs(roundLogs) do
-        if v.User == ply:IsBot() and ply:Name() or ply:SteamID() then
+        if v.User == instigator then
+            if entry.Type == "Death" then v.UserLifeSpan = entry.Time 
+            end
             table.insert(v.Logs, entry)
             self:SaveLogs()
-
             return
         end
     end
-
-    table.insert(roundLogs, {
-        User = ply:IsBot() and ply:Name() or ply:SteamID(),
-        UserTeam = ply:Team(),
-        UserName = ply:Name(),
-        Logs = {entry}
-    })
-
-    self:SaveLogs()
 end
 
 util.AddNetworkString("SendLog")
@@ -81,6 +72,19 @@ end
 function JB:SetupLogs()
     roundLogs = {}
     roundNumber = roundNumber + 1
+
+    for k, v in pairs (player.GetAll()) do 
+        table.insert(roundLogs, {
+            User = v:IsBot() and v:Name() or v:SteamID(),
+            UserTeam = v:Team(),
+            UserName = v:Name(),
+            UserLifeSpan = -1,
+            Logs = {entry}
+        })
+    end
+    
+    self:SaveLogs()
+
 end
 
 hook.Add("jb_round_active", "SetupLogs", function()

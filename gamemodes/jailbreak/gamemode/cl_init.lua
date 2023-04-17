@@ -24,7 +24,7 @@ hook.Add("SpawnMenuOpen", "SpawnMenuWhitelist", function()
 end)
 
 hook.Add("PlayerButtonDown", "DropWeapon", function(ply, button)
-    if (button == KEY_Q) then
+    if (button == KEY_H) then
         net.Start("DropWeapon")
         net.SendToServer()
     end
