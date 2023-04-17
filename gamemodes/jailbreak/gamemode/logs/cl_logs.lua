@@ -1,5 +1,5 @@
 local LOGSWINDOW = {}
-
+JB.RoundNumber = 1
 local mats = {
     CLOSE = Material("jailbreak/vgui/icons/exit.png")
 }
@@ -29,6 +29,8 @@ function LOGSWINDOW:Init()
         end
     end)
     net.Start("LogRequest")
+
+    net.WriteInt(JB.RoundNumber, 32)
     net.SendToServer()
     self:MakePopup()
     self.header = vgui.Create("Panel", self)
@@ -36,7 +38,8 @@ function LOGSWINDOW:Init()
     function self.header:Paint(width, height)
         draw.DrawRect(0, 0, width, height, Color(25, 25, 25))
         draw.DrawRect(0, height - height * 0.05, width, height * 0.05, Color(0, 150, 255))
-        draw.DrawText("Logs", "Jailbreak_Font_70", width / 2 - 74 / 2, -toVRatio(4), Color(255, 255, 255), TEXT_ALIGN_CENTER)
+        draw.DrawText("Logs", "Jailbreak_Font_70", width / 2 - 74 / 2, -toVRatio(4), Color(255, 255, 255),
+            TEXT_ALIGN_CENTER)
     end
 
     self.closeButton = vgui.Create("DImageButton", self.header)
@@ -54,6 +57,45 @@ function LOGSWINDOW:Init()
     end
 
     self.content = vgui.Create("JailbreakLogsList", self.body)
+
+    self.rightButton = vgui.Create("DButton", self.header)
+    self.rightButton:SetText("next")
+    self.rightButton:SetSize(42, 42)
+    self.rightButton:SetMouseInputEnabled(true)
+    self.rightButton:Dock(RIGHT)
+    function self.rightButton:Paint(width, height)
+        draw.DrawRect(0, 0, width, height, Color(75, 75, 75, 255))
+
+        if self:IsHovered() then
+            draw.DrawRect(0, 0, width, height, Color(255, 255, 255, 30))
+        end
+
+        draw.DrawRect(0, 0, width, height * 0.7, Color(40, 40, 40, 50))
+    end
+
+    function self.rightButton:DoClick()
+        panel:Delete()
+        JB:OpenLogWindow(JB.RoundNumber + 1)
+    end
+    self.leftButton = vgui.Create("DButton", self.header)
+    self.leftButton:SetText("previous")
+    self.leftButton:SetSize(42, 42)
+    self.leftButton:SetMouseInputEnabled(true)
+
+    function self.leftButton:Paint(width, height)
+        draw.DrawRect(0, 0, width, height, Color(75, 75, 75, 255))
+
+        if self:IsHovered() then
+            draw.DrawRect(0, 0, width, height, Color(255, 255, 255, 30))
+        end
+
+        draw.DrawRect(0, 0, width, height * 0.7, Color(40, 40, 40, 50))
+    end
+
+    function self.leftButton:DoClick(clr, btn)
+        panel:Delete()
+        JB:OpenLogWindow(JB.RoundNumber - 1)
+    end
 end
 
 function LOGSWINDOW:PerformLayout(width, height)
@@ -85,7 +127,12 @@ function JB.logsWidow:Show()
     self.logsPanel:SetSize(w, h)
 end
 
-function JB:OpenLogWindow()
+function JB:OpenLogWindow(roundNumber)
+    if roundNumber then
+        JB.RoundNumber = roundNumber
+    else
+        JB.RoundNumber = -1
+    end
     self.logsWidow:Show()
 end
 
