@@ -5,9 +5,10 @@ function LOGINSPECTOR:Init()
     self.barHeight = 0
     self.timeHeight = 16
     self.minutes = 1
+    self.boxes = {}
 end
 
-function LOGINSPECTOR:SetActive(enabled, index)
+function LOGINSPECTOR:SetActive(enabled, callback)
     if self.active ~= enabled then
         LerpFloat(enabled and 0 or 1, enabled and 1 or 0, 0.2, function(progress)
             if not IsValid(self) then
@@ -15,8 +16,8 @@ function LOGINSPECTOR:SetActive(enabled, index)
             end
             self:SetSize(self:GetWide(), self.barHeight * progress)
         end, INTERPOLATION.SinLerp, function()
-            if index and self.index == index then
-                self.index = -1
+            if callback then
+                callback()
             end
         end)
     end
@@ -25,32 +26,33 @@ function LOGINSPECTOR:SetActive(enabled, index)
 end
 
 function LOGINSPECTOR:SetInfo(barHeight, ind, plyInd, logs, minutes)
-    self.logs = logs
-    self.minutes = minutes
-    self.barHeight = barHeight
-    self:LayoutBoxes()
-
+    if (self.plyInd == plyInd) then
+        self.logs = logs
+        self.minutes = minutes
+        self.barHeight = barHeight
+    end
     if not self.plyInd then
         self.plyInd = plyInd
     end
 
-    if self.active then
-        self:SetSize(self:GetWide(), self.barHeight)
-    end
-
-    -- elseif self.plyInd ~= plyInd and self.active then
-    --     self:SetActive(false)
-    -- else
-    --     self:SetActive(true)
-    -- end
     if self.plyInd ~= plyInd or self.index == ind then
-        self:SetActive(false, ind)
+        self:SetActive(false, function()
+            if ind and self.index == ind then
+                self.index = -1
+            end
+            table.Empty(self.boxes)
+
+        end)
     else
         self:SetActive(true)
+        self.index = ind
+        self:LayoutBoxes()
+        if self.active then
+            self:SetSize(self:GetWide(), self.barHeight)
+        end
+
     end
 
-    self.index = ind
-    self:LayoutBoxes()
 end
 
 function LOGINSPECTOR:SetInit(barheight, ind)
@@ -58,8 +60,6 @@ function LOGINSPECTOR:SetInit(barheight, ind)
     self.barHeight = barHeight
     -- self.plyInd = -1
 end
-
-local boxes = {}
 
 function LOGINSPECTOR:LayoutBoxes()
     self:Clear()
@@ -74,13 +74,13 @@ function LOGINSPECTOR:LayoutBoxes()
         local pos = ((v.Time - self.index * self.minutes) / self.minutes) * self:GetWide()
         local offset = 0
 
-        if #boxes > 0 then
-            for i = 1, #boxes do
-                if IsValid(boxes[i]) then
-                    local x, y = boxes[i]:GetPos()
+        if #self.boxes > 0 then
+            for i = 1, #self.boxes do
+                if IsValid(self.boxes[i]) then
+                    local x, y = self.boxes[i]:GetPos()
 
-                    if boxes[i]:GetWide() / 2 + x > pos - boxWidth then
-                        offset = offset + boxWidth / 2 + 4
+                    if self.boxes[i]:GetWide() / 2 + x + 16 > pos - boxWidth then
+                        offset = offset + boxHeight + 4
                         tall = math.max(tall, 64 - 16 + offset)
                     end
                 end
@@ -91,10 +91,11 @@ function LOGINSPECTOR:LayoutBoxes()
         box:SetSize(boxWidth, boxHeight)
         box:SetPos(pos - box:GetWide() / 2, 64 - 16 + offset)
         box:SetInfo(v)
-        table.insert(boxes, box)
+        table.insert(self.boxes, box)
+        offset = 0
     end
 
-    self.barHeight = self.barHeight + tall + 8
+    self.barHeight = self.barHeight + tall + 20
 end
 
 function LOGINSPECTOR:Paint(width, height)
@@ -127,28 +128,23 @@ function LOGINSPECTOR:DrawRoundTimeline(x, y, width, height)
 end
 
 function LOGINSPECTOR:DrawPlayerTimeline(x, y, width, height)
-    if not boxes or #boxes == 0 then
+    if not self.boxes or #self.boxes == 0 then
         return
     end
     local arrowWidth = 0
 
-    for k, v in pairs(boxes) do
+    for k, v in pairs(self.boxes) do
         if IsValid(v) then
             local posX, posY = v:GetPos()
-            if boxes[k + 1] and boxes[k + 1].log.Type == v.log.Type then
-                arrowWidth = arrowWidth + boxes[k + 1]:GetPos() - posX
-            else
-                self:DrawArrow(posX + v:GetWide() / 2 - 32 - 4 - arrowWidth, y, 64 + 8 + arrowWidth, self.timeHeight,
-                    10, Color(20, 20, 20, 255))
-                self:DrawArrow(posX + v:GetWide() / 2 - 32 - arrowWidth, y, 64 + arrowWidth, self.timeHeight, 10,
-                    JB:GetLogColor(v.log.Type))
-            end
+
+            self:DrawArrow(posX + v:GetWide() / 2 - 32 - 4 - arrowWidth, y, 64 + 8 + arrowWidth, self.timeHeight, 10,
+                Color(20, 20, 20, 255))
+            self:DrawArrow(posX + v:GetWide() / 2 - 32 - arrowWidth, y, 64 + arrowWidth, self.timeHeight, 10,
+                JB:GetLogColor(v.log.Type))
 
             draw.DrawRect(posX + v:GetWide() / 2, y + self.timeHeight, 1, y + 2 + posY - v:GetTall() / 2,
                 JB:GetLogColor(v.log.Type))
-            -- draw.DrawRect(pos, y + k * (64 + 4), 128, 64, 2, Color(255, 255, 255))
-            -- draw.ChamferedBox(pos, y + 8, 16, 16, 90, JB:GetLogColor(v.Type))
-            --  draw.ChamferedBox(pos, y + 8, 16 - 4, 12, 90, Color(50, 50, 50, 225))
+
         end
     end
 end
