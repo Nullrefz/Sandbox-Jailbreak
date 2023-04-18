@@ -4,10 +4,10 @@ local mats = {
     CLOSE = Material("jailbreak/vgui/icons/exit.png")
 }
 
-surface.CreateFont("Jailbreak_Font_70", {
+surface.CreateFont("Jailbreak_Font_64", {
     font = "Optimus",
     extended = false,
-    size = 70,
+    size = 64,
     weight = 5,
     blursize = 0,
     scanlines = 0,
@@ -36,9 +36,10 @@ function LOGSWINDOW:Init()
     self.header = vgui.Create("Panel", self)
 
     function self.header:Paint(width, height)
-        draw.DrawRect(0, 0, width, height, Color(25, 25, 25))
+        draw.DrawRect(0, 0, width, height, Color(30, 30, 30))
+        draw.DrawRect(0, height / 2, width, height / 2, Color(25, 25, 25))
         draw.DrawRect(0, height - height * 0.05, width, height * 0.05, Color(0, 150, 255))
-        draw.DrawText("Logs", "Jailbreak_Font_70", width / 2 - 74 / 2, -toVRatio(4), Color(255, 255, 255),
+        draw.DrawText("Logs", "Jailbreak_Font_64", width / 2 - 74 / 2, -toVRatio(4), Color(255, 255, 255),
             TEXT_ALIGN_CENTER)
     end
 
