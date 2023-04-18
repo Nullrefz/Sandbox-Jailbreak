@@ -18,28 +18,82 @@ surface.CreateFont("Jailbreak_Font_14", {
     outline = false
 })
 
-function LOGSLIST:Init()
-    self.playerLog = vgui.Create("JailbreakPlayerLog", self)
-    self.header = vgui.Create("Panel", self)
-    self.footer = vgui.Create("Panel", self.header)
-    self.roundID = vgui.Create("DPanel", self.header)
+local mats = {
+    NextArrow = Material("jailbreak/vgui/nextArrow.png", "smooth"),
+    PreviousArrow = Material("jailbreak/vgui/previousArrow.png", "smooth")
+}
 
-    self.timeScale = vgui.Create("JailbreakTimeScale", self.header)
+local currentRound
+function LOGSLIST:Init()
+
     -- self.playHead = vgui.Create("Panel", self.timeScale)
-    self.panel = vgui.Create("Panel", self)
-    self.entries = vgui.Create("Panel", self)
-    
     self.time = 300
-    self.logs = {}
 
     net.Receive("SendLog", function()
+        -- Logs Info Receive
+        local currentRound = net.ReadInt(32)
         JB.RoundNumber = net.ReadInt(32)
+
         self.time = net.ReadFloat()
         self.logs = net.ReadTable()
+        -- Panel Creation
+        if (not self.logs or table.IsEmpty(self.logs)) then
+            self.noLogsPanel = vgui.Create("DPanel", self)
+            self.noLogsPanel:Dock(FILL)
+            function self.noLogsPanel:Paint(width, height)
+                draw.DrawText("No Logs Registered", "Jailbreak_Font_32", width / 2, height / 2, Color(255, 255, 255),
+                    TEXT_ALIGN_CENTER)
+            end
+            return
+        end
+        self.playerLog = vgui.Create("JailbreakPlayerLog", self)
+        self.panel = vgui.Create("Panel", self)
+        self.entries = vgui.Create("Panel", self)
+        self.header = vgui.Create("Panel", self)
+        self.footer = vgui.Create("Panel", self.header)
+        self.timeScale = vgui.Create("JailbreakTimeScale", self.header)
+        self.roundID = vgui.Create("DPanel", self.header)
+
+        if (JB.RoundNumber > 1) then
+            self.leftButton = vgui.Create("DButton", self.roundID)
+            self.leftButton:SetSize(42, 42)
+            self.leftButton:SetText("")
+            function self.leftButton:Paint(width, height)
+                draw.DrawRect(0, 0, width, height, Color(255, 255, 255, 255), mats.PreviousArrow)
+            end
+
+            self.leftButton.DoClick = function()
+                hook.Run("OnLogsClosed", JB.RoundNumber - 1)
+            end
+        end
+
+        if (JB.RoundNumber < currentRound) then
+            self.rightButton = vgui.Create("DButton", self.roundID)
+            self.rightButton:SetText("")
+            self.rightButton:SetSize(42, 42)
+            function self.rightButton:Paint(width, height)
+                draw.DrawRect(0, 0, width, height, Color(255, 255, 255, 255), mats.NextArrow)
+            end
+
+            function self.rightButton:DoClick()
+                hook.Run("OnLogsClosed", JB.RoundNumber + 1)
+            end
+        end
+        function self.footer:Paint(width, height)
+            draw.DrawRect(0, 0, width, height, Color(15, 15, 15))
+        end
+
+        function self.roundID:Paint(width, height)
+            draw.DrawRect(0, 0, width, height, Color(40, 40, 40))
+            draw.DrawRect(0, 0, width, height * 0.06, Color(15, 15, 15))
+            draw.DrawRect(width - width * 0.005, 0, width * 0.005, height, Color(15, 15, 15))
+            draw.DrawText("Round: " .. JB.RoundNumber, "Jailbreak_Font_32", width / 2, height / 6, Color(255, 255, 255),
+                TEXT_ALIGN_CENTER)
+        end
+
         self:LayoutEntries()
     end)
 
-    local panel = self
     local curPos = 0
 
     -- function self.playHead:Paint(width, height)
@@ -60,18 +114,6 @@ function LOGSLIST:Init()
     --     surface.SetDrawColor(255, 255, 255)
     --     surface.DrawLine(curPos + width / 7, 18, curPos + width / 7, panel:GetTall())
     -- end
-
-    function self.footer:Paint(width, height)
-        draw.DrawRect(0, 0, width, height, Color(15, 15, 15))
-    end
-
-    function self.roundID:Paint(width, height)
-        draw.DrawRect(0, 0, width, height, Color(40, 40, 40))
-        draw.DrawRect(0, 0, width, height * 0.06, Color(15, 15, 15))
-        draw.DrawRect(width - width * 0.005, 0, width * 0.005, height, Color(15, 15, 15))
-        draw.DrawText("Round: " .. JB.RoundNumber, "Jailbreak_Font_32", width / 2, height / 6, Color(255, 255, 255),
-            TEXT_ALIGN_CENTER)
-    end
 
     --	self.panel:MoveToFront()
 end
@@ -139,12 +181,14 @@ function LOGSLIST:Think()
 end
 
 function LOGSLIST:PerformLayout(width, height)
+    if not self.logs or  table.IsEmpty(self.logs) then
+        return
+    end
     self.header:Dock(TOP)
     self.footer:Dock(BOTTOM)
     self.footer:SetTall(2)
     self.header:SetTall(toVRatio(44))
-    self.roundID:Dock(LEFT)
-    self.roundID:SetWide(width / 7)
+
     self.timeScale:Dock(FILL)
     self.timeScale:DockMargin(0, 2, 0, 0)
     self.timeScale:SetTall(toVRatio(32))
@@ -154,6 +198,15 @@ function LOGSLIST:PerformLayout(width, height)
     self.playerLog:Dock(RIGHT)
     self.playerLog:SetWide(0)
     self.playerLog:DockMargin(2, 2, 0, 0)
+    self.roundID:MoveToFront()
+    self.roundID:Dock(LEFT)
+    self.roundID:SetWide(width / 7)
+    if self.rightButton then
+        self.rightButton:Dock(RIGHT)
+    end
+    if self.leftButton then
+        self.leftButton:Dock(LEFT)
+    end
 end
 
 vgui.Register("JailbreakLogsList", LOGSLIST)

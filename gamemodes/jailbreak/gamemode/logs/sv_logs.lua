@@ -39,6 +39,11 @@ function JB:SendLog(ply, round)
     end
     local logs = self:LoadLogs(round)
     net.Start("SendLog")
+    if not logs or logs == "" or not logs.RoundTime then
+        net.Send(ply)
+        return
+    end
+    net.WriteInt(roundNumber, 32)
     net.WriteInt(round, 32)
     net.WriteFloat(logs.RoundTime)
     net.WriteTable(logs)
@@ -48,13 +53,15 @@ end
 function JB:HandleLogRequest(ply, round)
     -- TODO: This is the section where I check if the player is allowed to get the logs
     round = math.Clamp(round, 1, roundNumber)
-    self:SaveLogs()
+    if (self:GetActivePhase() == ROUND_ACTIVE) then
+        self:SaveLogs()
+    end
     self:SendLog(ply, round)
 end
 
 net.Receive("LogRequest", function(ln, ply)
     local round = net.ReadInt(32)
-    if round == -1 then 
+    if round == -1 then
         round = roundNumber
     end
     JB:HandleLogRequest(ply, round)
@@ -74,10 +81,8 @@ function JB:SaveLogs()
 end
 
 function JB:LoadLogs(round)
-    logs = {}
-    
-    logFile = file.Read(dir .."/round_" .. round .. ".txt", "DATA")
-    return util.JSONToTable(logFile)
+    logFile = file.Read(dir .. "/round_" .. round .. ".txt", "DATA")
+    return logFile and util.JSONToTable(logFile) or ""
 end
 
 function JB:SetupLogs()
@@ -93,7 +98,7 @@ function JB:SetupLogs()
             Logs = {entry}
         })
     end
-    
+
     roundLogs.RoundTime = 0
     self:SaveLogs()
 
@@ -108,7 +113,9 @@ hook.Add("jb_round_ending", "SaveLogs", function()
 end)
 
 hook.Add("Think", "StoreTime", function()
-    if not roundLogs.RoundTime then return end
+    if not roundLogs.RoundTime then
+        return
+    end
     roundLogs.RoundTime = roundLogs.RoundTime + FrameTime()
 end)
 

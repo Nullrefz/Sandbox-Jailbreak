@@ -1,7 +1,4 @@
 local mats = {
-    HPBlUE = Material("jailbreak/vgui/HealthBar_Blue.png", "smooth"),
-    HPWHITE = Material("jailbreak/vgui/HealthBar_White.png", "smooth"),
-    HPYELLOW = Material("jailbreak/vgui/HealthBar_Yellow.png", "smooth"),
     BAR = Material("jailbreak/vgui/Bar.png", "smooth")
 }
 

@@ -1,8 +1,10 @@
 local TIMERBAR = {}
 
 local mats = {
-    STOPWATCH = Material("jailbreak/vgui/stopwatch.png")
+    STOPWATCH = Material("jailbreak/vgui/stopwatch.png"),
+    BAR = Material("jailbreak/vgui/Bar.png", "smooth")
 }
+
 
 surface.CreateFont("Jailbreak_Font_Counter", {
     font = "Optimus",
@@ -85,13 +87,13 @@ function TIMERBAR:Init()
             render.SetStencilZFailOperation(STENCILOPERATION_ZERO)
             render.SetStencilCompareFunction(STENCILCOMPARISONFUNCTION_EQUAL)
             render.SetStencilReferenceValue(1)
-            DrawProgressBar(toHRatio(5), height / 2, width - toHRatio(5), toVRatio(6), toHRatio(2), 8, Color(255, 255, 255, 255))
+            DrawProgressBar(toHRatio(5), height / 2, width - toHRatio(5), toVRatio(6), toHRatio(2), 8, Color(255, 255, 255, 255), mats.BAR)
             render.SetStencilEnable(false)
         else
-            draw.DrawSkewedRect(toHRatio(5), height / 2, width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 50))
+            draw.DrawSkewedRect(toHRatio(5), height / 2, width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 50), mats.BAR)
         end
 
-        draw.DrawSkewedRect(toHRatio(5), height / 2, (((CurTime() < dayTime and dayTime or timeLeft) - CurTime()) / (CurTime() < dayTime and daySpan or roundTime)) * width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 200))
+        draw.DrawSkewedRect(toHRatio(5), height / 2, (((CurTime() < dayTime and dayTime or timeLeft) - CurTime()) / (CurTime() < dayTime and daySpan or roundTime)) * width - toHRatio(5), toVRatio(6), toHRatio(2), Color(255, 255, 255, 200), mats.BAR)
         draw.DrawText(CurTime() < dayTime and curDay or tostring(roundPhase), "Jailbreak_Font_RoundPhase", toHRatio(2), height - 16, Color(255, 255, 255, 200), TEXT_ALIGN_LEFT)
     end
 end
