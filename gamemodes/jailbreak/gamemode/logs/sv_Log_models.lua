@@ -1,4 +1,4 @@
-function JB:RegisterKillLog(victim, culprit, inflictor, type)
+function JB:RegisterKillLog(victim, inflictor, culprit, type)
     killLog = {
         Type = type,
         Time = self:GetTimeElapsed(),
