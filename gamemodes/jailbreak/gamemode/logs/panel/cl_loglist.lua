@@ -18,6 +18,12 @@ surface.CreateFont("Jailbreak_Font_14", {
     outline = false
 })
 
+local mats = {
+    NextArrow = Material("jailbreak/vgui/nextArrow.png", "smooth"),
+    PreviousArrow = Material("jailbreak/vgui/previousArrow.png", "smooth")
+}
+
+
 local currentRound
 function LOGSLIST:Init()
     self.playerLog = vgui.Create("JailbreakPlayerLog", self)
@@ -40,19 +46,12 @@ function LOGSLIST:Init()
         self.logs = net.ReadTable()
 
         if (JB.RoundNumber > 1) then
-            self.leftButton = vgui.Create("DImageButton", self.roundID)
-            self.leftButton:SetImage("icon16/bomb.png")
+            self.leftButton = vgui.Create("DButton", self.roundID)
             self.leftButton:SetSize(42, 42)
-            self.leftButton:SetMouseInputEnabled(true)
-            -- function self.leftButton:Paint(width, height)
-            --     draw.DrawRect(0, 0, width, height, Color(75, 75, 75, 255))
-
-            --     if self:IsHovered() then
-            --         draw.DrawRect(0, 0, width, height, Color(255, 255, 255, 30))
-            --     end
-
-            --     draw.DrawRect(0, 0, width, height * 0.7, Color(40, 40, 40, 50))
-            -- end
+            self.leftButton:SetText("")
+            function self.leftButton:Paint(width, height)
+                draw.DrawRect(0, 0, width, height, Color(255, 255, 255, 255), mats.PreviousArrow)
+            end
 
             self.leftButton.DoClick = function()
                 hook.Run("OnLogsClosed", JB.RoundNumber - 1)
@@ -61,17 +60,10 @@ function LOGSLIST:Init()
 
         if (JB.RoundNumber < currentRound) then
             self.rightButton = vgui.Create("DButton", self.roundID)
-            self.rightButton:SetText("next")
+            self.rightButton:SetText("")
             self.rightButton:SetSize(42, 42)
-            self.rightButton:SetMouseInputEnabled(true)
             function self.rightButton:Paint(width, height)
-                draw.DrawRect(0, 0, width, height, Color(75, 75, 75, 255))
-
-                if self:IsHovered() then
-                    draw.DrawRect(0, 0, width, height, Color(255, 255, 255, 30))
-                end
-
-                draw.DrawRect(0, 0, width, height * 0.7, Color(40, 40, 40, 50))
+                draw.DrawRect(0, 0, width, height, Color(255, 255, 255, 255), mats.NextArrow)
             end
 
             function self.rightButton:DoClick()
