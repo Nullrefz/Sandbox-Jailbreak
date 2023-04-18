@@ -327,6 +327,7 @@ function DrawRect(x, y, width, height, color, material)
 end
 
 function DrawSkewedRect(x, y, width, height, skew, color, material)
+    NoTexture()
     local coord = {}
 
     table.insert(coord, {
@@ -367,8 +368,8 @@ function DrawSkewedRect(x, y, width, height, skew, color, material)
         color = Color(0, 0, 0, 100)
     end
 
-    NoTexture()
     surface.DrawPoly(coord)
+    NoTexture()
 end
 
 local function MakeSkewedCircle(tbl, x, y, radius, seg, angle, shift, skew)
