@@ -189,14 +189,14 @@ end
 
 function DrawArc(x, y, radius1, radius2, rot, angle, color, material)
     local arc = {}
-    local iteration = 1
+    local iteration = 10
 
     if color == nil then
         color = Color(0, 0, 0, 220)
     end
 
     local t = 0
-
+    
     for i = 0, rot - iteration, iteration do
         rad = math.rad(i + angle)
         local rad2 = math.rad(i + iteration + angle)
@@ -236,8 +236,8 @@ function DrawArc(x, y, radius1, radius2, rot, angle, color, material)
 
     if rot ~= 0 then
         local temp2 = {}
-        local radbase = math.rad(rot + angle)
-        local radbase2 = math.rad(t + iteration + angle)
+        local radbase = math.rad(t + iteration + angle)
+        local radbase2 = math.rad(rot + angle)
 
         table.insert(temp2, {
             x = x + math.sin(radbase) * radius2,
