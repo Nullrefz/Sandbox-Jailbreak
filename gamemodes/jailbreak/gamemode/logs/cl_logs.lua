@@ -56,46 +56,13 @@ function LOGSWINDOW:Init()
         draw.DrawRect(0, 0, width, height, Color(40, 40, 40))
     end
 
+    hook.Add("OnLogsClosed", "ClosingLogs", function(round)
+        panel:Delete()
+        JB:OpenLogWindow(round)
+    end)
+
     self.content = vgui.Create("JailbreakLogsList", self.body)
 
-    self.rightButton = vgui.Create("DButton", self.content.roundID)
-    self.rightButton:SetText("next")
-    self.rightButton:SetSize(42, 42)
-    self.rightButton:SetMouseInputEnabled(true)
-    function self.rightButton:Paint(width, height)
-        draw.DrawRect(0, 0, width, height, Color(75, 75, 75, 255))
-
-        if self:IsHovered() then
-            draw.DrawRect(0, 0, width, height, Color(255, 255, 255, 30))
-        end
-
-        draw.DrawRect(0, 0, width, height * 0.7, Color(40, 40, 40, 50))
-    end
-
-    function self.rightButton:DoClick()
-        panel:Delete()
-        JB:OpenLogWindow(JB.RoundNumber + 1)
-    end
-    self.leftButton = vgui.Create("DImageButton", self.content.roundID)
-    self.leftButton:SetImage( "icon16/bomb.png" )
-    self.leftButton:SetSize(42, 42)
-    self.leftButton:SetMouseInputEnabled(true)
-    self.leftButton:MoveToFront()
-
-    -- function self.leftButton:Paint(width, height)
-    --     draw.DrawRect(0, 0, width, height, Color(75, 75, 75, 255))
-
-    --     if self:IsHovered() then
-    --         draw.DrawRect(0, 0, width, height, Color(255, 255, 255, 30))
-    --     end
-
-    --     draw.DrawRect(0, 0, width, height * 0.7, Color(40, 40, 40, 50))
-    -- end
-
-    self.leftButton.DoClick = function()
-        panel:Delete()
-        JB:OpenLogWindow(JB.RoundNumber - 1)
-    end
 end
 
 function LOGSWINDOW:PerformLayout(width, height)
@@ -105,9 +72,6 @@ function LOGSWINDOW:PerformLayout(width, height)
     self.closeButton:SetWide(toVRatio(64))
     self.body:Dock(FILL)
     self.content:Dock(FILL)
-    self.rightButton:Dock(RIGHT)
-    self.leftButton:Dock(LEFT)
-
 end
 
 function LOGSWINDOW:Think()

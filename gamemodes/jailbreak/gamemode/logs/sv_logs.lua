@@ -40,6 +40,7 @@ function JB:SendLog(ply, round)
     local logs = self:LoadLogs(round)
     if not logs or logs == "" or not logs.RoundTime then return end
     net.Start("SendLog")
+    net.WriteInt(roundNumber, 32)
     net.WriteInt(round, 32)
     net.WriteFloat(logs.RoundTime)
     net.WriteTable(logs)

@@ -18,9 +18,10 @@ surface.CreateFont("Jailbreak_Font_14", {
     outline = false
 })
 
+local currentRound
 function LOGSLIST:Init()
     self.playerLog = vgui.Create("JailbreakPlayerLog", self)
-    
+
     -- self.playHead = vgui.Create("Panel", self.timeScale)
     self.panel = vgui.Create("Panel", self)
     self.entries = vgui.Create("Panel", self)
@@ -28,14 +29,56 @@ function LOGSLIST:Init()
     self.footer = vgui.Create("Panel", self.header)
     self.timeScale = vgui.Create("JailbreakTimeScale", self.header)
     self.roundID = vgui.Create("DPanel", self.header)
-    
+
     self.time = 300
     self.logs = {}
 
     net.Receive("SendLog", function()
+        local currentRound = net.ReadInt(32)
         JB.RoundNumber = net.ReadInt(32)
         self.time = net.ReadFloat()
         self.logs = net.ReadTable()
+
+        if (JB.RoundNumber > 1) then
+            self.leftButton = vgui.Create("DImageButton", self.roundID)
+            self.leftButton:SetImage("icon16/bomb.png")
+            self.leftButton:SetSize(42, 42)
+            self.leftButton:SetMouseInputEnabled(true)
+            -- function self.leftButton:Paint(width, height)
+            --     draw.DrawRect(0, 0, width, height, Color(75, 75, 75, 255))
+
+            --     if self:IsHovered() then
+            --         draw.DrawRect(0, 0, width, height, Color(255, 255, 255, 30))
+            --     end
+
+            --     draw.DrawRect(0, 0, width, height * 0.7, Color(40, 40, 40, 50))
+            -- end
+
+            self.leftButton.DoClick = function()
+                hook.Run("OnLogsClosed", JB.RoundNumber - 1)
+            end
+        end
+
+        if (JB.RoundNumber < currentRound) then
+            self.rightButton = vgui.Create("DButton", self.roundID)
+            self.rightButton:SetText("next")
+            self.rightButton:SetSize(42, 42)
+            self.rightButton:SetMouseInputEnabled(true)
+            function self.rightButton:Paint(width, height)
+                draw.DrawRect(0, 0, width, height, Color(75, 75, 75, 255))
+
+                if self:IsHovered() then
+                    draw.DrawRect(0, 0, width, height, Color(255, 255, 255, 30))
+                end
+
+                draw.DrawRect(0, 0, width, height * 0.7, Color(40, 40, 40, 50))
+            end
+
+            function self.rightButton:DoClick()
+                hook.Run("OnLogsClosed", JB.RoundNumber + 1)
+            end
+        end
+
         self:LayoutEntries()
     end)
 
@@ -155,6 +198,12 @@ function LOGSLIST:PerformLayout(width, height)
     self.roundID:MoveToFront()
     self.roundID:Dock(LEFT)
     self.roundID:SetWide(width / 7)
+    if self.rightButton then
+        self.rightButton:Dock(RIGHT)
+    end
+    if self.leftButton then
+        self.leftButton:Dock(LEFT)
+    end
 end
 
 vgui.Register("JailbreakLogsList", LOGSLIST)
