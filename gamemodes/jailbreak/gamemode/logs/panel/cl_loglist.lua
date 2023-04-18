@@ -20,14 +20,14 @@ surface.CreateFont("Jailbreak_Font_14", {
 
 function LOGSLIST:Init()
     self.playerLog = vgui.Create("JailbreakPlayerLog", self)
-    self.header = vgui.Create("Panel", self)
-    self.footer = vgui.Create("Panel", self.header)
-    self.roundID = vgui.Create("DPanel", self.header)
-
-    self.timeScale = vgui.Create("JailbreakTimeScale", self.header)
+    
     -- self.playHead = vgui.Create("Panel", self.timeScale)
     self.panel = vgui.Create("Panel", self)
     self.entries = vgui.Create("Panel", self)
+    self.header = vgui.Create("Panel", self)
+    self.footer = vgui.Create("Panel", self.header)
+    self.timeScale = vgui.Create("JailbreakTimeScale", self.header)
+    self.roundID = vgui.Create("DPanel", self.header)
     
     self.time = 300
     self.logs = {}
@@ -39,7 +39,6 @@ function LOGSLIST:Init()
         self:LayoutEntries()
     end)
 
-    local panel = self
     local curPos = 0
 
     -- function self.playHead:Paint(width, height)
@@ -143,8 +142,7 @@ function LOGSLIST:PerformLayout(width, height)
     self.footer:Dock(BOTTOM)
     self.footer:SetTall(2)
     self.header:SetTall(toVRatio(44))
-    self.roundID:Dock(LEFT)
-    self.roundID:SetWide(width / 7)
+
     self.timeScale:Dock(FILL)
     self.timeScale:DockMargin(0, 2, 0, 0)
     self.timeScale:SetTall(toVRatio(32))
@@ -154,6 +152,9 @@ function LOGSLIST:PerformLayout(width, height)
     self.playerLog:Dock(RIGHT)
     self.playerLog:SetWide(0)
     self.playerLog:DockMargin(2, 2, 0, 0)
+    self.roundID:MoveToFront()
+    self.roundID:Dock(LEFT)
+    self.roundID:SetWide(width / 7)
 end
 
 vgui.Register("JailbreakLogsList", LOGSLIST)

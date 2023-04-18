@@ -38,6 +38,7 @@ function JB:SendLog(ply, round)
         return
     end
     local logs = self:LoadLogs(round)
+    if not logs or logs == "" or not logs.RoundTime then return end
     net.Start("SendLog")
     net.WriteInt(round, 32)
     net.WriteFloat(logs.RoundTime)
@@ -74,10 +75,8 @@ function JB:SaveLogs()
 end
 
 function JB:LoadLogs(round)
-    logs = {}
-    
     logFile = file.Read(dir .."/round_" .. round .. ".txt", "DATA")
-    return util.JSONToTable(logFile)
+    return logFile and util.JSONToTable(logFile) or ""
 end
 
 function JB:SetupLogs()
