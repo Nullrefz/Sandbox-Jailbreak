@@ -33,7 +33,7 @@ function JB:OpenCells(ply, ent)
         self:SendNotification(notification)
     end
 
-    hook.Run("CellDoorsOpened")
+    hook.Run("CellDoorsOpened", ply)
 end
 
 function JB:ValidateDoorButton(ent)

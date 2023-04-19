@@ -10,7 +10,6 @@ function JB:DrawWaypoint(trace, prog, placed, color, mat)
     local wid = 2
     prog = 1
     local distance = LocalPlayer():GetPos():Distance(trace.HitPos)
-    print(distance)
     cam.Start3D2D(trace.HitPos, Angle(0, 90, 0), math.Clamp(distance / 100, 2, 15))
     draw.DrawArc(0, 0, 8.5 * prog, 0, 360, 0, Color(255, 255, 255, 10))
     draw.DrawArc(0, 0, 8.5 * prog, 8.3 * prog, 360 * prog, 0, Color(255, 255, 255, 150))

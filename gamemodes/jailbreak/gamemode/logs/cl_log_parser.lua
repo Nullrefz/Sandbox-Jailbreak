@@ -1,10 +1,12 @@
 local logColor = {
     Pickup = Color(0, 150, 255),
-    Kill = Color(255, 25, 255),
-    Death = Color(255, 20, 20),
-    Drop = Color(255, 255, 255)
+    Kill = Color(255, 0, 0),
+    Death = Color(150, 0, 255),
+    Drop = Color(200, 0, 255),
+    Damage = Color(255, 150, 0),
+    Doors = Color(0, 200, 0),
+    Disconnect = Color(200, 200, 200)
 }
-
 
 function JB:ParseLog(log)
 
