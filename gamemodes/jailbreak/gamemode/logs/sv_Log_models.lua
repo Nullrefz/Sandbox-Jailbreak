@@ -12,6 +12,7 @@ function JB:RegisterKillLog(victim, inflictor, instigator, type)
         Time = self:GetTimeElapsed(),
         Victim = self:GetUser(victim),
         Culprit = self:GetUser(instigator),
+        Weapon = inflictor:GetClass(),
         Day = self.dayPhase,
         Location = victim.containmentZones and victim.containmentZones[#victim.containmentZones] or "Unknown"
     }
@@ -99,7 +100,7 @@ hook.Add("EntityTakeDamage", "RegisterDamageLog", function(target, dmginfo)
     local victim = target
     if victim:IsPlayer() then
         local culprit = dmginfo:GetAttacker()
-        local inflictor = dmginfo:GetInflictor()
+        local inflictor = culprit:GetActiveWeapon()
         local health = target:Health() - dmginfo:GetDamage()
         if target:Team() == TEAM_GUARDS and culprit:Team() == TEAM_PRISONERS and
             not culprit:GetStatus() == PLAYER_CAUGHT then
