@@ -4,7 +4,7 @@ local logColor = {
     Death = Color(150, 0, 255),
     Drop = Color(200, 0, 255),
     Damage = Color(255, 150, 0),
-    Doors = Color(0, 0, 255),
+    Doors = Color(0, 255, 0),
     Disconnect = Color(200, 200, 200)
 }
 

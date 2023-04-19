@@ -68,13 +68,13 @@ function JB:RegisterDamageLog(victim, inflictor, instigator, type)
     self:RegisterLog(self:GetUser(instigator), dropLog)
 end
 
-function JB:RefisterDoorsLog(ply)
+function JB:RegisterDoorsLog(ply)
     doorLog = {
         Type = LOG_DOORS,
         Time = self:GetTimeElapsed(),
         Instigator = ply and self:GetUser(ply) or self:GetUser(self.warden)
     }
-    self:RegisterLog(self:GetUser(instigator), doorLog)
+    self:RegisterLog(doorLog.Instigator, doorLog)
 end
 
 hook.Add("PlayerDroppedWeapon", "RegisterDropWeaponLog", function(instigator, weapon)
@@ -121,6 +121,6 @@ hook.Add("EntityTakeDamage", "RegisterDamageLog", function(target, dmginfo)
 end)
 
 hook.Add("CellDoorsOpened", "RegisterDoorsLog", function(ply)
-
+    JB:RegisterDoorsLog(ply)
 end)
 -- bars, icons, rdm manager

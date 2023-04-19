@@ -19,10 +19,10 @@ function JB:RegisterLog(instigator, entry)
     if self:GetActivePhase() ~= ROUND_ACTIVE then
         return
     end
-    print(entry.Type)
+
     for k, v in pairs(roundLogs) do
         if v.User == instigator then
-            if entry.Type == "Death" then
+            if entry.Type == LOG_DEATH then
                 v.UserLifeSpan = entry.Time
             end
             table.insert(v.Logs, entry)

@@ -54,7 +54,7 @@ function LOGBAR:GetIndexLog(index)
             table.insert(logs, v)
         end
     end
-
+    PrintTable(logs)
     return logs
 end
 
