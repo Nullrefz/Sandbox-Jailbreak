@@ -14,10 +14,12 @@ local roundLogs = {}
 local session = 0
 local roundNumber = 0
 local dir = ""
+
 function JB:RegisterLog(instigator, entry)
     if self:GetActivePhase() ~= ROUND_ACTIVE then
         return
     end
+    print(entry.Type)
     for k, v in pairs(roundLogs) do
         if v.User == instigator then
             if entry.Type == "Death" then
@@ -43,16 +45,22 @@ function JB:SendLog(ply, round)
         net.Send(ply)
         return
     end
-    net.WriteInt(roundNumber, 32)
+    net.WriteInt(self:GetRoundNumber(ply), 32)
     net.WriteInt(round, 32)
     net.WriteFloat(logs.RoundTime)
     net.WriteTable(logs)
     net.Send(ply)
 end
 
+function JB:GetRoundNumber(ply)
+    if not ply:IsAdmin() or not ply:IsSuperAdmin() then return roundNumber - 1 end
+    return roundNumber
+end
+
 function JB:HandleLogRequest(ply, round)
     -- TODO: This is the section where I check if the player is allowed to get the logs
-    round = math.Clamp(round, 1, roundNumber)
+    
+    round = math.Clamp(round, 1, self:GetRoundNumber(ply))
     if (self:GetActivePhase() == ROUND_ACTIVE) then
         self:SaveLogs()
     end
