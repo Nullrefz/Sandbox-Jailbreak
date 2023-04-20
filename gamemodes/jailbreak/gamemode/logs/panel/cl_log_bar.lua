@@ -1,5 +1,7 @@
 local LOGBAR = {}
 
+-- TODO: Set player alive, dead, rebel, caught, RDM
+
 function LOGBAR:Init()
     self.bars = 0
     self.wide = 8

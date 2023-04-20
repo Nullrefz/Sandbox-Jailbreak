@@ -5,6 +5,7 @@ LOG_DEATH = "Death"
 LOG_DAMAGE = "Damage"
 LOG_DOORS = "Doors"
 LOG_DISCONNECT = "Disconnect"
+LOG_RDM = "RDM"
 
 function JB:RegisterKillLog(victim, inflictor, instigator, type)
     killLog = {
@@ -54,7 +55,7 @@ function JB:GetUser(ply)
     return ply:IsBot() and ply:Name() or ply:SteamID()
 end
 
-function JB:RegisterDamageLog(victim, inflictor, instigator, type)
+function JB:RegisterDamageLog(victim, inflictor, instigator, damage,  type)
     dropLog = {
         Type = type,
         Time = self:GetTimeElapsed(),
@@ -62,6 +63,8 @@ function JB:RegisterDamageLog(victim, inflictor, instigator, type)
         Culprit = self:GetUser(instigator),
         Weapon = inflictor:GetClass(),
         PlayerStatus = instigator:GetStatus(),
+        Damage = damage,
+        Day = self.dayPhase,
         Location = instigator.containmentZones and instigator.containmentZones[#instigator.containmentZones] or
             "Unknown"
     }
@@ -76,6 +79,29 @@ function JB:RegisterDoorsLog(ply)
         Instigator = ply and self:GetUser(ply) or self:GetUser(self.warden)
     }
     self:RegisterLog(doorLog.Instigator, doorLog)
+end
+
+function JB:RegisterDisconnectLog(ply)
+    disconnectLog = {
+        Type = LOG_DISCONNECT,
+        Time = self:GetTimeElapsed(),
+        Instigator = self:GetUser(ply)
+    }
+    self:RegisterLog(disconnectLog.Instigator, disconnectLog)
+end
+
+function JB:RegisterRDMLog(culprit, inflictor, instigator)
+    rdmLog = {
+        Type = LOG_RDM,
+        Time = self:GetTimeElapsed(),
+        Victim = self:GetUser(victim),
+        Culprit = self:GetUser(instigator),
+        Weapon = inflictor:GetClass(),
+        Day = self.dayPhase,
+        Location = victim.containmentZones and victim.containmentZones[#victim.containmentZones] or "Unknown"
+    }
+
+    self:RegisterLog(rdmLog.Culprit, rdmLog)
 end
 
 hook.Add("PlayerDroppedWeapon", "RegisterDropWeaponLog", function(instigator, weapon)
@@ -102,6 +128,7 @@ hook.Add("EntityTakeDamage", "RegisterDamageLog", function(target, dmginfo)
         local culprit = dmginfo:GetAttacker()
         local inflictor = culprit:GetActiveWeapon()
         local health = target:Health() - dmginfo:GetDamage()
+        local damage = dmginfo:GetDamage()
         if target:Team() == TEAM_GUARDS and culprit:Team() == TEAM_PRISONERS and
             not culprit:GetStatus() == PLAYER_CAUGHT then
                 culprit:SetStatus(PLAYER_REBELLING)
@@ -113,10 +140,11 @@ hook.Add("EntityTakeDamage", "RegisterDamageLog", function(target, dmginfo)
         end
         
         if health > 0 then 
-        JB:RegisterDamageLog(target, inflictor, culprit, LOG_DAMAGE)
+        JB:RegisterDamageLog(target, inflictor, culprit, damage, LOG_DAMAGE)
         else
         JB:RegisterKillLog(target, inflictor , culprit, LOG_KILL)
         JB:RegisterKillLog(target, inflictor , culprit, LOG_DEATH)
+        --TODO Implement RDM Check
         end
     end
 end)
@@ -124,4 +152,7 @@ end)
 hook.Add("CellDoorsOpened", "RegisterDoorsLog", function(ply)
     JB:RegisterDoorsLog(ply)
 end)
--- bars, icons, rdm manager
+
+hook.Add("PlayerDisconnected", "RegisterDisconnectLog", function(ply)
+    JB:RegisterDisconnectLog(ply)
+end)

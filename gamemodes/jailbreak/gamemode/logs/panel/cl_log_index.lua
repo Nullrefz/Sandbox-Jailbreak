@@ -18,6 +18,8 @@ function LOGINDEX:Init()
 
         if #self:GetParent().logs > 0 then
             for i = 1, #self:GetParent().logs do
+--TODO split the boxes into multiples ones
+-- TODO add player status
                 draw.DrawRect((i - 1) * width, 0, width * #self:GetParent().logs, height, JB:GetLogColor(self:GetParent().logs[i].Type))
             end
         end
@@ -38,13 +40,14 @@ function LOGINDEX:PerformLayout(width, height)
     self.panel:Dock(FILL)
 end
 
-function LOGINDEX:SetInfo(logs, index, playerInd, inspector, minutes, playerAlive)
+function LOGINDEX:SetInfo(logs, index, playerInd, inspector, minutes, playerAlive, playerStatus)
     self.logs = logs
     self.index = index
     self.playerInd = playerInd
     self.inspector = inspector
     self.minutes = minutes
     self.playerAlive = playerAlive
+    self.playerStatus = playerStatus
 end
 
 vgui.Register("JailbreakLogIndex", LOGINDEX)

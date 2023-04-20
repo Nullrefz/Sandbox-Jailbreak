@@ -1,7 +1,7 @@
 PLAYER_REBELLING = "Rebelling"
 PLAYER_NEUTRAL = "Neutral"
 PLAYER_CAUGHT = "Caught in Action"
-PLAYER_RDM = "RDM"
+PLAYER_WARDEN = "Warden"
 
 local ply = FindMetaTable("Player")
 

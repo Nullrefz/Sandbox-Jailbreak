@@ -8,6 +8,13 @@ local logColor = {
     Disconnect = Color(200, 200, 200)
 }
 
+local playerStatusColor = {
+    PLAYER_NEUTRAL = Color (0,0,0),
+    PLAYER_REBELLING = Color (0,0,0),
+    PLAYER_CAUGHT = Color (0,0,0),
+    PLAYER_WARDEN = Color (0,0,0),
+}
+
 function JB:ParseLog(log)
 
 end
