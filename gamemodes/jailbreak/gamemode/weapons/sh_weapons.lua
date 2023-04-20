@@ -87,7 +87,6 @@ if SERVER then
 
     local ply = FindMetaTable("Player")
 
-    --TODO: Find a better sollution
     function ply:GiveWeapon(weapon)
         self.canPick = true
         self:Give(weapon)
@@ -95,4 +94,4 @@ if SERVER then
     end
 end
 
-if CLIENT then end --TODO: Move weapon pickup notify and weapon highlight here
+if CLIENT then end

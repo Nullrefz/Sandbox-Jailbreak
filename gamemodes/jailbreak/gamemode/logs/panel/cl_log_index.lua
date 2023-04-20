@@ -7,20 +7,24 @@ function LOGINDEX:Init()
     self.panel:SetText("")
     self.index = 0
     self.playerInd = 0
-    self.playerAlive = false
+    self.playerAlive = true
     LerpFloat(0, 1, 1, function(progress)
-        if not alpha then return end
+        if not alpha then
+            return
+        end
         alpha = progress
     end, INTERPOLATION.SinLerp)
 
     function self.panel:Paint(width, height)
-        draw.DrawRect(0, 0, width, height, self:GetParent().playerAlive and  Color(30, 30, 30, 255) or Color(1, 1, 1, 255))
+        draw.DrawRect(0, 0, width, height,
+            self:GetParent().playerAlive and Color(30, 30, 30, 255) or Color(1, 1, 1, 255))
 
         if #self:GetParent().logs > 0 then
             for i = 1, #self:GetParent().logs do
---TODO split the boxes into multiples ones
--- TODO add player status
-                draw.DrawRect((i - 1) * width, 0, width * #self:GetParent().logs, height, JB:GetLogColor(self:GetParent().logs[i].Type))
+                -- TODO split the boxes into multiples ones
+                -- TODO add player status
+                draw.DrawRect((i - 1) * width, 0, width * #self:GetParent().logs, height,
+                    JB:GetLogColor(self:GetParent().logs[i].Type))
             end
         end
 
@@ -29,6 +33,11 @@ function LOGINDEX:Init()
         end
 
         draw.DrawRect(0, 0, width, height * 0.7, Color(40, 40, 40, 50))
+
+        if self:GetParent().playerStatus and  self:GetParent().playerAlive then
+            draw.DrawRect(0, height - 2, width, 2, Color(255, 0, 0, 255))
+            draw.DrawRect(0, 0, width, 2, Color(255, 0, 0, 255))
+        end
     end
 
     self.panel.DoClick = function()

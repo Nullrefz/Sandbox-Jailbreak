@@ -42,7 +42,6 @@ function LOGBOX:SetInfo(log)
         self:DrawKill(self.log, "Murdered")
     elseif self.log.Type == "Damage" then
         self:DrawKill(self.log, " Got Damaged")
-        
     end
 end
 
@@ -173,25 +172,7 @@ function LOGBOX:DrawKill(log, action)
         end
         target:ShowProfile()
     end
-    -- local LeftSide = vgui.Create("Panel", self)
-    -- LeftSide:Dock(RIGHT)
-    -- local material = Material("jailbreak/vgui/weapons/" .. tostring(log.Weapon) .. ".png")
-    -- local imgHeight = material:Height()
-    -- local imgWidth = material:Width()
-    -- function LeftSide:Paint(width, height)
-    --     local imgWid = imgWidth / imgHeight * 100
-    --     draw.DrawRect((width - imgWid) / 2, -12, imgWid, height + 32, Color(255, 255, 255, 200), material)
-    -- end
 
-    -- local bottomPanel = vgui.Create("Panel", self)
-    -- bottomPanel:Dock(BOTTOM)
-    -- bottomPanel:SetTall(16)
-
-    -- function bottomPanel:Paint(width, height)
-    --     draw.DrawRect(0, 0, width, height, Color(0, 150, 255, 20))
-    --     draw.DrawText(string.gsub(log.Weapon, "weapon_jb_", ""), "Jailbreak_Font_16", width / 2, -2,
-    --         Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
-    -- end
 end
 function LOGBOX:DrawTitle(log)
     -- Title
