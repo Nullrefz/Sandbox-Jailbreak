@@ -4,8 +4,9 @@ LOG_KILL = "Kill"
 LOG_DEATH = "Death"
 LOG_DAMAGE = "Damage"
 LOG_DOORS = "Doors"
-LOG_DISCONNECT = "Disconnect"
+LOG_DISCONNECT = "Disconnected"
 LOG_RDM = "RDM"
+LOG_STATUS = "Status"
 
 function JB:RegisterKillLog(victim, inflictor, instigator, type)
     killLog = {
@@ -34,7 +35,9 @@ function JB:SpawnLog(ply)
 end
 
 function JB:RegisterWeaponLog(weapon, instigator, type)
-    if not instigator:Alive() then return end
+    if not instigator:Alive() then
+        return
+    end
     dropLog = {
         Type = type,
         Time = self:GetTimeElapsed(),
@@ -55,7 +58,7 @@ function JB:GetUser(ply)
     return ply:IsBot() and ply:Name() or ply:SteamID()
 end
 
-function JB:RegisterDamageLog(victim, inflictor, instigator, damage,  type)
+function JB:RegisterDamageLog(victim, inflictor, instigator, damage, type)
     dropLog = {
         Type = type,
         Time = self:GetTimeElapsed(),
@@ -104,6 +107,14 @@ function JB:RegisterRDMLog(culprit, inflictor, instigator)
     self:RegisterLog(rdmLog.Culprit, rdmLog)
 end
 
+function JB:RegisterStatusLog(ply, status)
+    statusLog = {
+        Type = LOG_STATUS,
+        Instigator = self.GetUser(ply)
+    }
+    self:RegisterLog(statusLog.Instigator, statusLog)
+end
+
 hook.Add("PlayerDroppedWeapon", "RegisterDropWeaponLog", function(instigator, weapon)
     JB:RegisterWeaponLog(weapon, instigator, LOG_DROP)
 end)
@@ -129,22 +140,22 @@ hook.Add("EntityTakeDamage", "RegisterDamageLog", function(target, dmginfo)
         local inflictor = culprit:GetActiveWeapon()
         local health = target:Health() - dmginfo:GetDamage()
         local damage = dmginfo:GetDamage()
-        if target:Team() == TEAM_GUARDS and culprit:Team() == TEAM_PRISONERS and
-            not culprit:GetStatus() == PLAYER_CAUGHT then
-                culprit:SetStatus(PLAYER_REBELLING)
+        if target:Team() == TEAM_GUARDS and culprit:Team() == TEAM_PRISONERS and not culprit:GetStatus() ==
+            PLAYER_CAUGHT then
+            culprit:SetStatus(PLAYER_REBELLING)
             for k, v in pairs(teams.GetPlayers(TEAM_GUARDS)) do
                 if v:Alive() and v:Visible(culprit) then
                     culprit:SetStatus(PLAYER_CAUGHT)
                 end
             end
         end
-        
-        if health > 0 then 
-        JB:RegisterDamageLog(target, inflictor, culprit, damage, LOG_DAMAGE)
+
+        if health > 0 then
+            JB:RegisterDamageLog(target, inflictor, culprit, damage, LOG_DAMAGE)
         else
-        JB:RegisterKillLog(target, inflictor , culprit, LOG_KILL)
-        JB:RegisterKillLog(target, inflictor , culprit, LOG_DEATH)
-        --TODO Implement RDM Check
+            JB:RegisterKillLog(target, inflictor, culprit, LOG_KILL)
+            JB:RegisterKillLog(target, inflictor, culprit, LOG_DEATH)
+            -- TODO Implement RDM Check
         end
     end
 end)
@@ -155,4 +166,11 @@ end)
 
 hook.Add("PlayerDisconnected", "RegisterDisconnectLog", function(ply)
     JB:RegisterDisconnectLog(ply)
+end)
+
+hook.Add("PlayerStatusChanged", "RegisterStatusLog", function(ply)
+    if (JB.dayPhase == "Warday" or JB.dayPhase == "Purge Day") then
+        return
+    end
+    JB:RegisterStatusLog(ply, ply.status)
 end)

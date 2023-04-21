@@ -5,7 +5,7 @@ local logColor = {
     Drop = Color(200, 0, 255),
     Damage = Color(255, 150, 0),
     Doors = Color(0, 200, 0),
-    Disconnect = Color(200, 200, 200)
+    Disconnected = Color(200, 200, 200)
 }
 
 local playerStatusColor = {

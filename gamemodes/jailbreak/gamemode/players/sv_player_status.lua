@@ -7,6 +7,7 @@ local ply = FindMetaTable("Player")
 
 function ply:SetStatus(status)
     self.status = status
+    hook.Run("PlayerStatusChanged", self)
 end
 
 function ply:GetStatus()

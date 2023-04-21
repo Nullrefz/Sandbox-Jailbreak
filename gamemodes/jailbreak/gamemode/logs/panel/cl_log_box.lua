@@ -1,6 +1,7 @@
 local mats = {
     Door = Material("jailbreak/vgui/icons/opencelldoors.png", "smooth"),
-    Arrow = Material("jailbreak/vgui/icons/arrow.png", "smooth")
+    Arrow = Material("jailbreak/vgui/icons/arrow.png", "smooth"),
+    Disconnect = Material("jailbreak/vgui/icons/disconnected.png", "smooth")
 }
 
 surface.CreateFont("Jailbreak_Font_32_Simple", {
@@ -31,7 +32,7 @@ end
 
 function LOGBOX:SetInfo(log)
     self.log = log
-
+    print(self.log.Type)
     if self.log.Type == "Pickup" or self.log.Type == "Drop" then
         self:DrawPickup(self.log)
     elseif self.log.Type == "Doors" then
@@ -41,7 +42,9 @@ function LOGBOX:SetInfo(log)
     elseif self.log.Type == "Death" then
         self:DrawKill(self.log, "Murdered")
     elseif self.log.Type == "Damage" then
-        self:DrawKill(self.log, " Got Damaged")
+        self:DrawKill(self.log, "Got Damaged") 
+    elseif self.log.Type == "Disconnected" then
+        self:DrawDisconnect(self.log)
     end
 end
 
@@ -72,13 +75,23 @@ function LOGBOX:DrawPickup(log)
 end
 
 function LOGBOX:DrawDoors(log)
+    self:DrawInfo(log, mats.Door)
+end
+
+function LOGBOX:DrawDisconnect(log)
+    PrintTable(log)
+    self:DrawInfo(log, mats.Disconnect)
+    self:SetWide(128)
+end
+
+function LOGBOX:DrawInfo(log, material)
     self:DrawTitle(log)
     self:SetWide(64)
     self.image = vgui.Create("DPanel", self)
     self.image:Dock(FILL)
     local size = 32
     function self.image:Paint(width, height)
-        draw.DrawRect(width / 2 - size / 2, height / 2 - size / 2 - 2, size, size, Color(255, 255, 255), mats.Door)
+        draw.DrawRect(width / 2 - size / 2, height / 2 - size / 2 - 2, size, size, Color(255, 255, 255), material)
     end
 end
 
@@ -176,6 +189,7 @@ function LOGBOX:DrawKill(log, action)
 end
 function LOGBOX:DrawTitle(log)
     -- Title
+    print(log.Type)
     local topPanel = vgui.Create("Panel", self)
     topPanel:Dock(TOP)
     topPanel:SetTall(16)
