@@ -32,7 +32,6 @@ end
 
 function LOGBOX:SetInfo(log)
     self.log = log
-    print(self.log.Type)
     if self.log.Type == "Pickup" or self.log.Type == "Drop" then
         self:DrawPickup(self.log)
     elseif self.log.Type == "Doors" then
@@ -79,7 +78,6 @@ function LOGBOX:DrawDoors(log)
 end
 
 function LOGBOX:DrawDisconnect(log)
-    PrintTable(log)
     self:DrawInfo(log, mats.Disconnect)
     self:SetWide(128)
 end
@@ -189,7 +187,6 @@ function LOGBOX:DrawKill(log, action)
 end
 function LOGBOX:DrawTitle(log)
     -- Title
-    print(log.Type)
     local topPanel = vgui.Create("Panel", self)
     topPanel:Dock(TOP)
     topPanel:SetTall(16)

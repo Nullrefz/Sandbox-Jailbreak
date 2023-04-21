@@ -33,9 +33,10 @@ function LOGINDEX:Init()
 
         draw.DrawRect(0, 0, width, height * 0.7, Color(40, 40, 40, 50))
 
-        if self:GetParent().playerStatus and  self:GetParent().playerAlive then
-            draw.DrawRect(0, height - 2, width, 2, Color(255, 0, 0, 255))
-            draw.DrawRect(0, 0, width, 2, Color(255, 0, 0, 255))
+        local status = self:GetParent().playerStatus
+        if status and  self:GetParent().playerAlive and status ~= "Neutral" then
+            draw.DrawRect(0, height - 2, width, 2, JB:GetStatusColor(status))
+            draw.DrawRect(0, 0, width, 2, JB:GetStatusColor(status))
         end
     end
 

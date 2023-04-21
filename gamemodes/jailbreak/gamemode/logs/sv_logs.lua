@@ -21,7 +21,7 @@ function JB:RegisterLog(instigator, entry)
     end
 
     for k, v in pairs(roundLogs) do
-        if v.User == instigator then
+        if istable(v) and v.User == instigator then
             table.insert(v.Logs, entry)
             self:SaveLogs()
             return

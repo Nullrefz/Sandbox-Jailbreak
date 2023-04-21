@@ -1,6 +1,6 @@
 local LOGBAR = {}
 
--- TODO: Set player alive, dead, rebel, caught, RDM
+-- TODO: rebel, caught, RDM
 
 function LOGBAR:Init()
     self.bars = 0
@@ -47,9 +47,8 @@ function LOGBAR:LayoutBars(width, height)
             if v.Type == "Death" then
                 self.playerAlive = false
             end
-
-            if not v.Status == "Neutral" then
-                self.playerStatus = v.Status
+            if v.Type == "Status" then
+                self.playerStatus = v.PlayerStatus
             end
         end
         bar:SetInfo(logs, i, self.ind, self.inspector, self.minutes, self.playerAlive, self.playerStatus)

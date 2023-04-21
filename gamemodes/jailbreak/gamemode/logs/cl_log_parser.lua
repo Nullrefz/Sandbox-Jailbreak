@@ -9,10 +9,10 @@ local logColor = {
 }
 
 local playerStatusColor = {
-    PLAYER_NEUTRAL = Color (0,0,0),
-    PLAYER_REBELLING = Color (0,0,0),
-    PLAYER_CAUGHT = Color (0,0,0),
-    PLAYER_WARDEN = Color (0,0,0),
+    Neutral = Color (0,0,0),
+    Rebelling = Color (255,255,0),
+    Caught = Color (255,0,0),
+    Warden = team.GetColor(TEAM_GUARDS),
 }
 
 function JB:ParseLog(log)
@@ -21,4 +21,8 @@ end
 
 function JB:GetLogColor(logType)
     return logColor[logType]
+end
+
+function JB:GetStatusColor(status)
+    return playerStatusColor[status]
 end
