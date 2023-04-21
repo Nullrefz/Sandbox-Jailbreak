@@ -67,7 +67,7 @@ function LOGINSPECTOR:LayoutBoxes()
         return
     end
     local tall = 64 - 16
-    local boxWidth = 300
+    local boxWidth = 400
     local boxHeight = 64
 
     for k, v in pairs(self.logs) do

@@ -18,13 +18,12 @@ function LOGINDEX:Init()
     function self.panel:Paint(width, height)
         draw.DrawRect(0, 0, width, height,
             self:GetParent().playerAlive and Color(30, 30, 30, 255) or Color(1, 1, 1, 255))
-
-        if #self:GetParent().logs > 0 then
-            for i = 1, #self:GetParent().logs do
-                -- TODO split the boxes into multiples ones
-                -- TODO add player status
-                draw.DrawRect((i - 1) * width, 0, width * #self:GetParent().logs, height,
-                    JB:GetLogColor(self:GetParent().logs[i].Type))
+        local logCount = #self:GetParent().logs
+        if logCount > 0 then
+            for i = 1, logCount do
+                local wid = width / logCount
+                draw.DrawRect((i - 1) * wid, 0, wid , height,
+                JB:GetLogColor(self:GetParent().logs[i].Type))
             end
         end
 
