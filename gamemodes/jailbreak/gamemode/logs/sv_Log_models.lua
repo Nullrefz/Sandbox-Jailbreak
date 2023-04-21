@@ -137,7 +137,7 @@ hook.Add("PlayerDroppedWeapon", "RegisterDropWeaponLog", function(instigator, we
 end)
 
 hook.Add("WeaponEquip", "RegisterDropWeaponLog", function(weapon, instigator)
-    if not JB:CheckIfSeen(instigator) and instigator:GetStatus() == PLAYER_NEUTRAL then
+    if not JB:CheckIfSeen(instigator) and instigator:GetStatus() == PLAYER_NEUTRAL and JB.round.activePhase == ROUND_ACTIVE then
         instigator:SetStatus(PLAYER_REBELLING)
     end
     JB:RegisterWeaponLog(weapon, instigator, LOG_PICKUP)
@@ -161,7 +161,13 @@ hook.Add("EntityTakeDamage", "RegisterDamageLog", function(target, dmginfo)
         else
             JB:RegisterKillLog(target, inflictor, culprit, LOG_KILL)
             JB:RegisterKillLog(target, inflictor, culprit, LOG_DEATH)
-            -- TODO Implement RDM Check
+            
+            
+            -- RDM Checker
+            print(JB.dayPhase, victim:GetStatus())
+            if JB.dayPhase == "Freeday" and victim:GetStatus() == PLAYER_NEUTRAL then
+                culprit:KillSilent()
+            end
         end
     end
 end)
