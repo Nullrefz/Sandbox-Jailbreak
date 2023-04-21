@@ -1,5 +1,4 @@
 local LOGSLIST = {}
--- TODO: fix Play head
 surface.CreateFont("Jailbreak_Font_14", {
     font = "Optimus",
     extended = false,
@@ -26,7 +25,6 @@ local mats = {
 local currentRound
 function LOGSLIST:Init()
 
-    -- self.playHead = vgui.Create("Panel", self.timeScale)
     self.time = 300
 
     net.Receive("SendLog", function()
@@ -93,29 +91,6 @@ function LOGSLIST:Init()
 
         self:LayoutEntries()
     end)
-
-    local curPos = 0
-
-    -- function self.playHead:Paint(width, height)
-    --     curPos = math.Clamp(self:LocalCursorPos(), 0, self:LocalCursorPos())
-    --     if (curPos < 0 or curPos > self:GetWide()) then
-    --         return
-    --     end
-    --     curPos = self:GetParent():GetPos(curPos, self:GetWide())
-    --     draw.DrawSkewedRect(curPos - 13, 0, 32, height, 4, Color(255, 255, 255))
-    --     draw.DrawText(self:GetParent():GetMinute(curPos / self:GetWide()), "Jailbreak_Font_14", curPos, 0,
-    --         Color(0, 0, 0), TEXT_ALIGN_CENTER)
-    -- end
-
-    -- function self.panel:Paint(width, height)
-    --     if (curPos < 0 or curPos > panel.playHead:GetWide()) then
-    --         return
-    --     end
-    --     surface.SetDrawColor(255, 255, 255)
-    --     surface.DrawLine(curPos + width / 7, 18, curPos + width / 7, panel:GetTall())
-    -- end
-
-    --	self.panel:MoveToFront()
 end
 
 function LOGSLIST:LayoutEntries()
@@ -135,10 +110,9 @@ function LOGSLIST:LayoutEntries()
             inspector.plyInd = k
             inspector:SetSize(w, 0)
             inspector:SetPos(0, (k - 1) * (barHeight + offset) + entryLog:GetTall())
-            -- inspector:SetInfo(barHeight, -1)
             table.insert(self.panels, inspector)
             table.insert(inspectors, inspector)
-            entryLog:SetInfo(v.User, v.UserTeam, v.UserName, v.UserLifeSpan, v.Logs, self.time, k, inspector)
+            entryLog:SetInfo(v.User, v.UserTeam, v.UserName, v.Logs, self.time, k, inspector)
         end
     end
 
@@ -193,7 +167,6 @@ function LOGSLIST:PerformLayout(width, height)
     self.timeScale:DockMargin(0, 2, 0, 0)
     self.timeScale:SetTall(toVRatio(32))
     self.panel:SetSize(width, height)
-    -- self.playHead:SetSize(self.timeScale:GetWide(), 16)
     self.entries:Dock(FILL)
     self.playerLog:Dock(RIGHT)
     self.playerLog:SetWide(0)

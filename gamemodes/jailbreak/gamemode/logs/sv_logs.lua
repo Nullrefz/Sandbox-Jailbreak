@@ -21,10 +21,7 @@ function JB:RegisterLog(instigator, entry)
     end
 
     for k, v in pairs(roundLogs) do
-        if v.User == instigator then
-            if entry.Type == LOG_DEATH then
-                v.UserLifeSpan = entry.Time
-            end
+        if istable(v) and v.User == instigator then
             table.insert(v.Logs, entry)
             self:SaveLogs()
             return
@@ -58,8 +55,6 @@ function JB:GetRoundNumber(ply)
 end
 
 function JB:HandleLogRequest(ply, round)
-    -- TODO: This is the section where I check if the player is allowed to get the logs
-    
     round = math.Clamp(round, 1, self:GetRoundNumber(ply))
     if (self:GetActivePhase() == ROUND_ACTIVE) then
         self:SaveLogs()

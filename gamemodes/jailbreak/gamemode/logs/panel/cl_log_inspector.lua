@@ -67,32 +67,34 @@ function LOGINSPECTOR:LayoutBoxes()
         return
     end
     local tall = 64 - 16
-    local boxWidth = 128
+    local boxWidth = 400
     local boxHeight = 64
 
     for k, v in pairs(self.logs) do
-        local pos = ((v.Time - self.index * self.minutes) / self.minutes) * self:GetWide()
-        local offset = 0
+        if (v.Type ~= "Status") then
+            local pos = ((v.Time - self.index * self.minutes) / self.minutes) * self:GetWide()
+            local offset = 0
 
-        if #self.boxes > 0 then
-            for i = 1, #self.boxes do
-                if IsValid(self.boxes[i]) then
-                    local x, y = self.boxes[i]:GetPos()
+            if #self.boxes > 0 then
+                for i = 1, #self.boxes do
+                    if IsValid(self.boxes[i]) then
+                        local x, y = self.boxes[i]:GetPos()
 
-                    if self.boxes[i]:GetWide() / 2 + x + 16 > pos - boxWidth then
-                        offset = offset + boxHeight + 4
-                        tall = math.max(tall, 64 - 16 + offset)
+                        if self.boxes[i]:GetWide() / 2 + x + 16 > pos - boxWidth then
+                            offset = offset + boxHeight + 4
+                            tall = math.max(tall, 64 - 16 + offset)
+                        end
                     end
                 end
             end
-        end
 
-        local box = vgui.Create("JailbreakLogBox", self)
-        box:SetSize(boxWidth, boxHeight)
-        box:SetPos(pos - box:GetWide() / 2, 64 - 16 + offset)
-        box:SetInfo(v)
-        table.insert(self.boxes, box)
-        offset = 0
+            local box = vgui.Create("JailbreakLogBox", self)
+            box:SetSize(boxWidth, boxHeight)
+            box:SetPos(pos - box:GetWide() / 2, 64 - 16 + offset)
+            box:SetInfo(v)
+            table.insert(self.boxes, box)
+            offset = 0
+        end
     end
 
     self.barHeight = self.barHeight + tall + 20

@@ -1,4 +1,4 @@
-JB.dayPhase = ""
+JB.dayPhase = "Normal Day"
 JB.nextDay = ""
 local timeLeft
 util.AddNetworkString("SetDay")
@@ -63,7 +63,7 @@ hook.Add("WardenRevoked", "WardenKilled", function()
 end)
 
 function JB:ResetDay()
-    JB.dayPhase = ""
+    JB.dayPhase = "Normal Day"
 end
 
 function JB:SetDay(day)
