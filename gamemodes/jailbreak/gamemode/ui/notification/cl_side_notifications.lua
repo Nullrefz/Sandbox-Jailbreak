@@ -15,7 +15,7 @@ local mats = {
 function JB:StartNotification(time, color, text, textColor, callback, type)
     local notification = vgui.Create("JailbreakNotification")
     notification:SetTime(time or 3)
-    notification:SetColor(color or Color(255, 255, 255))
+    notification:SetColor(color or Color(0, 0, 0))
     notification:SetText(text or "Notification")
     notification:SetTextColor(textColor or Color(255, 255, 255))
     notification:SetCallBack(callback)
@@ -51,7 +51,7 @@ function JAILBREAKNOTIFICATION:Init()
     self.panel.activeProgress = 0
     self.panel.devisions = 2
     self.panel.padding = toHRatio(5)
-    self.panel.color = Color(255, 255, 255, 255)
+    self.panel.color = Color(0, 0, 0, 255)
     self.panel.typeColor = Color(255, 255, 255)
     self.panel.text = ""
     self.panel.textColor = Color(0, 0, 0)
@@ -65,11 +65,11 @@ function JAILBREAKNOTIFICATION:Init()
         local widPos = width * (1 - self.progress) + self.skew * 2 + toHRatio(self.padding * self.devisions) * (1 - self.activeProgress)
 
         for i = 1, self.devisions do
-            draw.DrawSkewedRect(wid + widPos, 0, toHRatio(16), height, self.skew, self.typeColor)
+            draw.DrawSkewedRect(wid + widPos, 0, toHRatio(16), height, self.skew, self.typeColor, mats.BAR)
             wid = wid + toHRatio(9) + toHRatio(self.padding) * self.activeProgress
         end
 
-        draw.DrawSkewedRect(wid + widPos, 0, width - toHRatio(16) * 3, height, self.skew, self.color)
+        draw.DrawSkewedRect(wid + widPos, 0, width - toHRatio(16) * 3, height, self.skew, self.color, mats.BAR)
         self:GetParent().text:SetPos(wid + widPos + 10, height / 4)
     end
 

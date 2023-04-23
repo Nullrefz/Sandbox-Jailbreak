@@ -14,7 +14,7 @@ end
 function NOTIFICATIONBAR:AddNotification(time, color, text, textColor, type)
     local notification = vgui.Create("JailbreakNotification", self)
     notification:SetTime(time or 3)
-    notification:SetColor(color or Color(255, 255, 255))
+    notification:SetColor(color or Color(0, 0, 0))
     notification:SetText(text or "Notification")
     notification:SetTextColor(textColor or Color(255, 255, 255))
 

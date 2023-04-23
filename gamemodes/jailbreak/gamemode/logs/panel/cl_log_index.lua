@@ -22,7 +22,7 @@ function LOGINDEX:Init()
         if logCount > 0 then
             for i = 1, logCount do
                 local wid = width / logCount
-                draw.DrawRect((i - 1) * wid, 0, wid , height,
+                draw.DrawRect((i - 1) * wid, 0, (logCount > 1 and i ~= logCount) and wid - 1 or wid , height,
                 JB:GetLogColor(self:GetParent().logs[i].Type))
             end
         end

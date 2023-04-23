@@ -56,7 +56,7 @@ function LOGBOX:DrawPickup(log)
 
     function bottomPanel:Paint(width, height)
         draw.DrawRect(0, 0, width, height, Color(0, 150, 255, 20))
-        draw.DrawText(string.gsub(log.Weapon, "weapon_jb_", ""), "Jailbreak_Font_16", width / 2, -2,
+        draw.DrawText(string.gsub(log.Weapon, "weapon_jb_", "") .. ((log.Location ~= "Unknown") and  (" in ".. log.Location) or ""), "Jailbreak_Font_16", width / 2, -2,
             Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
     end
 
@@ -98,7 +98,7 @@ function LOGBOX:DrawKill(log, action)
     self.crimeScene = vgui.Create("DLabel", self)
     self.crimeScene:Dock(BOTTOM)
     self.crimeScene:SetTall(16)
-    self.crimeScene:SetText(action .. (log.Location == "Unknown" and "" or ("In a" .. log.Location)) .. (log.Day == "Normal Day" and "" or "On a" .. log.Day))
+    self.crimeScene:SetText(action .. (log.Location == "Unknown" and "" or (" In " .. log.Location)) .. (log.Day == "Normal Day" and "" or " On a " .. log.Day))
     self.crimeScene:SetTextColor(Color(255, 255, 255))
     self.crimeScene:SetFont("Jailbreak_Font_16")
     self.crimeScene:SetWide(self.crimeScene:GetTextSize())

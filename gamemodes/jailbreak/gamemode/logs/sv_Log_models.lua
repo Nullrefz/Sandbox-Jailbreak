@@ -9,14 +9,15 @@ LOG_RDM = "RDM"
 LOG_STATUS = "Status"
 
 function JB:RegisterKillLog(victim, inflictor, instigator, type)
+
     killLog = {
         Type = type,
         Time = self:GetTimeElapsed(),
         Victim = self:GetUser(victim),
         Culprit = self:GetUser(instigator),
-        Weapon = inflictor:GetClass(),
+        Weapon = inflictor and inflictor:GetClass(),
         Day = self.dayPhase,
-        Location = victim.containmentZones and victim.containmentZones[#victim.containmentZones] or "Unknown"
+        Location = self:GetArea(victim)
     }
 
     self:RegisterLog(killLog.Type == LOG_KILL and killLog.Culprit or killLog.Victim, killLog)
@@ -27,7 +28,7 @@ function JB:SpawnLog(ply)
         Type = "Spawn",
         Time = self:GetTimeElapsed(),
         pl = ply,
-        Location = ply.containmentZones and ply.containmentZones[#ply.containmentZones] or "Unknown",
+        Location = self:GetArea(ply),
         PlayerStatus = ply:GetStatus()
     }
 
@@ -43,15 +44,23 @@ function JB:RegisterWeaponLog(weapon, instigator, type)
         Time = self:GetTimeElapsed(),
         Culprit = self:GetUser(instigator),
         Weapon = weapon:GetClass(),
-        Location = instigator.containmentZones and instigator.containmentZones[#instigator.containmentZones] or
-            "Unknown"
+        Location = self:GetArea(instigator)
     }
-
     self:RegisterLog(self:GetUser(instigator), dropLog)
 end
 
+function JB:GetArea(ply)
+    local area = "Unknown"
+    if ply.containmentZones then
+        for k, v in pairs(ply.containmentZones) do
+            area = v
+        end
+    end
+    return area
+end
+
 function JB:GetUser(ply)
-    if not ply then
+    if not ply or not IsValid(ply) then
         return
     end
     return ply:IsBot() and ply:Name() or ply:SteamID()
@@ -67,8 +76,7 @@ function JB:RegisterDamageLog(victim, inflictor, instigator, damage, type)
         PlayerStatus = instigator:GetStatus(),
         Damage = damage,
         Day = self.dayPhase,
-        Location = instigator.containmentZones and instigator.containmentZones[#instigator.containmentZones] or
-            "Unknown"
+        Location = self:GetArea(instigator)
     }
 
     self:RegisterLog(self:GetUser(instigator), dropLog)
@@ -92,7 +100,7 @@ function JB:RegisterDisconnectLog(ply)
     self:RegisterLog(disconnectLog.Instigator, disconnectLog)
 end
 
-function JB:RegisterRDMLog(culprit, inflictor, instigator)
+function JB:RegisterRDMLog(victim, inflictor, instigator)
     rdmLog = {
         Type = LOG_RDM,
         Time = self:GetTimeElapsed(),
@@ -100,7 +108,7 @@ function JB:RegisterRDMLog(culprit, inflictor, instigator)
         Culprit = self:GetUser(instigator),
         Weapon = inflictor:GetClass(),
         Day = self.dayPhase,
-        Location = victim.containmentZones and victim.containmentZones[#victim.containmentZones] or "Unknown"
+        Location = self:GetArea(victim)
     }
 
     self:RegisterLog(rdmLog.Culprit, rdmLog)
@@ -137,7 +145,8 @@ hook.Add("PlayerDroppedWeapon", "RegisterDropWeaponLog", function(instigator, we
 end)
 
 hook.Add("WeaponEquip", "RegisterDropWeaponLog", function(weapon, instigator)
-    if not JB:CheckIfSeen(instigator) and instigator:GetStatus() == PLAYER_NEUTRAL and JB.round.activePhase == ROUND_ACTIVE then
+    if not JB:CheckIfSeen(instigator) and instigator:GetStatus() == PLAYER_NEUTRAL and JB.round.activePhase ==
+        ROUND_ACTIVE then
         instigator:SetStatus(PLAYER_REBELLING)
     end
     JB:RegisterWeaponLog(weapon, instigator, LOG_PICKUP)
@@ -147,24 +156,22 @@ hook.Add("EntityTakeDamage", "RegisterDamageLog", function(target, dmginfo)
     local victim = target
     if victim:IsPlayer() then
         local culprit = dmginfo:GetAttacker()
-        local inflictor = culprit:GetActiveWeapon()
+        local inflictor = culprit:IsPlayer() and culprit:GetActiveWeapon()
         local health = target:Health() - dmginfo:GetDamage()
         local damage = dmginfo:GetDamage()
 
-        if health > 0 and target:Team() ~= culprit:Team() then
+        if culprit:IsPlayer() and health > 0 and target:Team() ~= culprit:Team() then
             JB:RegisterDamageLog(target, inflictor, culprit, damage, LOG_DAMAGE)
             if culprit:Team() == TEAM_PRISONERS and target:Team() ~= culprit:Team() then
                 if not JB:CheckIfSeen(culprit) and culprit:GetStatus() == PLAYER_NEUTRAL then
                     culprit:SetStatus(PLAYER_REBELLING)
                 end
             end
-        else
+        elseif health <= 0 then
             JB:RegisterKillLog(target, inflictor, culprit, LOG_KILL)
             JB:RegisterKillLog(target, inflictor, culprit, LOG_DEATH)
-            
-            
+
             -- RDM Checker
-            print(JB.dayPhase, victim:GetStatus())
             if JB.dayPhase == "Freeday" and victim:GetStatus() == PLAYER_NEUTRAL then
                 culprit:KillSilent()
             end
